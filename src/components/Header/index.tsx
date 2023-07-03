@@ -1,20 +1,26 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Search } from '..';
+import { Input } from '..';
+import { AiOutlineSearch } from 'react-icons/ai';
+
 type Props = {};
 
 const Header = (props: Props) => {
   return (
-    <div className="bg-white flex items-center justify-between  w-full h-[50px] shadow-[0_2px_10px_0_rgba(0,0,0,0.06)] px-4">
+    <div className="header flex justify-between items-center px-4 py-2">
       <div className="logo">
-        <Link to="/">
-          <img className="w-[150px] h-10 max-w-[150px]" src="/logo.png" alt="" />
-        </Link>
+        <img src="/logo.png" alt="" className="w-[150px] " />
       </div>
-      <Search />
-
-      <Button type="auth" size="small">
-        Đăng nhập
-      </Button>
+      <div className="search flex justify-between items-center bg-[#fbfbfb] rounded-2xl">
+        <Input
+          prefix={<AiOutlineSearch className="text-xl mx-2 text-[#bebec2] " />}
+          type="search"
+          placeholder="Tìm kiếm sản phẩm..."
+        />
+      </div>
+      <div className="btn bg-[#d8b979] text-white px-4 py-1 rounded-2xl text-[14px] cursor-pointer">
+        <Link to="/signin">Đăng nhập</Link>
+      </div>
     </div>
   );
 };
