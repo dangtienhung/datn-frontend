@@ -11,10 +11,12 @@ const Signin = (props: Props) => {
             <img src="/logo.png" alt="" className="w-[200px] mb-5" />
           </div>
           <form action="" className="flex flex-col">
-            <Input placeholder="Nhập số điện thoại của bạn" />
-            <Input placeholder="Nhập mật khẩu của bạn" />
+            <Input type="auth" placeholder="Nhập số điện thoại của bạn" />
+            <Input type="auth" placeholder="Nhập mật khẩu của bạn" />
             <div className="text-right mt-4 font-bold text-[#d4b774] text-sm">Quên mật khẩu?</div>
-            <Button type="auth">Đăng nhập</Button>
+            <Button type="auth" size="large">
+              Đăng nhập
+            </Button>
             <div className="flex gap-x-2 justify-center items-center my-5 text-sm">
               <div>Bạn chưa có tài khoản?</div>
               <div className="font-semibold text-[#d4b774]">
