@@ -36,5 +36,35 @@
     max-width: 1200px !important;
   }
 
-  
+  .center-slider {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    transform: translate(-50%, -20%);
+  }
+
+  .bg_title {
+    background: url(./home_line.webp) no-repeat center;
+    width: 315px;
+    height: 30px;
+  }
+  body::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  //slider
+  .slick-prev,
+  .slick-next {
+    width: 32px !important;
+    height: 32px !important;
+    z-index: 1 !important;
+    color: white !important;
+  }
+  .slick-prev {
+    left: 10% !important;
+  }
+  .slick-next {
+    right: 10% !important;
+  }
 }
