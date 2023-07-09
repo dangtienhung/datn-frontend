@@ -15,7 +15,7 @@ const Signup = (props: Props) => {
             <Input type="auth" placeholder="Nhập số điện thoại của bạn" />
             <Input type="auth" placeholder="Nhập mật khẩu của bạn" />
             <Input type="auth" placeholder="Nhập lại mật khẩu của bạn" />
-            <Button type="auth" size="large">
+            <Button type="auth" size="large" shape="circle">
               Đăng kí
             </Button>
             <div className="flex gap-x-2 justify-center items-center my-5 text-sm">

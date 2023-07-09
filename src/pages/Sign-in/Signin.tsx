@@ -14,7 +14,7 @@ const Signin = (props: Props) => {
             <Input type="auth" placeholder="Nhập số điện thoại của bạn" />
             <Input type="auth" placeholder="Nhập mật khẩu của bạn" />
             <div className="text-right mt-4 font-bold text-[#d4b774] text-sm">Quên mật khẩu?</div>
-            <Button type="auth" size="large">
+            <Button type="auth" size="large" shape="circle">
               Đăng nhập
             </Button>
             <div className="flex gap-x-2 justify-center items-center my-5 text-sm">

@@ -7,7 +7,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Signin from './pages/Sign-in/Signin';
 import Signup from './pages/Sign-up/Signup';
-import HomePage from './pages/Home/home';
+import ClientLayout from './layouts/client';
+import Checkout from './pages/Checkout/Checkout';
+import ProductsPage from './pages/Products/Products';
+import HomePage from './pages/Home/HomePage';
 
 const App = () => {
   return (
@@ -15,7 +18,13 @@ const App = () => {
       <Routes>
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/" element={<HomePage />} />
+        <Route path="products" element={<ClientLayout />}>
+          {/* <Route index element="Home page" /> */}
+          <Route index element={<ProductsPage />} />
+          <Route path="checkout" element={<Checkout />} />
+        </Route>
+        <Route path="admin" element="adminPage"></Route>
       </Routes>
     </BrowserRouter>
   );
