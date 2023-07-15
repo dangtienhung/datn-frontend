@@ -7,7 +7,7 @@ type Props = {};
 const HomePage = (props: Props) => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className="bg-[#fbfbfb]">
         <div className="container mx-auto pt-3">
           <div className="content flex justify-between">

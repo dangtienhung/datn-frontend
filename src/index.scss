@@ -36,5 +36,68 @@
     max-width: 1200px !important;
   }
 
+  //my-account
+  .bg-top-account {
+    height: 180px;
+    display: block;
+    position: relative;
+    text-align: center;
+    background-color: #f1f1f1;
+    background-image: url(/background-account.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+  }
+
+  .account-avatar{
+    box-shadow: 2px 2px 15px 0 rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+
+  .account-content {
+    box-shadow: 1px -2px 5px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-change-photo {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: -8%;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    left: 62%;
+    box-shadow: 2px 2px 15px 0 rgba(0, 0, 0, 0.2);
+    background: url(/camera-regular.svg) no-repeat center;
+    background-color: #ffffff;
+    background-size: 20px auto;
+    cursor: pointer;
+  }
+
+  .item-profile:nth-child(odd) {
+    padding-right: 15px;
+  }
+
+  .item-profile:nth-child(even) {
+    padding-left: 15px;
+  }
+
+  .voucher-item {
+    // display: flex;
+    // flex-direction: column;
+    background-color: #D0A151;
+    width: calc(25% - 15px);
+    padding: 6px 12px;
+    margin: 0 15px 15px 0;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 2px 2px 2px 0px #e0e0e0;
+    cursor: pointer;
+  }
+
+  
+
   
 }

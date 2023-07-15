@@ -48,7 +48,7 @@ const MyCart = (props: Props) => {
 
         <div className="cart ">
           <div className="cart-ss2 flex justify-start items-center my-5">
-            <img className="img-toco h-[40px] pr-2" src="src/assets/icon-glass-tea.png" />
+            <img className="img-toco h-[40px] pr-2" src="/icon-glass-tea.png" />
             <span className="cart-ss2-one pr-2">x</span>
             <span className="cart-ss2-two pr-2 text-[#8a733f]">1</span>
             <span className="cart-ss2-three pr-2">=</span>
