@@ -3,42 +3,44 @@ import { Link, Outlet } from 'react-router-dom';
 import { AiFillHome, AiOutlineUser, AiFillCreditCard } from 'react-icons/ai';
 import { GrLogout } from 'react-icons/gr';
 import { MdShoppingCart } from 'react-icons/md';
+import { Header } from '../../components';
 type Props = {};
 
 const AccountLayout = (props: Props) => {
   return (
-    <div className="container mx-auto p-[20px] flex">
-      <div className="list-sidebar w-[250px] max-w-[250px] mr-[20px] flex-shrink-0">
-        <div className="menu text-[14px]">
-          <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px] cu">
-            <AiFillHome className="text-[14px] mr-2 " />
-            <Link to="/">Trang chủ</Link>
-          </div>
+    <>
+      <Header />
+      <div className="container mx-auto p-[20px] flex">
+        <div className="list-sidebar w-[250px] max-w-[250px] mr-[20px] flex-shrink-0">
+          <div className="menu text-[14px]">
+            <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px] cu">
+              <AiFillHome className="text-[14px] mr-2 " />
+              <Link to="/">Trang chủ</Link>
+            </div>
 
-          <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
-            <AiOutlineUser className="text-[14px] mr-2 " />
-            <Link to="my-infor">Thông tin tài khoản</Link>
-          </div>
+            <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
+              <AiOutlineUser className="text-[14px] mr-2 " />
+              <Link to="my-infor">Thông tin tài khoản</Link>
+            </div>
 
-          <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
-            <MdShoppingCart className="text-[14px] mr-2 " />
-            <Link to="my-order">Đơn hàng của tôi</Link>
-          </div>
+            <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
+              <MdShoppingCart className="text-[14px] mr-2 " />
+              <Link to="my-order">Đơn hàng của tôi</Link>
+            </div>
 
-          <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
-            <AiFillCreditCard className="text-[14px] mr-2 " />
-            <Link to="my-voucher">Mã khuyến mại</Link>
-          </div>
+            <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
+              <AiFillCreditCard className="text-[14px] mr-2 " />
+              <Link to="my-voucher">Mã khuyến mại</Link>
+            </div>
 
-          <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
-            <GrLogout className="text-[14px] mr-2 " />
-            <p>Đăng xuất</p>
+            <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
+              <GrLogout className="text-[14px] mr-2 " />
+              <p>Đăng xuất</p>
+            </div>
           </div>
-          
         </div>
-      </div>
-      <Outlet />
-      {/* <div className="my-account grow ">
+        <Outlet />
+        {/* <div className="my-account grow ">
         <div className="account flex flex-col">
           <div className="bg-top-account"></div>
 
@@ -128,7 +130,8 @@ const AccountLayout = (props: Props) => {
           </div>
         </div>
       </div> */}
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,15 +1,16 @@
-import React from 'react';
 import { Header } from '../../components';
 import { Outlet } from 'react-router-dom';
 type Props = {};
 
-const UserLayout = (props: Props) => {
+const ClientLayout = (props: Props) => {
   return (
     <>
       <Header />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
     </>
   );
 };
 
-export default UserLayout;
+export default ClientLayout;
