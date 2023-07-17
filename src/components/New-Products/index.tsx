@@ -7,25 +7,28 @@ type Props = {};
 
 const NewProducts = (props: Props) => {
   return (
-    <section className="pt-[50px] pb-[60px] mx-auto w-[1140px] max-w-[1140px]">
+    <section className="pt-[50px] pb-[60px] mx-auto sm:w-full  max-w-[1140px]">
       <div className="title flex flex-col items-center">
         <div className="sub-title">
           <h4 className="text-[#d3b673] text-[22px] mb-[5px] font-bold">ToCoToCo Menu</h4>
         </div>
         <div className="main-title">
-          <h2 className="text-4xl text-center text-black px-[50px] uppercase font-bold mb-2">
+          <h2 className="text-3xl md:text-4xl text-center text-black px-[50px] uppercase font-bold mb-2">
             Sản phẩm nổi bật
           </h2>
         </div>
         <div className="bg_title"></div>
       </div>
-      <div className="flex flex-col container">
-        <div className="list mt-[50px] flex flex-wrap gap-x-3">
+      <div className="flex flex-col ">
+        <div className="list mt-[50px] flex flex-wrap ">
           <NewProductItem />
           <NewProductItem />
           <NewProductItem />
           <NewProductItem />
           <NewProductItem />
+          <NewProductItem />
+          <NewProductItem />
+          {/* <NewProductItem /> */}
         </div>
         <div className="mt-4 self-center">
           <Link to="/products">

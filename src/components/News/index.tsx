@@ -8,13 +8,13 @@ const News = (props: Props) => {
     <div className="container mx-auto">
       <div className="title flex flex-col items-center mb-8">
         <h4 className="text-[#d3b673] text-[22px] mb-[5px] font-bold">Tin Tức và Khuyến Mãi</h4>
-        <h3 className="text-4xl font-bold text-black uppercase mb-2">
+        <h3 className="text-center  text-3xl md:text-4xl font-bold text-black uppercase mb-2">
           KHÁM PHÁ TOCOTOCO NHẬN NGAY KHUYẾN MÃI
         </h3>
         <div className="bg_title"></div>
       </div>
-      <div className="news-content flex justify-center">
-        <div className="left w-1/2 mr-2 flex flex-wrap">
+      <div className="news-content mb-10 flex flex-col md:flex-row justify-center ">
+        <div className="left w-full md:w-1/2 mr-2 flex flex-wrap">
           <Link
             to="/"
             className="block w-full m-0 bg-[#f5f5f5] mb-[30px] transition-all group shadow-[3.5px_6px_18px_0_rgb(0,0,0/10%)]"
@@ -113,7 +113,7 @@ const News = (props: Props) => {
             </div>
           </Link>
         </div>
-        <div className="right w-1/2 ml-2">
+        <div className="right w-full md:w-1/2 md:ml-2">
           <div className="main-content ">
             <Link to="/" className="group ">
               <div className="relative overflow-hidden">
@@ -125,7 +125,7 @@ const News = (props: Props) => {
                   />
                 </div>
                 <div className="title py-2 px-1 absolute bottom-0">
-                  <h3 className="text-white text-center text-[18px]">
+                  <h3 className="text-white text-center text-sm md:text-[18px]">
                     CON ĐƯỜNG KHỞI NGHIỆP CỦA NGƯỜI SÁNG LẬP THƯƠNG HIỆU TRÀ SỮA VIỆT NAM - TOCOTOCO
                   </h3>
                 </div>
