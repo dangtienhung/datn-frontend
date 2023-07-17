@@ -14,9 +14,11 @@ const HomePage = (props: Props) => {
     <>
       <HeaderHomePage />
       <Sliders />
-      <NewProducts />
-      <About />
-      <News />
+      <main className="p-8 md:p-5">
+        <NewProducts />
+        <About />
+        <News />
+      </main>
       <FooterHomePage />
       <ButtonDelivery />
       <Popup />

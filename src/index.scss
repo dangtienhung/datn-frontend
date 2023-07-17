@@ -67,4 +67,22 @@
   .slick-next {
     right: 10% !important;
   }
+
+  //Header-HomePage
+  @media only screen and (max-width: 767px) {
+    .menu {
+      position: fixed;
+      top: 0;
+      background: #292929c7;
+      width: 50vw;
+      height: 100vh;
+      border-left: 1px solid #f0f0f0;
+      right: -100%;
+      z-index: 3;
+      transition: all 0.5s ease;
+    }
+    .show__menu {
+      right: 0 !important;
+    }
+  }
 }

@@ -24,7 +24,8 @@ const App = () => {
           <Route index element={<ProductsPage />} />
           <Route path="checkout" element={<Checkout />} />
         </Route>
-        <Route path="admin" element="adminPage"></Route>
+
+        <Route path="admin" element="AdminPage"></Route>
       </Routes>
     </BrowserRouter>
   );
