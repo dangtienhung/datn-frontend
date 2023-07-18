@@ -124,7 +124,7 @@ const News = (props: Props) => {
                     alt=""
                   />
                 </div>
-                <div className="title py-2 px-1 absolute bottom-0">
+                <div className="title py-2 px-1 absolute bottom-0 shadow-[0_2px_9px]">
                   <h3 className="text-white text-center text-sm md:text-[18px]">
                     CON ĐƯỜNG KHỞI NGHIỆP CỦA NGƯỜI SÁNG LẬP THƯƠNG HIỆU TRÀ SỮA VIỆT NAM - TOCOTOCO
                   </h3>

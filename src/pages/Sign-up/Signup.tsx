@@ -7,7 +7,7 @@ const Signup = (props: Props) => {
   return (
     <div className="background-container">
       <div className="h-full flex justify-center items-center">
-        <div className="content background-content bg-white w-[500px] h-[600px] px-[100px] py-6 flex justify-center items-center flex-col rounded">
+        <div className="content background-content bg-white w-[90vw] md:w-[500px] h-[600px] px-6 md:px-[100px] py-6 flex justify-center items-center flex-col rounded">
           <div className="logo">
             <img src="/logo.png" alt="" className="w-[200px] mb-5" />
           </div>
