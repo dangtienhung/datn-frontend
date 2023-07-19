@@ -10,9 +10,9 @@ type Props = {};
 
 const Checkout = (props: Props) => {
   return (
-    <div className="w-[1200px] max-w-[1200px] my-0 mx-auto">
-      <div className="detail flex justify-between mt-6">
-        <div className="left w-[60%]">
+    <div className="w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto">
+      <div className="detail flex justify-between mt-6 flex-col gap-y-10 lg:gap-y-0  lg:flex-row">
+        <div className="left w-full lg:w-[60%]">
           <div className="title flex justify-between items-center px-5 mb-[7px] ">
             <div>
               <h2 className="font-bold text-sm">Thông tin giao hàng</h2>
@@ -64,7 +64,7 @@ const Checkout = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="right w-[40%] pl-4">
+        <div className="right w-full lg:w-[40%] lg:pl-4">
           <div className="title flex justify-between items-center px-5 mb-[7px] ">
             <div>
               <h2 className="font-bold text-sm">Thông tin đơn hàng</h2>
