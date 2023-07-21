@@ -5,7 +5,7 @@ type Props = {};
 
 const NewProductItem = (props: Props) => {
   return (
-    <div className="item-product w-[24%] mb-8 relative overflow-hidden shadow-[0_2px_1.5px_0_#ccc] transition-all group">
+    <div className="item-product mx-[15px] w-[calc(100%-30px)] sm:w-[calc(50%-30px)] md:w-[calc(33.33333%-30px)] lg:w-[calc(25%-30px)] mb-8 relative overflow-hidden shadow-[0_2px_1.5px_0_#ccc] transition-all group">
       <div className="tags flex w-full absolute p-4 top-0 justify-between items-center z-10">
         <span className="-rotate-12 bg-[#d3b673] rounded-[50%] flex justify-center items-center text-white w-10 h-10 text-sm font-bold ">
           new
