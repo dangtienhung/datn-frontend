@@ -7,9 +7,10 @@ type Props = {};
 const ProductsPage = (props: Props) => {
   return (
     <div>
+      {/* <Header /> */}
       <div className="bg-[#fbfbfb]">
         <div className="container mx-auto pt-3">
-          <div className="content flex justify-between">
+          <div className="content flex flex-col justify-between md:flex-row">
             <SidebarCate />
             <ListProducts />
             <MyCart />
