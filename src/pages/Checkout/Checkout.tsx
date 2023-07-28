@@ -49,7 +49,7 @@ const Checkout = (props: Props) => {
                 <span className="text-sm">Thanh toán khi nhận hàng</span>
                 <input
                   className="opacity-0 absolute"
-                  checked
+                  defaultChecked
                   type="radio"
                   name="type"
                   value="cold"

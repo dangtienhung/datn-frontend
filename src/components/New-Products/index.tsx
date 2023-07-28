@@ -35,7 +35,7 @@ const NewProducts = (props: Props) => {
             <Button
               size="medium"
               shape="square"
-              style="border border-[#d3b673]  hover:text-[#d3b673] hover:bg-white"
+              style="border border-[#d3b673] hover:text-[#d3b673] hover:bg-white"
             >
               Xem tất cả
             </Button>

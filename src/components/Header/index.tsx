@@ -11,7 +11,7 @@ const Header = (props: Props) => {
       <div className="logo">
         <img src="/logo.png" alt="" className="w-[150px] " />
       </div>
-      <div className="search flex justify-between items-center bg-[#fbfbfb] rounded-2xl">
+      <div className="search flex justify-between items-center bg-[#fbfbfb] rounded-2xl ">
         <Input
           prefix={<AiOutlineSearch className="text-xl mx-2 text-[#bebec2] " />}
           type="search"
