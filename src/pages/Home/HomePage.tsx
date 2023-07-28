@@ -7,9 +7,7 @@ import News from '../../components/News';
 import Popup from '../../components/Popup';
 import Sliders from '../../components/Slider';
 
-type Props = {};
-
-const HomePage = (props: Props) => {
+const HomePage = () => {
   return (
     <>
       <HeaderHomePage />

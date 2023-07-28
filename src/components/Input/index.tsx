@@ -15,7 +15,7 @@ const Input = ({ placeholder, type, prefix }: Props) => {
         } 
         ${
           type === 'search' &&
-          'w-[500px] bg-[#fbfbfb] h-[32px] text-[14px] rounded-e-2xl focus:outline-none border-none'
+          ' w-[500px] bg-[#fbfbfb] h-[32px] text-[14px] rounded-e-2xl focus:outline-none border-none'
         }`}
         autoComplete="off"
         placeholder={placeholder && placeholder}

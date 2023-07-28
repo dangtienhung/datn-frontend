@@ -1,0 +1,32 @@
+import { ICategory } from './category.type';
+import { IImage } from './image.type';
+import { ISize } from './size.type';
+import { ITopping } from './topping.type';
+
+export interface IProduct {
+  _id: string;
+  name: string;
+  images: IImage[];
+  description: string;
+  sale: number;
+  category: ICategory;
+  sizes: ISize[];
+  toppings: ITopping[];
+  is_deleted: boolean;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IProductDocs {
+  docs: IProduct[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+}
