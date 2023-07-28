@@ -9,7 +9,10 @@ const Input = ({ placeholder, type, prefix }: Props) => {
     <div className="flex items-center gap-x-3">
       {prefix && prefix}
       <input
-        className={`p-0 border-transparent border border-b-[#d6cdbc] text-sm outline-none  py-[10px] w-full
+        className={`p-0 ${
+          type === 'auth' &&
+          'border-transparent border border-b-[#d6cdbc] text-sm outline-none   py-[10px] w-full'
+        } 
         ${
           type === 'search' &&
           ' w-[500px] bg-[#fbfbfb] h-[32px] text-[14px] rounded-e-2xl focus:outline-none border-none'
