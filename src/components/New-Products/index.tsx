@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+
 import { Button } from '..';
-import NewProductItem from '../New-ProductItem';
+import { IProduct } from '../../interfaces/products.type';
 import { Link } from 'react-router-dom';
+import NewProductItem from '../New-ProductItem';
+import { RootState } from '../../store/store';
+import { getAllProducts } from '../../store/services/product.service';
 
-type Props = {};
-
-const NewProducts = (props: Props) => {
+const NewProducts = () => {
+  const dispatch = useAppDispatch();
+  const { products } = useAppSelector((state: RootState) => state.products);
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
   return (
     <section className="pt-[50px] pb-[60px] mx-auto sm:w-full  max-w-[1140px]">
-      <div className="title flex flex-col items-center">
+      <div className="flex flex-col items-center title">
         <div className="sub-title">
           <h4 className="text-[#d3b673] text-[22px] mb-[5px] font-bold">ToCoToCo Menu</h4>
         </div>
@@ -21,16 +29,13 @@ const NewProducts = (props: Props) => {
       </div>
       <div className="flex flex-col ">
         <div className="list mt-[50px] flex flex-wrap ">
-          <NewProductItem />
-          <NewProductItem />
-          <NewProductItem />
-          <NewProductItem />
-          <NewProductItem />
-          <NewProductItem />
-          <NewProductItem />
-          {/* <NewProductItem /> */}
+          {products &&
+            products?.docs?.length > 0 &&
+            products?.docs?.map((product: IProduct) => (
+              <NewProductItem key={product._id} product={product} />
+            ))}
         </div>
-        <div className="mt-4 self-center">
+        <div className="self-center mt-4">
           <Link to="/products">
             <Button
               size="medium"
