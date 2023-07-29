@@ -1,12 +1,25 @@
+import { UseFormRegister } from 'react-hook-form';
+
+type NameInput = 'password' | 'account' | 'username' | 'confirmpassword' | any;
+
 type Props = {
   placeholder?: string;
   prefix?: React.ReactNode;
   type?: string;
+  name?: NameInput;
+  typeInput?: string;
+  register?: UseFormRegister<{
+    password: string;
+    account: string;
+    username: string;
+    confirmpassword: string;
+  }>;
+  error?: string;
 };
 
-const Input = ({ placeholder, type, prefix }: Props) => {
+const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: Props) => {
   return (
-    <div className="flex items-center gap-x-3">
+    <div className="flex items-center gap-x-3 flex-col">
       {prefix && prefix}
       <input
         className={`p-0 ${
@@ -19,7 +32,11 @@ const Input = ({ placeholder, type, prefix }: Props) => {
         }`}
         autoComplete="off"
         placeholder={placeholder && placeholder}
+        type={typeInput}
+        {...register?.(name)}
+        name={name}
       />
+      {error && <span className="text-red-500 text-[13px]">{error}</span>}
     </div>
   );
 };
