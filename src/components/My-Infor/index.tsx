@@ -1,8 +1,16 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { useFetchUserQuery } from '../../api/User';
+import { useEffect } from 'react';
 
 type Props = {};
 
 const MyInfor = (props: Props) => {
+  const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+  const { data, isSuccess } = useFetchUserQuery();
+  useEffect(() => {
+    console.log(data);
+  });
   return (
     <div className="my-account grow ">
       <div className="account flex flex-col">
@@ -10,9 +18,9 @@ const MyInfor = (props: Props) => {
 
         <div className="account-content relative -top-5 bg-[#fff] mx-4 rounded-md">
           <div className="account-avatar absolute -top-[60px] left-[calc(50%-60px)] h-[120px] w-[120px] bg-[#fff] rounded-full border-[5px] border-white">
-            <div className="avatar ">
+            <div className="avatar">
               <div>
-                <img className="" src="/logo_icon.png" />
+                <img className="w-full rounded-full" src={user.avatar} />
               </div>
               <div className="image-upload">
                 <label className="btn-change-photo" htmlFor="file-input"></label>
@@ -53,19 +61,20 @@ const MyInfor = (props: Props) => {
                   />
                 </div>
                 <div className="item-profile w-[50%] my-3">
-                  <label className="block py-2 text-[#959393]">Số điện thoại</label>
+                  <label className="block py-2 text-[#959393]">Tài khoản</label>
                   <input
                     className="w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none"
                     type="text"
+                    defaultValue={user.account}
                   />
                 </div>
-                <div className="item-profile w-[50%] my-3">
+                {/* <div className="item-profile w-[50%] my-3">
                   <label className="block py-2 text-[#959393]">Email</label>
                   <input
                     className="w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none"
                     type="text"
                   />
-                </div>
+                </div> */}
                 <div className="item-profile w-[50%] my-3">
                   <label className="block py-2 text-[#959393]">Giới tính</label>
                   <input

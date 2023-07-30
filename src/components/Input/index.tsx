@@ -8,12 +8,7 @@ type Props = {
   type?: string;
   name?: NameInput;
   typeInput?: string;
-  register?: UseFormRegister<{
-    password: string;
-    account: string;
-    username: string;
-    confirmpassword: string;
-  }>;
+  register?: UseFormRegister<any>;
   error?: string;
 };
 
@@ -24,7 +19,7 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
       <input
         className={`p-0 ${
           type === 'auth' &&
-          'border-transparent border border-b-[#d6cdbc] text-sm outline-none   py-[10px] w-full'
+          'border-transparent border border-b-[#d6cdbc] text-sm outline-none py-[10px] w-full'
         } 
         ${
           type === 'search' &&

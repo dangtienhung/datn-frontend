@@ -3,7 +3,7 @@ import { Button, Input } from '../../components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
-import Register, { RegisterSchema } from '../../validate/Form';
+import { Register, RegisterSchema } from '../../validate/Form';
 import { useRegisterMutation } from '../../api/Auth';
 import { useEffect } from 'react';
 
