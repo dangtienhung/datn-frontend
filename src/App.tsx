@@ -1,28 +1,24 @@
 'use client';
 
-// import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { MyInfor, MyOrder, MyVoucher } from './components';
 
-// import { MdDashboard } from 'react-icons/md';
-// import { Tabs } from 'flowbite-react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AccountLayout from './layouts/AccountLayout/accountLayout';
+import AdminLayout from './layouts/admin';
+import Categories from './pages/admin/Categories/Categories';
+import Checkout from './pages/Checkout/Checkout';
+import ClientLayout from './layouts/client';
+import Dashboard from './pages/admin/Dashboard/Dashboard';
+import { Flowbite } from 'flowbite-react';
+import HomePage from './pages/Home/HomePage';
+import ProductsList from './pages/admin/Products/Products';
+import ProductsPage from './pages/Products/Products';
 import Signin from './pages/Sign-in/Signin';
 import Signup from './pages/Sign-up/Signup';
-// import HomePage from './pages/Home/home';
-import AccountLayout from './layouts/AccountLayout/accountLayout';
-import { MyInfor, MyOrder, MyVoucher } from './components';
-import ClientLayout from './layouts/client';
-import Checkout from './pages/Checkout/Checkout';
-import ProductsPage from './pages/Products/Products';
-import HomePage from './pages/Home/HomePage';
-import { Flowbite } from 'flowbite-react';
-import theme from './flowbite-theme';
-import AdminLayout from './layouts/admin';
-import UserList from './pages/admin/Users/Users';
-import Dashboard from './pages/admin/Dashboard/Dashboard';
-import ProductsList from './pages/admin/Products/Products';
-import Topping from './pages/admin/Toppings/Topping';
 import Sizes from './pages/admin/Sizes/Sizes';
-import Categories from './pages/admin/Categories/Categories';
+import Topping from './pages/admin/Toppings/Topping';
+import UserList from './pages/admin/Users/Users';
+import theme from './flowbite-theme';
 
 const App = () => {
   return (
