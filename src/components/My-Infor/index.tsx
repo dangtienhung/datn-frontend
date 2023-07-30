@@ -1,16 +1,11 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { useFetchUserQuery } from '../../api/User';
-import { useEffect } from 'react';
 
 type Props = {};
 
 const MyInfor = (props: Props) => {
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
-  const { data, isSuccess } = useFetchUserQuery();
-  useEffect(() => {
-    console.log(data);
-  });
+
   return (
     <div className="my-account grow ">
       <div className="account flex flex-col">
