@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '..';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 type Props = {};
 
 const Header = (props: Props) => {
+  const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+
   return (
     <div className="header flex justify-between items-center px-4 py-2 ">
       <div className="logo hidden md:block">
@@ -21,13 +25,13 @@ const Header = (props: Props) => {
       {/* <div className="btn bg-[#d8b979] text-white px-4 py-1 rounded-2xl text-[14px] cursor-pointer">
         <Link to="/signin">Đăng nhập</Link>
       </div> */}
-      
+
       {/* Nếu tồn tại user */}
       <div>
         <Link to="/account-layout">
           <img
             className="w-[30px] h-[30px] rounder-full mr-[8px] object-cover"
-            src="/logo_icon.png"
+            src={user.avatar}
             alt=""
           />
         </Link>

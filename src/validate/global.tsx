@@ -17,4 +17,11 @@ Yup.addMethod<Yup.StringSchema>(Yup.string, 'checkLength', function (message) {
   });
 });
 
+Yup.addMethod<Yup.StringSchema>(Yup.string, 'checkEmpty', function (message) {
+  return this.test('empty', message, function (value) {
+    const { path, createError } = this;
+    return value?.length == 0 || createError({ path, message: message });
+  });
+});
+
 export default Yup;

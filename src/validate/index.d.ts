@@ -7,5 +7,6 @@ declare module 'yup' {
   > extends yup.BaseSchema<TType, TContext, TOut> {
     regexMatch(message: string): StringSchema<TType, TContext>;
     checkLength(message: string): StringSchema<TType, TContext>;
+    checkEmpty(message: string): StringSchema<TType, TContext>;
   }
 }
