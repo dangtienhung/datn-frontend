@@ -1,13 +1,18 @@
-import React, { useRef } from 'react';
-import { FaAngleDown, FaArrowDown } from 'react-icons/fa';
-import ListProductItem from '../List-ProductItem';
-import { Button } from '..';
-import { FaBars } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import CardOrder from '../Card-Order';
-type Props = {};
+import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa';
 
-const ListProducts = (props: Props) => {
+import { Button } from '..';
+import CardOrder from '../Card-Order';
+import { ICategory } from '../../interfaces/category.type';
+import { IProduct } from '../../interfaces/products.type';
+import { Link } from 'react-router-dom';
+import ListProductItem from '../List-ProductItem';
+import { useRef } from 'react';
+
+interface ListProductsProps {
+  products: ICategory;
+}
+
+const ListProducts = ({ products }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null);
   const toggleOrder = () => {
     orderRef.current?.classList.toggle('show_order');
@@ -17,48 +22,18 @@ const ListProducts = (props: Props) => {
       <div className="pb-[160px]">
         <div className="category ">
           <div className="category-name flex items-center justify-between px-[20px] py-[16px]">
-            <div className="">Món nổi bật</div>
+            <div className="text-lg capitalize select-none">{products.name}</div>
             <div className="right">
               <FaAngleDown />
             </div>
           </div>
-
-          <div className="list-product flex justify-between flex-wrap mx-3 xl:mx-0">
-            <ListProductItem />
-            <ListProductItem />
-            <ListProductItem />
-          </div>
-        </div>
-
-        <div className="category ">
-          <div className="category-name flex items-center justify-between px-[20px] py-[16px]">
-            <div className="">Món nổi bật</div>
-            <div className="right">
-              <FaAngleDown />
-            </div>
-          </div>
-
-          <div className="list-product flex justify-between flex-wrap mx-3 xl:mx-0">
-            <ListProductItem />
-            <ListProductItem />
-            <ListProductItem />
-            <ListProductItem />
-          </div>
-        </div>
-
-        <div className="category ">
-          <div className="category-name flex items-center justify-between px-[20px] py-[16px]">
-            <div className="">Món không nổi bật</div>
-            <div className="right">
-              <FaAngleDown />
-            </div>
-          </div>
-
-          <div className="list-product flex justify-between flex-wrap mx-3 xl:mx-0">
-            <ListProductItem />
-            <ListProductItem />
-            <ListProductItem />
-            <ListProductItem />
+          <div className="list-product xl:mx-0 lg:grid-cols-3 grid grid-cols-2 gap-3">
+            {products &&
+              products?.products &&
+              products?.products?.length > 0 &&
+              products?.products?.map((product: IProduct) => (
+                <ListProductItem key={product._id} product={product} />
+              ))}
           </div>
         </div>
       </div>
