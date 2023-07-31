@@ -6,7 +6,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const { accessToken } = (getState() as RootState).persistedReducer.auth.user;
+    const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken;
 
     if (accessToken) {
       headers.set('authorization', `Bearer ${accessToken}`);

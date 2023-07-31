@@ -1,4 +1,5 @@
 import { UseFormRegister } from 'react-hook-form';
+import style from './clearOutline.module.css';
 
 type NameInput = 'password' | 'account' | 'username' | 'confirmpassword' | any;
 
@@ -17,9 +18,9 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
     <div className="flex items-center gap-x-3 flex-col">
       {prefix && prefix}
       <input
-        className={`p-0 ${
+        className={`p-0  ${
           type === 'auth' &&
-          'border-transparent border border-b-[#d6cdbc] text-sm outline-none py-[10px] w-full'
+          'border-transparent border border-b-[#d6cdbc] text-sm outline-none py-[10px] w-full focus:ring-0'
         } 
         ${
           type === 'search' &&

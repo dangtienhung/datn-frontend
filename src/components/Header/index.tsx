@@ -31,7 +31,7 @@ const Header = (props: Props) => {
         <Link to="/account-layout">
           <img
             className="w-[30px] h-[30px] rounder-full mr-[8px] object-cover"
-            src={user.avatar}
+            src={user?.avatar}
             alt=""
           />
         </Link>

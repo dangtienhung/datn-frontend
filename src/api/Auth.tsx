@@ -1,9 +1,10 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser, responseUser } from '../interfaces/user.type';
 import baseQueryWithReAuth from './requestRefresh';
 
 export const Auth = createApi({
   reducerPath: 'Auth',
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     register: builder.mutation<void, IUser>({
@@ -20,13 +21,26 @@ export const Auth = createApi({
         method: 'POST',
       }),
     }),
-    logout: builder.mutation<void, void>({
+    // logout: builder.mutation<void, void>({
+    //   query: () => ({
+    //     url: '/api/logout',
+    //     method: 'POST',
+    //   }),
+    // }),
+    logout: builder.mutation<any, void>({
       query: () => ({
-        url: '/api/logout',
+        url: '/auth/logout',
         method: 'POST',
+        credential: 'include',
+      }),
+    }),
+    fetchUser: builder.query<responseUser, void>({
+      query: () => ({
+        url: '/auth/getUser',
+        credentials: 'include',
       }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = Auth;
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation, useFetchUserQuery } = Auth;

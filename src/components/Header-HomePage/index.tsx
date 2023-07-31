@@ -1,16 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
+import { Auth, useFetchUserQuery } from '../../api/Auth';
 
 type Props = {};
 
 const HeaderHomePage = (props: Props) => {
+  const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery();
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
   const menuRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const toggleMenu = () => {
     menuRef.current?.classList.toggle('show__menu');
     overlayRef.current?.classList.toggle('hidden');
   };
+
   return (
     <header className="w-full absolute z-[99] py-3 px-5 md:px-10 lg:px-0 ">
       <div className="container my-0 mx-auto flex items-center justify-between ">
@@ -22,7 +28,7 @@ const HeaderHomePage = (props: Props) => {
               alt=""
             />
           </Link>
-          
+
           <nav ref={menuRef} className="menu md:hidden md:static lg:block ml-[30px] text-white ">
             <div
               className="btn-close flex items-center justify-end mt-4 mb-6 pr-8 md:hidden uppercase text-sm font-semibold cursor-pointer"

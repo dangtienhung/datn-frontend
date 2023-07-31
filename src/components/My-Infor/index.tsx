@@ -15,7 +15,7 @@ const MyInfor = (props: Props) => {
           <div className="account-avatar absolute -top-[60px] left-[calc(50%-60px)] h-[120px] w-[120px] bg-[#fff] rounded-full border-[5px] border-white">
             <div className="avatar">
               <div>
-                <img className="w-full rounded-full" src={user.avatar} />
+                <img className="w-full rounded-full" src={user?.avatar} />
               </div>
               <div className="image-upload">
                 <label className="btn-change-photo" htmlFor="file-input"></label>
@@ -60,7 +60,7 @@ const MyInfor = (props: Props) => {
                   <input
                     className="w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none"
                     type="text"
-                    defaultValue={user.account}
+                    defaultValue={user?.account}
                   />
                 </div>
                 {/* <div className="item-profile w-[50%] my-3">

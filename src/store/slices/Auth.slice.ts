@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { responseUser } from '../../interfaces/user.type';
 import { Auth } from '../../api/Auth';
+import { ApiUser } from '../../api/User';
 
 const initialState: responseUser = {
   user: {
@@ -30,9 +31,14 @@ const AuthSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(Auth.endpoints.login.matchFulfilled, (state, { payload }) => {
-      state.user = payload.user;
-    });
+    builder.addMatcher(
+      isAnyOf(Auth.endpoints.login.matchFulfilled, Auth.endpoints.fetchUser.matchFulfilled),
+      (state, { payload }) => {
+        if (payload.user) {
+          state.user = payload.user;
+        }
+      }
+    );
     builder.addMatcher(Auth.endpoints.logout.matchFulfilled, (state) => {
       state.user = {};
     });
