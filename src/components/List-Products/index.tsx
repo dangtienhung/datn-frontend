@@ -82,9 +82,9 @@ const ListProducts = ({ products }: ListProductsProps) => {
         </div>
 
         {/* Category aside responsive */}
-        <div className="btn-menu fixed bottom-[100px] left-[16px] bg-[#ee4d2d] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center cursor-pointer z-[3]">
+        {/* <div className="btn-menu fixed bottom-[100px] left-[16px] bg-[#ee4d2d] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center cursor-pointer z-[3]">
           <FaBars />
-        </div>
+        </div> */}
       </div>
     </div>
   );

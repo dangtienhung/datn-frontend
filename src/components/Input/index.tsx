@@ -15,7 +15,9 @@ type Props = {
 
 const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: Props) => {
   return (
-    <div className="flex items-center gap-x-3 flex-col">
+    <div
+      className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}
+    >
       {prefix && prefix}
       <input
         className={`p-0  ${
@@ -24,7 +26,7 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
         } 
         ${
           type === 'search' &&
-          ' w-[500px] bg-[#fbfbfb] h-[32px] text-[14px] rounded-e-2xl focus:outline-none border-none'
+          'w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem]'
         }`}
         autoComplete="off"
         placeholder={placeholder && placeholder}

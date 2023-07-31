@@ -19,11 +19,12 @@ const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
   let result = await baseQuery(args, api, extraOptions);
 
   if (result.meta?.response?.status === 403) {
-    const refreshToken = await baseQuery('/api/refreshToken', api, extraOptions);
+    //AccessToken Hết hạn
+    const refreshToken = await baseQuery('/api/refreshToken', api, extraOptions); // Request refreshToken
 
     if (refreshToken.data) {
       const { user } = api.getState().persistedReducer.auth;
-      api.dispatch(refreshUser({ ...refreshToken.data, user }));
+      api.dispatch(refreshUser({ ...refreshToken.data, user })); // Cấp lại AccessToken
     }
   }
   return result;

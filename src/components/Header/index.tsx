@@ -11,13 +11,13 @@ const Header = (props: Props) => {
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
 
   return (
-    <div className="header flex justify-between items-center px-4 py-2 ">
-      <div className="logo hidden md:block">
+    <div className="header flex justify-between items-center px-4 py-2 gap-2">
+      <div className="logo hidden lg:block">
         <img src="/logo.png" alt="" className="w-[150px]" />
       </div>
-      <div className="search flex justify-between items-center bg-[#fbfbfb] rounded-2xl ">
+      <div className="search w-full lg:flex items-center justify-center">
         <Input
-          prefix={<AiOutlineSearch className="text-xl mx-2 text-[#bebec2] " />}
+          prefix={<AiOutlineSearch className="text-xl ml-2 text-[#bebec2] absolute" />}
           type="search"
           placeholder="Tìm kiếm sản phẩm..."
         />
