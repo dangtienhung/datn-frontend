@@ -1,6 +1,15 @@
 import { FaBars } from 'react-icons/fa';
 import { ICategory } from '../../interfaces/category.type';
-import { Divider, List, ListItem, ListItemText, Paper, Popover, Typography } from '@mui/material';
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Popover,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { Fragment, useState } from 'react';
 
 interface SidebarCateProps {
@@ -9,6 +18,8 @@ interface SidebarCateProps {
 }
 
 const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
+  console.log(categories);
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: any) => {
@@ -76,7 +87,7 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
             {categories &&
               categories?.length > 0 &&
               categories?.map((category: ICategory) => (
-                <div key={category._id}>
+                <Stack key={category._id} onClick={handleClose}>
                   <ListItem>
                     <ListItemText
                       className="cursor-pointer"
@@ -97,7 +108,7 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
                     />
                   </ListItem>
                   <Divider sx={{ marginLeft: '16px' }} />
-                </div>
+                </Stack>
               ))}
           </List>
         </Paper>
