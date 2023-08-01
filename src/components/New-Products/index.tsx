@@ -10,7 +10,7 @@ import { getAllProducts } from '../../store/services/product.service';
 
 const NewProducts = () => {
   const dispatch = useAppDispatch();
-  const { products } = useAppSelector((state: RootState) => state.products);
+  const { products } = useAppSelector((state: RootState) => state.persistedReducer.products);
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);

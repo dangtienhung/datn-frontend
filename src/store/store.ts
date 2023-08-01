@@ -11,6 +11,9 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { productReducer } from './slices/product.slice';
+import { Auth } from '../api/Auth';
+import AuthReducer from './slices/Auth.slice';
+import { ApiUser } from '../api/User';
 
 const persistConfig = {
   key: 'root',
@@ -20,18 +23,25 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   products: productReducer,
+  auth: AuthReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    persistedReducer,
+    [Auth.reducerPath]: Auth.reducer,
+    [ApiUser.reducerPath]: ApiUser.reducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    })
+      .concat(Auth.middleware)
+      .concat(ApiUser.middleware),
 });
 
 export const persistor = persistStore(store);

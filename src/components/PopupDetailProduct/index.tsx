@@ -225,6 +225,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                             type="checkbox"
                             name={item.name}
                             value={item.price}
+                            checked={checkedToppings.includes(item.name)}
                           />
                           <span
                             className={`${styles.checkmark_checkbox} group-hover:bg-[#ccc]`}

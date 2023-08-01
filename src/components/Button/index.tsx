@@ -11,7 +11,7 @@ type Props = {
 const Button = ({ children, type, size, shape, style }: Props) => {
   return (
     <button
-      className={`bg-[#d8b979] text-sm  uppercase 
+      className={`bg-[#d8b979] mb-1 text-sm  uppercase 
       ${type === 'auth' || type === 'checkout' || type === 'paying' || !type ? 'text-white' : ''}
       ${type === 'auth' || type === 'checkout' || !type ? 'uppercase' : 'capitalize'}
       ${type === 'checkout' && 'bg-[#ee4d2d]'}
