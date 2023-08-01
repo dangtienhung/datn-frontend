@@ -12,9 +12,14 @@ const Signup = (props: Props) => {
             <img src="/logo.png" alt="" className="w-[200px] mb-5" />
           </div>
           <form action="" className="flex flex-col">
-            <Input type="auth" placeholder="Nhập số điện thoại của bạn" />
-            <Input type="auth" placeholder="Nhập mật khẩu của bạn" />
-            <Input type="auth" placeholder="Nhập lại mật khẩu của bạn" />
+            <Input inputType="text" type="auth" placeholder="Nhập username của bạn" />
+
+            <Input inputType="text" type="auth" placeholder="Nhập email của bạn" />
+
+            <Input inputType="password" type="auth" placeholder="Nhập mật khẩu của bạn" />
+
+            <Input inputType="password" type="auth" placeholder="Nhập lại mật khẩu của bạn" />
+
             <Button type="auth" size="large" shape="circle">
               Đăng kí
             </Button>

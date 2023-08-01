@@ -1,8 +1,7 @@
 import { Button, Input } from '../../components';
 import { Link } from 'react-router-dom';
-type Props = {};
 
-const Signin = (props: Props) => {
+const Signin = () => {
   return (
     <div className="background-container">
       <div className="flex items-center justify-center h-full">
@@ -11,8 +10,10 @@ const Signin = (props: Props) => {
             <img src="/logo.png" alt="" className="w-[200px] mb-5" />
           </div>
           <form action="" className="flex flex-col">
-            <Input type="auth" placeholder="Nhập số điện thoại của bạn" />
-            <Input type="auth" placeholder="Nhập mật khẩu của bạn" />
+            <Input inputType="email" type="auth" placeholder="Nhập email của bạn" />
+
+            <Input inputType="password" type="auth" placeholder="Nhập mật khẩu của bạn" />
+
             <div className="text-right mt-4 font-bold text-[#d4b774] text-sm">Quên mật khẩu?</div>
             <Button type="auth" size="large" shape="circle">
               Đăng nhập

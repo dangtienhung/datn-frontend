@@ -2,14 +2,16 @@ type Props = {
   placeholder?: string;
   prefix?: React.ReactNode;
   type?: string;
+  inputType?: 'text' | 'email' | 'password' | 'number';
 };
 
-const Input = ({ placeholder, type, prefix }: Props) => {
+const Input = ({ placeholder, type, prefix, inputType }: Props) => {
   return (
     <div className="flex items-center gap-x-3">
       {prefix && prefix}
       <input
-        className={`p-0 ${
+        type={inputType}
+        className={`p-0 mb-1 !outline-none ${
           type === 'auth' &&
           'border-transparent border border-b-[#d6cdbc] text-sm outline-none   py-[10px] w-full'
         } 
