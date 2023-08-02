@@ -19,3 +19,11 @@ export type Register = Yup.InferType<typeof RegisterSchema>;
 export type Login = Yup.InferType<typeof LoginSchema>;
 
 // export default Register;
+
+//size schema
+export const SizeSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+  price: Yup.string().required('Price is required'),
+});
+
+export type SizeForm = Yup.InferType<typeof SizeSchema>;

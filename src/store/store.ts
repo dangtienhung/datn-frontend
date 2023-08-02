@@ -14,16 +14,18 @@ import { productReducer } from './slices/product.slice';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
 import { ApiUser } from '../api/User';
+import { sizeReducer } from './slices/size.slice';
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  blacklist: ['size'],
 };
-
 const rootReducer = combineReducers({
   products: productReducer,
   auth: AuthReducer,
+  size: sizeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
