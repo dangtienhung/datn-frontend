@@ -17,3 +17,4 @@ export const ApiUser = createApi({
 });
 
 export const { useFetchUserQuery } = ApiUser;
+export const SizeReducer = ApiUser.reducer;

@@ -19,6 +19,8 @@ import Sizes from './pages/admin/Sizes/Sizes';
 import Topping from './pages/admin/Toppings/Topping';
 import UserList from './pages/admin/Users/Users';
 import theme from './flowbite-theme';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
@@ -59,6 +61,7 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </Flowbite>
   );
 };
