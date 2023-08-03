@@ -31,7 +31,7 @@ const Sizes = () => {
 
   useEffect(() => {
     dispatch(getAllSizes());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

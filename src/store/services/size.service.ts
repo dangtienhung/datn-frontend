@@ -1,4 +1,4 @@
-import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit';
+import { createAsyncThunk  } from '@reduxjs/toolkit';
 import http from '../../api/instance';
 import { ISize } from '../../interfaces/size.type';
 

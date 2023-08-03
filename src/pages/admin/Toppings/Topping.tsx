@@ -1,6 +1,6 @@
 import { Breadcrumb, Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   HiChevronLeft,
   HiChevronRight,
@@ -14,10 +14,20 @@ import {
   HiPlus,
   HiTrash,
 } from 'react-icons/hi';
+import {
+  useCreateToppingMutation,
+  useDeleteToppingMutation,
+  useGetAllToppingQuery,
+  useUpdateToppingMutation,
+} from '../../../api/topping';
+import { ITopping } from '../../../interfaces/topping.type';
+import { useForm } from 'react-hook-form';
+import { SizeSchema } from '../../../validate/Form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
-type Props = {};
-
-const Topping: FC = (props: Props) => {
+const Topping = () => {
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
@@ -100,6 +110,31 @@ const Topping: FC = (props: Props) => {
 };
 
 const ToppingTable = () => {
+  const { data: dataTopping, isLoading, isSuccess, isError } = useGetAllToppingQuery();
+  // console.log(dataTopping)
+  const [deleteTopping, responDelete] = useDeleteToppingMutation();
+  const handleDeleteTopping = (id: string) => {
+    if (!responDelete.isError) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Do you want to delete this size?',
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted',
+          }).then(async () => {
+            await deleteTopping(id);
+          });
+        }
+      });
+    } else {
+      toast.error('Delete failed!');
+    }
+  };
+  if (isLoading) return <div>Loading.....</div>;
+  if (isError) return <div>Loi roi</div>;
   return (
     <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700">
@@ -116,36 +151,40 @@ const ToppingTable = () => {
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((_, index: number) => (
-          <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Table.Cell className="w-4 p-4">
-              <div className="flex items-center">
-                <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
-                <label htmlFor="checkbox-1" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              Ice
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              5000
-            </Table.Cell>
+        {dataTopping?.data &&
+          dataTopping.data.map((item, index: number) => (
+            <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Table.Cell className="w-4 p-4">
+                <div className="flex items-center">
+                  <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
+                  <label htmlFor="checkbox-1" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                {item.name}
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                {item.price}
+              </Table.Cell>
 
-            <Table.Cell>
-              <div className="flex items-center gap-x-3 whitespace-nowrap">
-                <EditToppingModal />
-                <Button color="failure">
-                  <div className="flex items-center gap-x-2">
-                    <HiTrash className="text-lg" />
-                    Delete Topping
-                  </div>
-                </Button>
-              </div>
-            </Table.Cell>
-          </Table.Row>
-        ))}
+              <Table.Cell>
+                <div className="flex items-center gap-x-3 whitespace-nowrap">
+                  <EditToppingModal dataTopping={item} />
+                  <Button color="failure">
+                    <div
+                      onClick={() => handleDeleteTopping(item._id)}
+                      className="flex items-center gap-x-2"
+                    >
+                      <HiTrash className="text-lg" />
+                      Delete Topping
+                    </div>
+                  </Button>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          ))}
       </Table.Body>
     </Table>
   );
@@ -153,6 +192,30 @@ const ToppingTable = () => {
 
 const AddToppingModal: FC = function () {
   const [isOpen, setOpen] = useState(false);
+  const [createTopping, responCreateTopping] = useCreateToppingMutation();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm<Pick<ITopping, 'name' | 'price'>>({
+    mode: 'onChange',
+    resolver: yupResolver(SizeSchema),
+  });
+
+  const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
+    if (data) {
+      await createTopping(data);
+      if (!responCreateTopping.isError) {
+        toast.success(`Topping ${data.name}  added✔`);
+        setOpen(false);
+        reset();
+      } else {
+        toast.error('Add Topping failed!');
+      }
+    }
+  });
 
   return (
     <>
@@ -167,23 +230,32 @@ const AddToppingModal: FC = function () {
           <strong>Add new Topping</strong>
         </Modal.Header>
         <Modal.Body>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <Label htmlFor="firstName">Name Topping</Label>
               <div className="mt-1">
-                <TextInput id="firstName" name="firstName" placeholder="Bonnie" />
+                <TextInput {...register('name')} id="firstName" placeholder="Bonnie" />
+                {errors && <span className="text-red-500 text-[13px]">{errors.name?.message}</span>}
               </div>
             </div>
             <div>
               <Label htmlFor="lastName">Price</Label>
               <div className="mt-1">
-                <TextInput id="lastName" name="lastName" placeholder="Green" />
+                <TextInput id="lastName" {...register('price')} placeholder="10" />
+                {errors && (
+                  <span className="text-red-500 text-[13px]">{errors.price?.message}</span>
+                )}
               </div>
             </div>
-          </div>
+          </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="primary" onClick={() => setOpen(false)}>
+          <Button
+            color="primary"
+            onClick={() => {
+              handleAdd();
+            }}
+          >
             Add Topping
           </Button>
         </Modal.Footer>
@@ -192,9 +264,37 @@ const AddToppingModal: FC = function () {
   );
 };
 
-const EditToppingModal: FC = function () {
+const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
   const [isOpen, setOpen] = useState(false);
+  const [updateTopping, responUpdate] = useUpdateToppingMutation();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+    reset,
+  } = useForm<Pick<ITopping, 'name' | 'price'>>({
+    mode: 'onChange',
+    resolver: yupResolver(SizeSchema),
+  });
 
+  useEffect(() => {
+    setValue('price', dataTopping.price);
+    setValue('name', dataTopping.name);
+  }, [dataTopping.name, dataTopping.price, setValue]);
+
+  const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
+    if (data) {
+      await updateTopping({ ...data, _id: dataTopping._id });
+      if (!responUpdate.isError) {
+        toast.success(`Size ${data.name}  Update✔`);
+        setOpen(false);
+        reset();
+      } else {
+        toast.error('Update Topping failed!');
+      }
+    }
+  });
   return (
     <>
       <Button color="primary" onClick={() => setOpen(true)}>
@@ -208,23 +308,32 @@ const EditToppingModal: FC = function () {
           <strong>Edit Topping</strong>
         </Modal.Header>
         <Modal.Body>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <Label htmlFor="firstName">Name Topping</Label>
               <div className="mt-1">
-                <TextInput id="firstName" name="firstName" placeholder="Bonnie" />
+                <TextInput {...register('name')} id="firstName" placeholder="Bonnie" />
+                {errors && <span className="text-red-500 text-[13px]">{errors.name?.message}</span>}
               </div>
             </div>
             <div>
               <Label htmlFor="lastName">Price</Label>
               <div className="mt-1">
-                <TextInput id="lastName" name="lastName" placeholder="Green" />
+                <TextInput id="lastName" {...register('price')} placeholder="10" />
+                {errors && (
+                  <span className="text-red-500 text-[13px]">{errors.price?.message}</span>
+                )}
               </div>
             </div>
-          </div>
+          </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="primary" onClick={() => setOpen(false)}>
+          <Button
+            color="primary"
+            onClick={() => {
+              handleAdd();
+            }}
+          >
             Edit Topping
           </Button>
         </Modal.Footer>
