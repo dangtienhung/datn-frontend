@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
 import { addSize, deleteSize, getAllSizes, updateSize } from '../../../store/services/size.service';
 import { ISize } from '../../../interfaces/size.type';
+import Loading from '../../../components/Loading';
 
 const Sizes = () => {
   // const { data: sizes, error, isLoading } = useFetchSizeQuery();
@@ -138,7 +139,7 @@ const SizesTable = ({ sizes, error, isLoading }: SizeTableProps) => {
     }
   };
 
-  if (isLoading) return <div>Loading.....</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Loi roi</div>;
   return (
     <>

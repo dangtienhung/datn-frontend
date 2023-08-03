@@ -1,26 +1,17 @@
-import { Breadcrumb, Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
+import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi';
+import { ITopping } from '../../../interfaces/topping.type';
+import Loading from '../../../components/Loading';
+import { formatCurrency } from '../../../utils/formatCurrency';
 
-type Props = {};
-
-const Topping: FC = (props: Props) => {
+const Topping: FC = () => {
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
         <div className="mb-1 w-full">
           <div className="mb-4">
-            {/* <Breadcrumb className="mb-4">
-              <Breadcrumb.Item href="#">
-                <div className="flex items-center gap-x-3">
-                  <HiHome className="text-xl" />
-                  <span className="dark:text-white">Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item href="/users/list">Users</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-            </Breadcrumb> */}
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
               All toppings
             </h1>
@@ -99,12 +90,10 @@ const ToppingTable = () => {
         </Table.HeadCell>
         <Table.HeadCell>Name</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
-        {/* <Table.HeadCell>Country</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell> */}
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((_, index: number) => (
+        {[0, 1, 2, 3, 4, 5, 6, 8, 9, 10].map((_, index: number) => (
           <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
             <Table.Cell className="w-4 p-4">
               <div className="flex items-center">
@@ -114,11 +103,11 @@ const ToppingTable = () => {
                 </label>
               </div>
             </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              Ice
+            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
+              abc
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              5000
+              1000
             </Table.Cell>
 
             <Table.Cell>

@@ -1,8 +1,9 @@
 export interface ITopping {
-  _id: string;
+  _id?: string;
   name: string;
-  slug: string;
+  slug?: string;
   price: number;
-  createdAt: string;
-  updatedAt: string;
+  products?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }

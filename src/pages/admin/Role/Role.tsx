@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { RoleForm, RoleSchema } from '../../../validate/Form';
 import http from '../../../api/instance';
 import { toast } from 'react-toastify';
+import Loading from '../../../components/Loading';
 
 const Role = () => {
   const dispatch = useAppDispatch();
@@ -120,7 +121,7 @@ const RoleTable = ({ roles, isLoading, error }: RoleTableProps) => {
     });
   };
   // console.log(idRole);
-  if (isLoading) return <div>Loading.....</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Loi roi</div>;
   return (
     <>
