@@ -1,30 +1,39 @@
-import { Button, Checkbox, Label, Modal, Select, Table, TextInput } from 'flowbite-react';
-import { useState } from 'react';
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { IRole } from '../../../interfaces/role.type';
-
-import Swal from 'sweetalert2';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { RoleForm, RoleSchema } from '../../../validate/Form';
-import { toast } from 'react-toastify';
-import Loading from '../../../components/Loading';
+import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
+import { useEffect, useState } from 'react';
 import {
-  useAddRoleMutation,
-  useDeleteRoleMutation,
-  useGetAllRolesQuery,
-  useUpdateRoleMutation,
-} from '../../../api/role';
+  HiCog,
+  HiDotsVertical,
+  HiExclamationCircle,
+  HiPlus,
+  HiTrash,
+  HiPencil,
+} from 'react-icons/hi';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import {
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useGetAllVouchersQuery,
+  useUpdateVoucherMutation,
+} from '../../../api/voucher';
+import { useForm } from 'react-hook-form';
+import { VoucherForm, VoucherSchema } from '../../../validate/Form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { formatCurrency } from '../../../utils/formatCurrency';
+import { toast } from 'react-toastify';
+import { IVoucher } from '../../../interfaces/voucher.type';
+import Swal from 'sweetalert2';
+import Loading from '../../../components/Loading';
+import formatDate from '../../../utils/formatDate';
+type Props = {};
 
-const Role = () => {
+const Voucher = (props: Props) => {
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
         <div className="mb-1 w-full">
           <div className="mb-4">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-              All roles
+              All Vouchers
             </h1>
           </div>
           <div className="sm:flex">
@@ -69,7 +78,7 @@ const Role = () => {
               </div>
             </div>
             <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
-              <AddRoleModal />
+              <AddVoucherModal />
             </div>
           </div>
         </div>
@@ -78,7 +87,7 @@ const Role = () => {
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
-              <RoleTable />
+              <VouchersTable />
             </div>
           </div>
         </div>
@@ -88,14 +97,15 @@ const Role = () => {
   );
 };
 
-const RoleTable = () => {
-  const { data: roles, isLoading, isError } = useGetAllRolesQuery();
-  const [deleteRole, { isLoading: isDeleting, isError: isDeleteErr }] = useDeleteRoleMutation();
+const VouchersTable = () => {
+  const { data: vouchers, isLoading, isError } = useGetAllVouchersQuery();
+  const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] =
+    useDeleteVoucherMutation();
 
   const handleDelete = (id: string) => {
     Swal.fire({
       icon: 'question',
-      title: 'Do you want to delete this role?',
+      title: 'Do you want to delete this voucher?',
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -103,9 +113,9 @@ const RoleTable = () => {
           icon: 'success',
           title: 'Deleted',
         }).then(() =>
-          deleteRole(id).then(() => {
+          deleteVoucher(id).then(() => {
             if (!isDeleteErr) {
-              toast.success('Delete success');
+              toast.success('Deleted success');
             } else {
               toast.error('Delete failed');
             }
@@ -114,9 +124,7 @@ const RoleTable = () => {
       }
     });
   };
-
   if (isLoading) return <Loading />;
-  if (isError) return <div>Loi roi</div>;
   return (
     <>
       <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -127,13 +135,17 @@ const RoleTable = () => {
             </Label>
             <Checkbox id="select-all" name="select-all" />
           </Table.HeadCell>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>Code</Table.HeadCell>
+          <Table.HeadCell>Discount</Table.HeadCell>
+          <Table.HeadCell>Sale</Table.HeadCell>
+          <Table.HeadCell>Start Date</Table.HeadCell>
+          <Table.HeadCell>End Date</Table.HeadCell>
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-          {roles &&
-            roles.data?.map((item) => (
+          {vouchers &&
+            vouchers.data.docs.length > 0 &&
+            vouchers.data.docs.map((item: IVoucher) => (
               <Table.Row key={item._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Table.Cell className="w-4 p-4">
                   <div className="flex items-center">
@@ -143,24 +155,34 @@ const RoleTable = () => {
                     </label>
                   </div>
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-                  {item.name}
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {item.code}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-                  {item.status}
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {item.discount}%
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatCurrency(item.sale)}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatDate(item.startDate!)}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatDate(item.endDate!)}
                 </Table.Cell>
 
                 <Table.Cell>
                   <div className="flex items-center gap-x-3 whitespace-nowrap">
-                    <EditRoleModal role={item} />
+                    {item && <EditVoucherModal voucher={item} />}
+
                     <Button color="failure" onClick={() => handleDelete(item._id!)}>
                       <div className="flex items-center gap-x-2">
-                        {isDeleting ? (
+                        {isDelteLoading ? (
                           <AiOutlineLoading3Quarters className="text-lg rotate" />
                         ) : (
                           <HiTrash className="text-lg" />
                         )}
-                        Delete Role
+                        Delete Voucher
                       </div>
                     </Button>
                   </div>
@@ -169,46 +191,39 @@ const RoleTable = () => {
             ))}
         </Table.Body>
       </Table>
-      {/* {idRole && (
-        <EditRoleModal isOpen={isEditPopupOpen} togglePopup={togglePopup} idRole={idRole} />
-      )} */}
     </>
   );
 };
 
-const AddRoleModal = function () {
-  const [addRole, { isLoading, isError }] = useAddRoleMutation();
-  const [isOpen, setOpen] = useState(false);
-
+const AddVoucherModal = function () {
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [addVoucher, { isLoading, isSuccess }] = useAddVoucherMutation();
   const {
     register,
-    handleSubmit,
     reset,
+    handleSubmit,
     formState: { errors },
-  } = useForm<RoleForm>({
+  } = useForm<VoucherForm>({
     mode: 'onChange',
-    resolver: yupResolver(RoleSchema),
+    resolver: yupResolver(VoucherSchema),
   });
 
-  const onHandleSubmit = async (data: any) => {
-    await addRole(data);
-    if (!isError) {
-      toast.success(`Added ${data.name} role`);
+  const onhandleSubmit = async (data: any) => {
+    await addVoucher({ code: data.code, discount: data.discount, sale: data.sale });
+    if (!isSuccess) {
+      toast.success(`Added voucher ${data.code}`);
       reset();
-      setOpen(false);
+    } else {
+      toast.success(`Added failed`);
     }
+    setOpen(false);
   };
   return (
     <>
-      <Button
-        color="primary"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
+      <Button color="primary" onClick={() => setOpen(true)}>
         <div className="flex items-center gap-x-3">
           <HiPlus className="text-xl" />
-          Add Role
+          Add Voucher
         </div>
       </Button>
       <Modal
@@ -219,25 +234,43 @@ const AddRoleModal = function () {
         show={isOpen}
       >
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
-          <strong>Add new role</strong>
+          <strong>Add new voucher</strong>
         </Modal.Header>
-        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action="" onSubmit={handleSubmit(onhandleSubmit)}>
           <Modal.Body>
-            <div className="">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <Label htmlFor="firstName">Name Role</Label>
+                <Label htmlFor="firstName">Code</Label>
                 <div className="mt-1">
-                  <TextInput {...register('name')} placeholder="Name of role" />
+                  <TextInput {...register('code')} placeholder="Code" />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.name && errors.name.message}
+                  {errors.code && errors.code.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="firstName">Discount</Label>
+                <div className="mt-1">
+                  <TextInput {...register('discount')} type="number" placeholder="Price" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.discount && errors.discount.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="firstName">Sale</Label>
+                <div className="mt-1">
+                  <TextInput {...register('sale')} type="number" placeholder="Price" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.sale && errors.sale.message}
                 </span>
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" color="primary">
-              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Role'}
+              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Voucher'}
             </Button>
           </Modal.Footer>
         </form>
@@ -246,64 +279,95 @@ const AddRoleModal = function () {
   );
 };
 
-type EditRoleModalProps = {
-  role: IRole;
+type EditVoucherModalProps = {
+  voucher: IVoucher;
 };
-const EditRoleModal = function ({ role }: EditRoleModalProps) {
-  const [isOpen, setOpen] = useState(false);
-  const [updateRole, { isLoading, isError }] = useUpdateRoleMutation();
-
+const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [updateVoucher, { isLoading, isError }] = useUpdateVoucherMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RoleForm>({
+  } = useForm<VoucherForm>({
     mode: 'onChange',
-    resolver: yupResolver(RoleSchema),
+    resolver: yupResolver(VoucherSchema),
     defaultValues: {
-      ...role,
-    },
+      ...voucher,
+    } as any,
   });
 
-  const onHandleSubmit = async (data: any) => {
-    await updateRole(data);
+  const onhaneleSubmit = async (data: any) => {
+    await updateVoucher(data);
     if (!isError) {
-      toast.success(`Updated ${data.name} role`);
+      toast.success('Updated');
       setOpen(false);
     } else {
       toast.error('Update failed');
     }
   };
-
   return (
     <>
       <Button color="primary" onClick={() => setOpen(true)}>
         <div className="flex items-center gap-x-3">
-          <HiPlus className="text-xl" />
-          Edit Role
+          <HiPencil className="text-xl" />
+          Edit Voucher
         </div>
       </Button>
-      <Modal onClose={() => setOpen(false)} show={isOpen}>
+      <Modal
+        onClose={() => {
+          setOpen(false);
+        }}
+        show={isOpen}
+        className="!bg-opacity-20"
+      >
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
-          <strong>Edit Role</strong>
+          <strong>Edit voucher</strong>
         </Modal.Header>
-        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action="" onSubmit={handleSubmit(onhaneleSubmit)}>
           <Modal.Body>
-            <div className="">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <Label htmlFor="firstName">Name Role</Label>
+                <Label htmlFor="code">Code</Label>
                 <div className="mt-1">
-                  <TextInput {...register('name')} placeholder="Name of role" />
+                  <TextInput {...register('code')} id="code" placeholder="Code" />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.name && errors.name.message}
+                  {errors.code && errors.code.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="discount">Discount</Label>
+                <div className="mt-1">
+                  <TextInput
+                    {...register('discount')}
+                    type="number"
+                    id="discount"
+                    placeholder="Discount"
+                  />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.discount && errors.discount.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="sale">Sale</Label>
+                <div className="mt-1">
+                  <TextInput {...register('sale')} type="number" id="sale" placeholder="Sale" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.sale && errors.sale.message}
                 </span>
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" color="primary">
-              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Edit Role'}
+              {isLoading ? (
+                <AiOutlineLoading3Quarters className="text-lg rotate" />
+              ) : (
+                'Edit Voucher'
+              )}
             </Button>
           </Modal.Footer>
         </form>
@@ -311,4 +375,5 @@ const EditRoleModal = function ({ role }: EditRoleModalProps) {
     </>
   );
 };
-export default Role;
+
+export default Voucher;
