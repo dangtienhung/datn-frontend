@@ -6,12 +6,16 @@ import { boolean } from 'yup';
 interface ISizeState {
   sizes: ISize[];
   isLoading: boolean;
+  isAdding: boolean;
+  isUpdating: boolean;
   error: string;
 }
 
 const initialState: ISizeState = {
   sizes: [],
   isLoading: false,
+  isAdding: false,
+  isUpdating: false,
   error: '',
 };
 
@@ -45,24 +49,29 @@ export const sizeSlice = createSlice({
     });
 
     //add size
-    // builder.addCase(addSize.pending, (state)=> {
-    //   state.isLoading =
-    // })
+    builder.addCase(addSize.pending, (state) => {
+      state.isAdding = true;
+    });
     builder.addCase(addSize.fulfilled, (state, action: any) => {
       state.sizes.unshift(action.payload);
+      state.isAdding = false;
     });
     builder.addCase(addSize.rejected, (state, action) => {
       state.error = action.error.message || 'error';
+      state.isAdding = false;
     });
 
     //update size
+    builder.addCase(updateSize.pending, (state) => {
+      state.isUpdating = true;
+    });
     builder.addCase(updateSize.fulfilled, (state, action) => {
       const size = action.payload.data;
       state.sizes = state.sizes.map((item) => (item._id === size._id ? size : item));
+      state.isUpdating = false;
     });
     builder.addCase(updateSize.rejected, (state, action: any) => {
-      console.log(action.payload);
-
+      state.isUpdating = false;
       state.error = action.payload;
     });
   },

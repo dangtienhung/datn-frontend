@@ -15,6 +15,7 @@ import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
 import { ApiUser } from '../api/User';
 import { sizeReducer } from './slices/size.slice';
+import { roleReducer } from './slices/role.slice';
 
 const persistConfig = {
   key: 'root',
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   products: productReducer,
   auth: AuthReducer,
   size: sizeReducer,
+  role: roleReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
