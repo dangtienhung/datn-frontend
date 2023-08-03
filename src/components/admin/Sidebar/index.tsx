@@ -3,16 +3,13 @@ import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import {
   HiChartPie,
-  HiClipboard,
   HiClipboardCheck,
   HiCollection,
-  HiInformationCircle,
-  HiPencil,
   HiSearch,
   HiShoppingBag,
   HiUsers,
 } from 'react-icons/hi';
-import { BiSolidCategoryAlt } from 'react-icons/bi';
+import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi';
 import { ImFontSize } from 'react-icons/im';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -107,6 +104,16 @@ const AdminSidebar: FC = function () {
                 }`}
               >
                 Sizes
+              </Sidebar.Item>
+              <Sidebar.Item
+                // href="/admin/orders"
+                onClick={() => handleRedirect('/admin/role')}
+                icon={BiSolidUserCheck}
+                className={`cursor-pointer ${
+                  '/admin/role' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                }`}
+              >
+                Role
               </Sidebar.Item>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up

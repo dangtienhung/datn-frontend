@@ -27,3 +27,10 @@ export const SizeSchema = Yup.object({
 });
 
 export type SizeForm = Yup.InferType<typeof SizeSchema>;
+
+//role schema
+export const RoleSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+});
+
+export type RoleForm = Yup.InferType<typeof RoleSchema>;

@@ -14,6 +14,7 @@ import Categories from './pages/admin/Categories/Categories';
 import ProductsList from './pages/admin/Products/Products';
 import Topping from './pages/admin/Toppings/Topping';
 import Sizes from './pages/admin/Sizes/Sizes';
+import Role from './pages/admin/Role/Role';
 
 const routes = createBrowserRouter([
   {
@@ -95,6 +96,10 @@ const routes = createBrowserRouter([
       {
         path: 'sizes',
         element: <Sizes />,
+      },
+      {
+        path: 'role',
+        element: <Role />,
       },
     ],
   },
