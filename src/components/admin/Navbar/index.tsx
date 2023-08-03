@@ -1,5 +1,6 @@
-import type { FC } from 'react';
+import { useState, type FC, useEffect } from 'react';
 import { Button, DarkThemeToggle, Navbar } from 'flowbite-react';
+import { useTheme } from 'flowbite-react';
 
 const AdminNavbar: FC = function () {
   return (

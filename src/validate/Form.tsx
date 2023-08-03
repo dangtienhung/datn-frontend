@@ -29,9 +29,7 @@ export const SizeSchema = Yup.object({
 // category schema
 export const CateSchema = Yup.object({
   name: Yup.string().required('Name is required'),
-
 });
-
 
 export type SizeForm = Yup.InferType<typeof SizeSchema>;
 
@@ -41,3 +39,12 @@ export const RoleSchema = Yup.object({
 });
 
 export type RoleForm = Yup.InferType<typeof RoleSchema>;
+
+//voucher
+export const VoucherSchema = Yup.object({
+  code: Yup.string().required('Code is required'),
+  discount: Yup.string().required('Discount is required'),
+  sale: Yup.string().required('Sale is required'),
+});
+
+export type VoucherForm = Yup.InferType<typeof VoucherSchema>;

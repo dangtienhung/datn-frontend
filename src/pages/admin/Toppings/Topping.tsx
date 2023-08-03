@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 
 import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi';
+import Loading from '../../../components/Loading';
+import { formatCurrency } from '../../../utils/formatCurrency';
 
 const Topping = () => {
   return (
@@ -22,16 +24,6 @@ const Topping = () => {
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
         <div className="mb-1 w-full">
           <div className="mb-4">
-            {/* <Breadcrumb className="mb-4">
-              <Breadcrumb.Item href="#">
-                <div className="flex items-center gap-x-3">
-                  <HiHome className="text-xl" />
-                  <span className="dark:text-white">Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item href="/users/list">Users</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-            </Breadcrumb> */}
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
               All toppings
             </h1>
@@ -135,8 +127,6 @@ const ToppingTable = () => {
         </Table.HeadCell>
         <Table.HeadCell>Name</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
-        {/* <Table.HeadCell>Country</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell> */}
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
@@ -163,7 +153,7 @@ const ToppingTable = () => {
                   <EditToppingModal dataTopping={item} />
                   <Button color="failure">
                     <div
-                      onClick={() => handleDeleteTopping(item._id)}
+                      onClick={() => handleDeleteTopping(item._id!)}
                       className="flex items-center gap-x-2"
                     >
                       <HiTrash className="text-lg" />

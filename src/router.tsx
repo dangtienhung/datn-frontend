@@ -15,6 +15,7 @@ import ProductsList from './pages/admin/Products/Products';
 import Topping from './pages/admin/Toppings/Topping';
 import Sizes from './pages/admin/Sizes/Sizes';
 import Role from './pages/admin/Role/Role';
+import Voucher from './pages/admin/Voucher/Voucher';
 
 const routes = createBrowserRouter([
   {
@@ -100,6 +101,10 @@ const routes = createBrowserRouter([
       {
         path: 'role',
         element: <Role />,
+      },
+      {
+        path: 'voucher',
+        element: <Voucher />,
       },
     ],
   },

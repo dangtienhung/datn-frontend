@@ -13,7 +13,7 @@ const App = () => {
     <Flowbite theme={{ theme }}>
       <ToastContainer />
       <RouterProvider router={routes} />
-      <ToastContainer />
+      <ToastContainer theme="colored" />
     </Flowbite>
   );
 };

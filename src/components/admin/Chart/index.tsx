@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 
 const AdminChart = () => {
   const { mode } = useTheme();
+
   const isDarkTheme = mode === 'dark';
 
   const borderColor = isDarkTheme ? '#374151' : '#F3F4F6';

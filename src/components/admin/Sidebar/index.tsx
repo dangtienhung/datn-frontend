@@ -8,6 +8,7 @@ import {
   HiSearch,
   HiShoppingBag,
   HiUsers,
+  HiTicket,
 } from 'react-icons/hi';
 import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi';
 import { ImFontSize } from 'react-icons/im';
@@ -114,6 +115,16 @@ const AdminSidebar: FC = function () {
                 }`}
               >
                 Role
+              </Sidebar.Item>
+              <Sidebar.Item
+                // href="/admin/orders"
+                onClick={() => handleRedirect('/admin/voucher')}
+                icon={HiTicket}
+                className={`cursor-pointer ${
+                  '/admin/voucher' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                }`}
+              >
+                Voucher
               </Sidebar.Item>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up

@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   HiCog,
   HiDotsVertical,
@@ -17,22 +17,16 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SizeForm, SizeSchema } from '../../../validate/Form';
 import http from '../../../api/instance';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { RootState } from '../../../store/store';
-import { addSize, deleteSize, getAllSizes, updateSize } from '../../../store/services/size.service';
 import { ISize } from '../../../interfaces/size.type';
+import Loading from '../../../components/Loading';
+import {
+  useGetAllSizesQuery,
+  useDeleteSizeMutation,
+  useAddSizeMutation,
+  useUpdateSizeMutation,
+} from '../../../api/size';
 
 const Sizes = () => {
-  // const { data: sizes, error, isLoading } = useFetchSizeQuery();
-  const dispatch = useAppDispatch();
-  const { sizes, isLoading, error } = useAppSelector(
-    (state: RootState) => state.persistedReducer.size
-  );
-
-  useEffect(() => {
-    dispatch(getAllSizes());
-  }, [dispatch]);
-
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
@@ -84,7 +78,7 @@ const Sizes = () => {
               </div>
             </div>
             <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
-              <AddSizeModal error={error} />
+              <AddSizeModal />
             </div>
           </div>
         </div>
@@ -93,7 +87,7 @@ const Sizes = () => {
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
-              <SizesTable sizes={sizes} error={error} isLoading={isLoading} />
+              <SizesTable />
             </div>
           </div>
         </div>
@@ -103,43 +97,35 @@ const Sizes = () => {
   );
 };
 
-type SizeTableProps = {
-  sizes?: ISize[];
-  error: string;
-  isLoading: boolean;
-};
-
-const SizesTable = ({ sizes, error, isLoading }: SizeTableProps) => {
-  const dispatch = useAppDispatch();
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState<boolean>(false);
-  const [idSize, setIdSize] = useState<string>('');
-
-  const togglePopup = () => {
-    setIsEditPopupOpen(!isEditPopupOpen);
-    setIdSize('');
-  };
+const SizesTable = () => {
+  const { data: sizes, isLoading, isError } = useGetAllSizesQuery();
+  const [deleteSize, { isError: isDeleteErr, isLoading: isDeleting }] = useDeleteSizeMutation();
 
   const handleDelete = (id: string) => {
-    if (!error) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Do you want to delete this size?',
-        showCancelButton: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Deleted',
-          }).then(() => dispatch(deleteSize(id)));
-        }
-      });
-    } else {
-      toast.error('Delete failed!');
-    }
+    Swal.fire({
+      icon: 'question',
+      title: 'Do you want to delete this voucher?',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted',
+        }).then(() =>
+          deleteSize(id).then(() => {
+            if (!isDeleteErr) {
+              toast.success('Deleted success');
+            } else {
+              toast.error('Delete failed');
+            }
+          })
+        );
+      }
+    });
   };
 
-  if (isLoading) return <div>Loading.....</div>;
-  if (error) return <div>Loi roi</div>;
+  if (isLoading) return <Loading />;
+  if (isError) return <div>Loi roi</div>;
   return (
     <>
       <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -156,7 +142,7 @@ const SizesTable = ({ sizes, error, isLoading }: SizeTableProps) => {
         </Table.Head>
         <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
           {sizes &&
-            sizes?.map((item) => (
+            sizes.docs?.map((item) => (
               <Table.Row key={item._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Table.Cell className="w-4 p-4">
                   <div className="flex items-center">
@@ -175,22 +161,14 @@ const SizesTable = ({ sizes, error, isLoading }: SizeTableProps) => {
 
                 <Table.Cell>
                   <div className="flex items-center gap-x-3 whitespace-nowrap">
-                    <Button
-                      color="primary"
-                      onClick={() => {
-                        togglePopup();
-                        setIdSize(item._id!);
-                      }}
-                    >
-                      <div className="flex items-center gap-x-3">
-                        <HiPencil className="text-xl" />
-                        Edit Size
-                      </div>
-                    </Button>
-
+                    <EditSizeModal size={item} />
                     <Button color="failure" onClick={() => handleDelete(item._id!)}>
                       <div className="flex items-center gap-x-2">
-                        <HiTrash className="text-lg" />
+                        {isDeleting ? (
+                          <AiOutlineLoading3Quarters className="text-lg rotate" />
+                        ) : (
+                          <HiTrash className="text-lg" />
+                        )}
                         Delete size
                       </div>
                     </Button>
@@ -200,27 +178,21 @@ const SizesTable = ({ sizes, error, isLoading }: SizeTableProps) => {
             ))}
         </Table.Body>
       </Table>
-      {idSize && (
+      {/* {idSize && (
         <EditSizeModal
           isOpen={isEditPopupOpen}
           togglePopup={togglePopup}
           sizeId={idSize}
           error={error}
         />
-      )}
+      )} */}
     </>
   );
 };
 
-type AddSizeProps = {
-  error: string;
-};
-
-const AddSizeModal = function ({ error }: AddSizeProps) {
+const AddSizeModal = function () {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-  const { isAdding } = useAppSelector((state) => state.persistedReducer.size);
-
+  const [addSize, { isLoading, isError }] = useAddSizeMutation();
   const {
     register,
     handleSubmit,
@@ -231,19 +203,16 @@ const AddSizeModal = function ({ error }: AddSizeProps) {
     resolver: yupResolver(SizeSchema),
   });
 
-  const onHanleSubmit = (data: any) => {
-    if (!error) {
-      dispatch(addSize(data)).then(() => {
-        toast.success(`Size ${data.name} added✔`);
-        setOpen(false);
-        reset();
-      });
+  const onHandleSubmit = async (data: any) => {
+    await addSize(data);
+    if (!isError) {
+      toast.success(`Added ${data.name} size.`);
+      reset();
+      setOpen(false);
     } else {
-      toast.error('Add size failed!');
+      toast.error(`Added failed`);
     }
-    // addSize(data);
   };
-
   return (
     <>
       <Button color="primary" onClick={() => setOpen(true)}>
@@ -262,7 +231,7 @@ const AddSizeModal = function ({ error }: AddSizeProps) {
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>Add new Size</strong>
         </Modal.Header>
-        <form action="" onSubmit={handleSubmit(onHanleSubmit)}>
+        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
           <Modal.Body>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
@@ -287,7 +256,7 @@ const AddSizeModal = function ({ error }: AddSizeProps) {
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" color="primary">
-              {isAdding ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Size'}
+              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Size'}
             </Button>
           </Modal.Footer>
         </form>
@@ -297,19 +266,12 @@ const AddSizeModal = function ({ error }: AddSizeProps) {
 };
 
 type EditSizeModalProps = {
-  sizeId: string;
-  isOpen: boolean;
-  togglePopup: () => void;
-  error: string;
+  size: ISize;
 };
 
-const EditSizeModal = function ({ sizeId, isOpen, togglePopup, error }: EditSizeModalProps) {
-  // const { data: sizeAbc, isLoading } = useFetchSizeByIdQuery(sizeId);
-  // const [fetchSize, { data: sizeabc, isLoading, isSuccess }] =
-  //   SizeApi.endpoints.fetchSizeById.useLazyQuery();
-  // const [updateSize] = useUpdateSizeMutation();
-  const dispatch = useAppDispatch();
-  const { isUpdating } = useAppSelector((state) => state.persistedReducer.size);
+const EditSizeModal = function ({ size }: EditSizeModalProps) {
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [updateSize, { isLoading, isError }] = useUpdateSizeMutation();
 
   const {
     register,
@@ -318,72 +280,70 @@ const EditSizeModal = function ({ sizeId, isOpen, togglePopup, error }: EditSize
   } = useForm<SizeForm>({
     mode: 'onChange',
     resolver: yupResolver(SizeSchema),
-    defaultValues: async (): Promise<any> => {
-      return await getSizeById(sizeId);
-    },
+    defaultValues: {
+      ...size,
+    } as any,
   });
 
-  const getSizeById = async (id: string) => {
-    try {
-      const { data: size } = await http.get(`/size/${id}`);
-      return size.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onHandleSubmit = (data: any) => {
-    if (!error) {
-      dispatch(updateSize(data)).then(() => {
-        toast.success(`Edited ${data.name} size`);
-        togglePopup();
-      });
+  const onHandleSubmit = async (data: any) => {
+    await updateSize(data);
+    if (!isError) {
+      toast.success(`Updated success`);
+      setOpen(false);
     } else {
-      toast.error('Update failed!');
+      toast.error('Update failed');
     }
   };
 
   return (
-    <Modal
-      onClose={() => {
-        togglePopup();
-      }}
-      show={isOpen}
-      className="!bg-opacity-20"
-    >
-      <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
-        <strong>Edit Size</strong>
-      </Modal.Header>
-      <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
-        <Modal.Body>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="name">Name Size</Label>
-              <div className="mt-1">
-                <TextInput {...register('name')} id="name" placeholder="Name" />
+    <>
+      <Button color="primary" onClick={() => setOpen(true)}>
+        <div className="flex items-center gap-x-3">
+          <HiPencil className="text-xl" />
+          Edit Size
+        </div>
+      </Button>
+      <Modal
+        onClose={() => {
+          setOpen(false);
+        }}
+        show={isOpen}
+        className="!bg-opacity-20"
+      >
+        <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
+          <strong>Edit Size</strong>
+        </Modal.Header>
+        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
+          <Modal.Body>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="name">Name Size</Label>
+                <div className="mt-1">
+                  <TextInput {...register('name')} id="name" placeholder="Name" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.name && errors.name.message}
+                </span>
               </div>
-              <span className="text-red-500 text-sm block my-2">
-                {errors.name && errors.name.message}
-              </span>
-            </div>
-            <div>
-              <Label htmlFor="price">Name Size</Label>
-              <div className="mt-1">
-                <TextInput {...register('price')} id="price" placeholder="Price" />
+              <div>
+                <Label htmlFor="price">Name Size</Label>
+                <div className="mt-1">
+                  <TextInput {...register('price')} id="price" placeholder="Price" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.price && errors.price.message}
+                </span>
               </div>
-              <span className="text-red-500 text-sm block my-2">
-                {errors.price && errors.price.message}
-              </span>
             </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button type="submit" color="primary">
-            {isUpdating ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : ' Edit Size'}
-          </Button>
-        </Modal.Footer>
-      </form>
-    </Modal>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit" color="primary">
+              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : ' Edit Size'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    </>
   );
 };
 export default Sizes;
