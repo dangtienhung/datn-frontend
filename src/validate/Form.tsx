@@ -26,6 +26,13 @@ export const SizeSchema = Yup.object({
   price: Yup.string().required('Price is required'),
 });
 
+// category schema
+export const CateSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+
+});
+
+
 export type SizeForm = Yup.InferType<typeof SizeSchema>;
 
 //role schema

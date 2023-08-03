@@ -11,6 +11,7 @@ import routes from './router';
 const App = () => {
   return (
     <Flowbite theme={{ theme }}>
+      <ToastContainer />
       <RouterProvider router={routes} />
       <ToastContainer />
     </Flowbite>

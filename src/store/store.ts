@@ -16,6 +16,11 @@ import AuthReducer from './slices/Auth.slice';
 import { ApiUser } from '../api/User';
 import { sizeReducer } from './slices/size.slice';
 import { roleReducer } from './slices/role.slice';
+import { ApiProduct } from '../api/Product';
+
+
+import { categoriesReducer } from './slices/categories';
+import { ToppingAPI } from '../api/topping';
 
 const persistConfig = {
   key: 'root',
@@ -28,6 +33,7 @@ const rootReducer = combineReducers({
   auth: AuthReducer,
   size: sizeReducer,
   role: roleReducer,
+category: categoriesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -37,6 +43,8 @@ export const store = configureStore({
     persistedReducer,
     [Auth.reducerPath]: Auth.reducer,
     [ApiUser.reducerPath]: ApiUser.reducer,
+    [ApiProduct.reducerPath]: ApiProduct.reducer,
+    [ToppingAPI.reducerPath]: ToppingAPI.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -45,7 +53,9 @@ export const store = configureStore({
       },
     })
       .concat(Auth.middleware)
-      .concat(ApiUser.middleware),
+      .concat(ApiUser.middleware)
+      .concat(ApiProduct.middleware)
+      .concat(ToppingAPI.middleware),
 });
 
 export const persistor = persistStore(store);
