@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
-import { FC, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   HiCog,
   HiDotsVertical,
@@ -9,31 +9,31 @@ import {
   HiPencil,
 } from 'react-icons/hi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-
-import { formatCurrency } from '../../../utils/formatCurrency';
-import Swal from 'sweetalert2';
-import { toast } from 'react-toastify';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { SizeForm, SizeSchema } from '../../../validate/Form';
-import http from '../../../api/instance';
-import { ISize } from '../../../interfaces/size.type';
-import Loading from '../../../components/Loading';
 import {
-  useGetAllSizesQuery,
-  useDeleteSizeMutation,
-  useAddSizeMutation,
-  useUpdateSizeMutation,
-} from '../../../api/size';
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useGetAllVouchersQuery,
+  useUpdateVoucherMutation,
+} from '../../../api/voucher';
+import { useForm } from 'react-hook-form';
+import { VoucherForm, VoucherSchema } from '../../../validate/Form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { formatCurrency } from '../../../utils/formatCurrency';
+import { toast } from 'react-toastify';
+import { IVoucher } from '../../../interfaces/voucher.type';
+import Swal from 'sweetalert2';
+import Loading from '../../../components/Loading';
+import formatDate from '../../../utils/formatDate';
+type Props = {};
 
-const Sizes = () => {
+const Voucher = (props: Props) => {
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
         <div className="mb-1 w-full">
           <div className="mb-4">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-              All sizes
+              All Vouchers
             </h1>
           </div>
           <div className="sm:flex">
@@ -78,7 +78,7 @@ const Sizes = () => {
               </div>
             </div>
             <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
-              <AddSizeModal />
+              <AddVoucherModal />
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ const Sizes = () => {
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
-              <SizesTable />
+              <VouchersTable />
             </div>
           </div>
         </div>
@@ -97,9 +97,10 @@ const Sizes = () => {
   );
 };
 
-const SizesTable = () => {
-  const { data: sizes, isLoading, isError } = useGetAllSizesQuery();
-  const [deleteSize, { isError: isDeleteErr, isLoading: isDeleting }] = useDeleteSizeMutation();
+const VouchersTable = () => {
+  const { data: vouchers, isLoading, isError } = useGetAllVouchersQuery();
+  const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] =
+    useDeleteVoucherMutation();
 
   const handleDelete = (id: string) => {
     Swal.fire({
@@ -112,7 +113,7 @@ const SizesTable = () => {
           icon: 'success',
           title: 'Deleted',
         }).then(() =>
-          deleteSize(id).then(() => {
+          deleteVoucher(id).then(() => {
             if (!isDeleteErr) {
               toast.success('Deleted success');
             } else {
@@ -123,9 +124,7 @@ const SizesTable = () => {
       }
     });
   };
-
   if (isLoading) return <Loading />;
-  if (isError) return <div>Loi roi</div>;
   return (
     <>
       <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -136,13 +135,17 @@ const SizesTable = () => {
             </Label>
             <Checkbox id="select-all" name="select-all" />
           </Table.HeadCell>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Price</Table.HeadCell>
+          <Table.HeadCell>Code</Table.HeadCell>
+          <Table.HeadCell>Discount</Table.HeadCell>
+          <Table.HeadCell>Sale</Table.HeadCell>
+          <Table.HeadCell>Start Date</Table.HeadCell>
+          <Table.HeadCell>End Date</Table.HeadCell>
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-          {sizes &&
-            sizes.docs?.map((item) => (
+          {vouchers &&
+            vouchers.data.docs.length > 0 &&
+            vouchers.data.docs.map((item: IVoucher) => (
               <Table.Row key={item._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Table.Cell className="w-4 p-4">
                   <div className="flex items-center">
@@ -153,23 +156,33 @@ const SizesTable = () => {
                   </div>
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                  {item.name}
+                  {item.code}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                  {formatCurrency(item.price)}
+                  {item.discount}%
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatCurrency(item.sale)}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatDate(item.startDate!)}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                  {formatDate(item.endDate!)}
                 </Table.Cell>
 
                 <Table.Cell>
                   <div className="flex items-center gap-x-3 whitespace-nowrap">
-                    <EditSizeModal size={item} />
+                    {item && <EditVoucherModal voucher={item} />}
+
                     <Button color="failure" onClick={() => handleDelete(item._id!)}>
                       <div className="flex items-center gap-x-2">
-                        {isDeleting ? (
+                        {isDelteLoading ? (
                           <AiOutlineLoading3Quarters className="text-lg rotate" />
                         ) : (
                           <HiTrash className="text-lg" />
                         )}
-                        Delete size
+                        Delete Voucher
                       </div>
                     </Button>
                   </div>
@@ -178,85 +191,86 @@ const SizesTable = () => {
             ))}
         </Table.Body>
       </Table>
-      {/* {idSize && (
-        <EditSizeModal
-          isOpen={isEditPopupOpen}
-          togglePopup={togglePopup}
-          sizeId={idSize}
-          error={error}
-        />
-      )} */}
     </>
   );
 };
 
-const AddSizeModal = function () {
+const AddVoucherModal = function () {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [addSize, { isLoading, isError }] = useAddSizeMutation();
+  const [addVoucher, { isLoading, isSuccess }] = useAddVoucherMutation();
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<SizeForm>({
+  } = useForm<VoucherForm>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver(VoucherSchema),
   });
 
-  const onHandleSubmit = async (data: any) => {
-    await addSize(data);
-    if (!isError) {
-      toast.success(`Added ${data.name} size.`);
+  const onhandleSubmit = async (data: any) => {
+    await addVoucher({ code: data.code, discount: data.discount, sale: data.sale });
+    if (!isSuccess) {
+      toast.success(`Added voucher ${data.code}`);
       reset();
-      setOpen(false);
     } else {
-      toast.error(`Added failed`);
+      toast.success(`Added failed`);
     }
+    setOpen(false);
   };
   return (
     <>
       <Button color="primary" onClick={() => setOpen(true)}>
         <div className="flex items-center gap-x-3">
           <HiPlus className="text-xl" />
-          Add Size
+          Add Voucher
         </div>
       </Button>
       <Modal
         onClose={() => {
-          reset();
           setOpen(false);
+          reset();
         }}
         show={isOpen}
       >
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
-          <strong>Add new Size</strong>
+          <strong>Add new voucher</strong>
         </Modal.Header>
-        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action="" onSubmit={handleSubmit(onhandleSubmit)}>
           <Modal.Body>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <Label htmlFor="firstName">Name Size</Label>
+                <Label htmlFor="firstName">Code</Label>
                 <div className="mt-1">
-                  <TextInput {...register('name')} placeholder="Name" />
+                  <TextInput {...register('code')} placeholder="Code" />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.name && errors.name.message}
+                  {errors.code && errors.code.message}
                 </span>
               </div>
               <div>
-                <Label htmlFor="firstName">Price Size</Label>
+                <Label htmlFor="firstName">Discount</Label>
                 <div className="mt-1">
-                  <TextInput type="number" {...register('price')} placeholder="Price" />
+                  <TextInput {...register('discount')} type="number" placeholder="Price" />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.price && errors.price.message}
+                  {errors.discount && errors.discount.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="firstName">Sale</Label>
+                <div className="mt-1">
+                  <TextInput {...register('sale')} type="number" placeholder="Price" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.sale && errors.sale.message}
                 </span>
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" color="primary">
-              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Size'}
+              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : 'Add Voucher'}
             </Button>
           </Modal.Footer>
         </form>
@@ -265,42 +279,39 @@ const AddSizeModal = function () {
   );
 };
 
-type EditSizeModalProps = {
-  size: ISize;
+type EditVoucherModalProps = {
+  voucher: IVoucher;
 };
-
-const EditSizeModal = function ({ size }: EditSizeModalProps) {
+const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [updateSize, { isLoading, isError }] = useUpdateSizeMutation();
-
+  const [updateVoucher, { isLoading, isError }] = useUpdateVoucherMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SizeForm>({
+  } = useForm<VoucherForm>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver(VoucherSchema),
     defaultValues: {
-      ...size,
+      ...voucher,
     } as any,
   });
 
-  const onHandleSubmit = async (data: any) => {
-    await updateSize(data);
+  const onhaneleSubmit = async (data: any) => {
+    await updateVoucher(data);
     if (!isError) {
-      toast.success(`Updated success`);
+      toast.success('Updated');
       setOpen(false);
     } else {
       toast.error('Update failed');
     }
   };
-
   return (
     <>
       <Button color="primary" onClick={() => setOpen(true)}>
         <div className="flex items-center gap-x-3">
           <HiPencil className="text-xl" />
-          Edit Size
+          Edit Voucher
         </div>
       </Button>
       <Modal
@@ -311,34 +322,52 @@ const EditSizeModal = function ({ size }: EditSizeModalProps) {
         className="!bg-opacity-20"
       >
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
-          <strong>Edit Size</strong>
+          <strong>Edit voucher</strong>
         </Modal.Header>
-        <form action="" onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action="" onSubmit={handleSubmit(onhaneleSubmit)}>
           <Modal.Body>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <Label htmlFor="name">Name Size</Label>
+                <Label htmlFor="code">Code</Label>
                 <div className="mt-1">
-                  <TextInput {...register('name')} id="name" placeholder="Name" />
+                  <TextInput {...register('code')} id="code" placeholder="Code" />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.name && errors.name.message}
+                  {errors.code && errors.code.message}
                 </span>
               </div>
               <div>
-                <Label htmlFor="price">Name Size</Label>
+                <Label htmlFor="discount">Discount</Label>
                 <div className="mt-1">
-                  <TextInput {...register('price')} id="price" placeholder="Price" />
+                  <TextInput
+                    {...register('discount')}
+                    type="number"
+                    id="discount"
+                    placeholder="Discount"
+                  />
                 </div>
                 <span className="text-red-500 text-sm block my-2">
-                  {errors.price && errors.price.message}
+                  {errors.discount && errors.discount.message}
+                </span>
+              </div>
+              <div>
+                <Label htmlFor="sale">Sale</Label>
+                <div className="mt-1">
+                  <TextInput {...register('sale')} type="number" id="sale" placeholder="Sale" />
+                </div>
+                <span className="text-red-500 text-sm block my-2">
+                  {errors.sale && errors.sale.message}
                 </span>
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" color="primary">
-              {isLoading ? <AiOutlineLoading3Quarters className="text-lg rotate" /> : ' Edit Size'}
+              {isLoading ? (
+                <AiOutlineLoading3Quarters className="text-lg rotate" />
+              ) : (
+                'Edit Voucher'
+              )}
             </Button>
           </Modal.Footer>
         </form>
@@ -346,4 +375,5 @@ const EditSizeModal = function ({ size }: EditSizeModalProps) {
     </>
   );
 };
-export default Sizes;
+
+export default Voucher;

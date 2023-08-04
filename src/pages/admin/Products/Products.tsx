@@ -20,10 +20,13 @@ import {
   HiTrash,
   HiUpload,
 } from 'react-icons/hi';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { useEffect } from 'react';
+import { getAllProducts } from '../../../store/services/product.service';
+import { RootState } from '../../../store/store';
+import { IProduct } from '../../../interfaces/products.type';
 
-type Props = {};
-
-const ProductsList = (props: Props) => {
+const ProductsList = () => {
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
@@ -317,6 +320,12 @@ const EditProductModal: FC = function () {
 };
 
 const ProductsTable: FC = function () {
+  const dispatch = useAppDispatch();
+  const { products } = useAppSelector((state: RootState) => state.persistedReducer.products);
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
+  
   return (
     <Table className="min-w-full  divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700">
@@ -325,45 +334,56 @@ const ProductsTable: FC = function () {
           <Checkbox />
         </Table.HeadCell>
         <Table.HeadCell>Product Name</Table.HeadCell>
-        <Table.HeadCell>Technology</Table.HeadCell>
+        <Table.HeadCell>Image</Table.HeadCell>
         <Table.HeadCell>ID</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        {[0, 1, 2, 4, 5, 6, 7, 8, 9, 10]?.map((_, index: number) => (
-          <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Table.Cell className="w-4 p-4">
-              <Checkbox />
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-              <div className="text-base font-semibold text-gray-900 dark:text-white">
-                Education Dashboard
-              </div>
-              <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                Html templates
-              </div>
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              Angular
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              #194556
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              $149
-            </Table.Cell>
-            <Table.Cell className="space-x-2 whitespace-nowrap p-4">
-              <div className="flex items-center gap-x-3">
-                <EditProductModal />
-                <Button color="failure">
-                  <HiTrash className="mr-2 text-lg" />
-                  Delete item
-                </Button>
-              </div>
-            </Table.Cell>
-          </Table.Row>
-        ))}
+        {products &&
+          products.docs?.length > 0 &&
+          products.docs.map((item: IProduct, index: number) => (
+            <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Table.Cell className="w-4 p-4">
+                <Checkbox />
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
+                <div className="text-base font-semibold text-gray-900 dark:text-white">
+                  {item.name}
+                </div>
+                <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                  Html templates
+                </div>
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                <img width={100} src={item.images[0].url} alt="" />
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                {item._id}{' '}
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                {item.sizes.map((productSize, ind: number) => {
+                  return (
+                    <ul key={ind}>
+                      <li className="flex justify-between px-1">
+                        <span>{productSize.name}</span>
+                        <span>{productSize.price}</span>
+                      </li>
+                    </ul>
+                  );
+                })}
+              </Table.Cell>
+              <Table.Cell className="space-x-2 whitespace-nowrap p-4">
+                <div className="flex items-center gap-x-3">
+                  <EditProductModal />
+                  <Button color="failure">
+                    <HiTrash className="mr-2 text-lg" />
+                    Delete item
+                  </Button>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          ))}
       </Table.Body>
     </Table>
   );
