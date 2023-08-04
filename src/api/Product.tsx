@@ -1,9 +1,11 @@
-import { createApi } from '@reduxjs/toolkit/dist/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from './requestRefresh';
 import { IProductDocs } from '../interfaces/products.type';
+import { IResImage } from '../interfaces/image.type';
 
-export const ApiProduct = createApi({
+export const ApiProducts = createApi({
   reducerPath: 'ApiProduct',
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReAuth,
   tagTypes: ['product'],
   endpoints: (builder) => ({
@@ -17,7 +19,25 @@ export const ApiProduct = createApi({
             ]
           : [{ type: 'product', id: 'Lists' }],
     }),
+    uploadImagesProduct: builder.mutation<IResImage, any>({
+      query: (files) => ({
+        url: '/api/uploadImages',
+        method: 'POST',
+        body: files,
+      }),
+    }),
+    deleteImagesProduct: builder.mutation<any, string>({
+      query: (publicId) => ({
+        url: `/api//deleteImages/${publicId}`,
+        method: 'DELETE',
+        body: publicId,
+      }),
+    }),
   }),
 });
 
-// export const {} = ApiProduct
+export const {
+  useFetchProductsQuery,
+  useUploadImagesProductMutation,
+  useDeleteImagesProductMutation,
+} = ApiProducts;

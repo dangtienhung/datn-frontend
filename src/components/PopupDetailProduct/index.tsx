@@ -13,7 +13,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [price, setPrice] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0);
-  const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
+  const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0]?.name);
   const [checkedToppings, setCheckedToppings] = useState<string[]>([]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,11 +35,11 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   };
 
   useEffect(() => {
-    setPrice(product.sizes[0].price);
+    setPrice(product.sizes[0]?.price);
     setQuantity(1);
     setTotalToppingPrice(0);
     setCheckedToppings([]);
-    setNameRadioInput(product.sizes[0].name);
+    setNameRadioInput(product.sizes[0]?.name);
 
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -62,21 +62,21 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               <div className="left w-[180px] h-[180px]">
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
-                  src={product.images[0].url}
+                  src={product.images[0]?.url}
                   alt=""
                 />
               </div>
               <div className="right ml-4">
                 <div className="title mr-4">
-                  <h4 className="text-lg font-semibold">{product.name}</h4>
+                  <h4 className="text-lg font-semibold">{product?.name}</h4>
                 </div>
                 <div className="price mt-4 flex items-end">
                   <span className="new-price pr-[10px] text-[#8a733f] font-semibold text-sm">
                     {product.sale > 0
-                      ? formatCurrency(price - product.sale)
+                      ? formatCurrency(price - product?.sale)
                       : formatCurrency(price)}
                   </span>
-                  {product.sale ? (
+                  {product?.sale ? (
                     <span className="old-price text-xs line-through">{formatCurrency(price)}</span>
                   ) : (
                     ''
@@ -108,8 +108,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                         size: nameRadioInput,
                         toppings: checkedToppings,
                         quantity,
-                        price: price - product.sale,
-                        total: (price - product.sale) * quantity,
+                        price: price - product?.sale,
+                        total: (price - product?.sale) * quantity,
                       });
                     }}
                     className="btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] ml-[30px] text-sm"

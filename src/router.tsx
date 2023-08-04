@@ -14,6 +14,7 @@ import Categories from './pages/admin/Categories/Categories';
 import ProductsList from './pages/admin/Products/Products';
 import Topping from './pages/admin/Toppings/Topping';
 import Sizes from './pages/admin/Sizes/Sizes';
+import PageNotFound from './pages/404/404';
 
 const routes = createBrowserRouter([
   {
@@ -97,6 +98,10 @@ const routes = createBrowserRouter([
         element: <Sizes />,
       },
     ],
+  },
+  {
+    path: '*',
+    element: <PageNotFound />,
   },
 ]);
 

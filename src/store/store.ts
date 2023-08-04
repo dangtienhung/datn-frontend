@@ -14,6 +14,7 @@ import { productReducer } from './slices/product.slice';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
 import { ApiUser } from '../api/User';
+import { ApiProducts } from '../api/Product';
 
 const persistConfig = {
   key: 'root',
@@ -33,15 +34,17 @@ export const store = configureStore({
     persistedReducer,
     [Auth.reducerPath]: Auth.reducer,
     [ApiUser.reducerPath]: ApiUser.reducer,
+    [ApiProducts.reducerPath]: ApiProducts.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    })
-      .concat(Auth.middleware)
-      .concat(ApiUser.middleware),
+    }).concat(Auth.middleware, Auth.middleware, ApiProducts.middleware),
+  // .concat(Auth.middleware)
+  // .concat(ApiUser.middleware)
+  // .concat(ApiProducts.middleware),
 });
 
 export const persistor = persistStore(store);

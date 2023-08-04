@@ -7,9 +7,11 @@ import {
   Table,
   Textarea,
   TextInput,
+  Select,
 } from 'flowbite-react';
+import SelectMui, { SelectChangeEvent } from '@mui/material/Select';
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import {
   HiCog,
@@ -20,8 +22,44 @@ import {
   HiTrash,
   HiUpload,
 } from 'react-icons/hi';
+import { Box, Chip, MenuItem, OutlinedInput, Theme, useTheme } from '@mui/material';
+import BoxUpload from '../../../components/Upload';
+import { IImage, IResImage } from '../../../interfaces/image.type';
 
 type Props = {};
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 const ProductsList = (props: Props) => {
   return (
@@ -108,6 +146,21 @@ const SearchForProducts: FC = function () {
 };
 
 const AddProductModal: FC = function () {
+  const [urls, setUrl] = useState<IImage[]>([]);
+  const theme = useTheme();
+  const [personName, setPersonName] = useState<string[]>([]);
+  // const Test = useMemo(() => {
+  //   console.log(urls);
+
+  //   return setUrl;
+  // }, []);
+
+  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(typeof value === 'string' ? value.split(',') : value);
+  };
   const [isOpen, setOpen] = useState(false);
 
   return (
@@ -116,34 +169,55 @@ const AddProductModal: FC = function () {
         <FaPlus className="mr-3 text-sm" />
         Add product
       </Button>
-      <Modal onClose={() => setOpen(false)} show={isOpen}>
+      <Modal className="lg:pt-[300px]" onClose={() => setOpen(false)} show={isOpen}>
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>Add product</strong>
         </Modal.Header>
         <Modal.Body>
           <form>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
               <div>
                 <Label htmlFor="productName">Product name</Label>
                 <TextInput
                   id="productName"
                   name="productName"
-                  placeholder='Apple iMac 27"'
+                  placeholder="Product..."
                   className="mt-1"
                 />
               </div>
               <div>
                 <Label htmlFor="category">Category</Label>
-                <TextInput
-                  id="category"
-                  name="category"
-                  placeholder="Electronics"
-                  className="mt-1"
-                />
+                <Select className="mt-1">
+                  <option value="">1</option>
+                  <option value="">2</option>
+                  <option value="">3</option>
+                </Select>
               </div>
               <div>
-                <Label htmlFor="brand">Brand</Label>
-                <TextInput id="brand" name="brand" placeholder="Apple" className="mt-1" />
+                <Label htmlFor="brand">Topping</Label>
+                <SelectMui
+                  className="w-full mt-1"
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  multiple
+                  value={personName}
+                  onChange={handleChange}
+                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {names.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </SelectMui>
               </div>
               <div>
                 <Label htmlFor="price">Price</Label>
@@ -151,7 +225,7 @@ const AddProductModal: FC = function () {
                   id="price"
                   name="price"
                   type="number"
-                  placeholder="$2300"
+                  placeholder="Price..."
                   className="mt-1"
                 />
               </div>
@@ -160,12 +234,12 @@ const AddProductModal: FC = function () {
                 <Textarea
                   id="producTable.Celletails"
                   name="producTable.Celletails"
-                  placeholder="e.g. 3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, Ram 16 GB DDR4 2300Mhz"
+                  placeholder="Description..."
                   rows={6}
                   className="mt-1"
                 />
               </div>
-              <div className="lg:col-span-2">
+              {/* <div className="lg:col-span-2">
                 <div className="flex w-full items-center justify-center">
                   <label className="flex h-32 w-full cursor-pointer flex-col rounded border-2 border-dashed border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -180,8 +254,9 @@ const AddProductModal: FC = function () {
                     <input type="file" className="hidden" />
                   </label>
                 </div>
-              </div>
+              </div> */}
             </div>
+            <BoxUpload urls={urls} setUrl={setUrl} />
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -324,9 +399,10 @@ const ProductsTable: FC = function () {
           <span className="sr-only">Toggle selected</span>
           <Checkbox />
         </Table.HeadCell>
-        <Table.HeadCell>Product Name</Table.HeadCell>
-        <Table.HeadCell>Technology</Table.HeadCell>
         <Table.HeadCell>ID</Table.HeadCell>
+        <Table.HeadCell>Product Name</Table.HeadCell>
+        <Table.HeadCell>Images</Table.HeadCell>
+        <Table.HeadCell>Technology</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
@@ -335,6 +411,9 @@ const ProductsTable: FC = function () {
           <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
             <Table.Cell className="w-4 p-4">
               <Checkbox />
+            </Table.Cell>
+            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+              #194556
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
               <div className="text-base font-semibold text-gray-900 dark:text-white">
@@ -345,10 +424,10 @@ const ProductsTable: FC = function () {
               </div>
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              Angular
+              Images
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              #194556
+              Angular
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
               $149

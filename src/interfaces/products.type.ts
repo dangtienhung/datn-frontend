@@ -30,3 +30,13 @@ export interface IProductDocs {
   prevPage: number | null;
   nextPage: number | null;
 }
+
+export interface IAddProduct {
+  name: string;
+  images: IImage[];
+  description: string;
+  sale: number;
+  category: ICategory;
+  sizes: ISize[];
+  toppings: ITopping[];
+}
