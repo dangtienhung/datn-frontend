@@ -1,18 +1,22 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { productReducer } from './slices/product.slice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { ApiUser } from '../api/User';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
+
+import cartReducer from './slices/cart.slice';
+import { productReducer } from './slices/product.slice';
+import storage from 'redux-persist/lib/storage';
 import { ApiUser } from '../api/User';
 import { ApiProduct } from '../api/Product';
 
@@ -26,10 +30,12 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  whitelist: ['cart'],
 };
 const rootReducer = combineReducers({
   products: productReducer,
   auth: AuthReducer,
+  cart: cartReducer,
   category: categoriesReducer,
 });
 
