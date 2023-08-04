@@ -74,9 +74,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
           <FaTimes className="text-2xl font-[900] transition-all hover:scale-[1.2]" />
         </div>
 
-        <div className="content w-full overflow-hidden">
+        <div className="w-full overflow-hidden content">
           <div className="flex flex-col h-full rounded-md">
-            <div className="info flex px-5 pb-3">
+            <div className="flex px-5 pb-3 info">
               <div className="left w-[180px] h-[180px]">
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
@@ -84,24 +84,24 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   alt=""
                 />
               </div>
-              <div className="right ml-4">
-                <div className="title mr-4">
+              <div className="ml-4 right">
+                <div className="mr-4 title">
                   <h4 className="text-lg font-semibold">{product.name}</h4>
                 </div>
-                <div className="price flex items-end mt-4">
+                <div className="flex items-end mt-4 price">
                   <span className="new-price pr-[10px] text-[#8a733f] font-semibold text-sm">
                     {product.sale > 0
                       ? formatCurrency(price - product.sale)
                       : formatCurrency(price)}
                   </span>
                   {product.sale ? (
-                    <span className="old-price text-xs line-through">{formatCurrency(price)}</span>
+                    <span className="text-xs line-through old-price">{formatCurrency(price)}</span>
                   ) : (
                     ''
                   )}
                 </div>
-                <div className="quantity flex items-center mt-5">
-                  <div className="change-quantity flex">
+                <div className="flex items-center mt-5 quantity">
+                  <div className="flex change-quantity">
                     <div
                       onClick={() =>
                         quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1)
@@ -147,9 +147,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
             <div
               className={`customize h-1/2 overflow-y-scroll p-5 grow  mb-5 ${styles.popup_body}`}
             >
-              {/* <div className="custom-type mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn loại</div>
+              {/* <div className="mb-2 custom-type">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn loại</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -169,9 +169,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
               </div> */}
 
-              <div className="custom-size mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn size</div>
+              <div className="mb-2 custom-size">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn size</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -206,9 +206,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
               </div>
 
-              {/* <div className="custom-sugar mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn đường</div>
+              {/* <div className="mb-2 custom-sugar">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn đường</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -231,8 +231,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               </div> */}
 
               <div className="custom-topping">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn topping</div>
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn topping</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -243,7 +243,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                       return (
                         <div
                           key={item._id}
-                          className="topping-wrap flex items-center justify-between w-full"
+                          className="flex items-center justify-between w-full topping-wrap"
                         >
                           <label className={`${styles.container_checkbox} group block w-full`}>
                             <span className="text-sm capitalize">{item.name}</span>
@@ -264,7 +264,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                             ></span>
                           </label>
 
-                          <span className="topping-price text-sm">
+                          <span className="text-sm topping-price">
                             {formatCurrency(item.price)}
                           </span>
                         </div>
