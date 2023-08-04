@@ -17,7 +17,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<CartItem>) {
+    addToCart: (state, action: PayloadAction<CartItem>) => {
       const product = action.payload;
       // /* check xem đã có sản phẩm nào tồn tại bên trong giỏ hàng chưa */
       const products = [...state.items];
@@ -79,26 +79,23 @@ const cartSlice = createSlice({
             };
             console.log('test1');
             state.items[productIndex].items.push(newProduct);
-            // for (let i = 0; i < state.items[productIndex].items.length; i++) {
-            //   for (let j = 0; j < product.toppings.length; j++) {
-            //     if (
-            //       state.items[productIndex].items[i].toppings[j].name === product.toppings[j].name
-            //     ) {
-            //       state.items[productIndex].items[i].quantity += product.quantity;
-            //       state.items[productIndex].items[i].total += product.total;
-            //     }
-            //   }
-            // }
           }
+          /* nếu mà trùng size & trùng tên => có topping => tăng số lượng lên */
           if (
-            arraysAreEqual(
-              product.toppings,
-              state.items[productIndex].items[productSizeIndex].toppings
-            )
+            product.toppings.length > 0 &&
+            state.items[productIndex].items[productSizeIndex].quantity > 1
           ) {
             // state.items[productIndex].items[productSizeIndex].quantity += product.quantity;
             // state.items[productIndex].items[productSizeIndex].total += product.total;
-            console.log('ahahi');
+            const newProduct = {
+              image: product.image,
+              price: product.price,
+              quantity: product.quantity,
+              size: product.size,
+              toppings: product.toppings,
+              total: product.total,
+            };
+            state.items[productIndex].items.push(newProduct);
           }
         }
       }

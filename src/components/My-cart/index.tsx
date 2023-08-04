@@ -1,12 +1,16 @@
 import CardOrder from '../Card-Order';
 import { Link } from 'react-router-dom';
 import { RootState } from '../../store/store';
-import { useAppSelector } from '../../store/hooks';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { useAppSelector } from '../../store/hooks';
 import { v4 as uuidv4 } from 'uuid';
 
 const MyCart = () => {
-  const { items, total } = useAppSelector((state: RootState) => state.persistedReducer.cart);
+  const { items } = useAppSelector((state: RootState) => state.persistedReducer.cart);
+  const priceItem = items.map((item) => {
+    return item.items.map((price) => price.total);
+  });
+  const total = priceItem.flat().reduce((a, b) => a + b, 0);
   return (
     <div className="sidebar shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block">
       <div className="border border-transparent border-b-[#f1f1f1]  px-4 py-2 flex justify-between items-center">
