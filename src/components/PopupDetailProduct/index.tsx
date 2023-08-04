@@ -63,7 +63,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
                   src={product.images[0].url}
-                  alt=""
+                  alt={product.images[0].url}
                 />
               </div>
               <div className="right ml-4">
@@ -173,6 +173,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           name="size"
                           value={item.price}
                         />
+
                         <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
                       </label>
                     ))}
