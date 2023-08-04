@@ -1,8 +1,18 @@
-import styles from './PopupDetailProduct.module.scss';
-import { FaTimes, FaAngleDown } from 'react-icons/fa';
-import { IProduct } from '../../interfaces/products.type';
-import { formatCurrency } from '../../utils/formatCurrency';
+import { FaAngleDown, FaTimes } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
+
+import { IProduct } from '../../interfaces/products.type';
+import { addToCart } from '../../store/slices/cart.slice';
+import { formatCurrency } from '../../utils/formatCurrency';
+import styles from './PopupDetailProduct.module.scss';
+import { useAppDispatch } from '../../store/hooks';
+
+interface TypeSize {
+  name: string;
+  price: number;
+  _id: string;
+}
+
 type PopupDetailProductProps = {
   showPopup: boolean;
   togglePopup: () => void;
@@ -10,24 +20,31 @@ type PopupDetailProductProps = {
 };
 
 const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProductProps) => {
+  const dispatch = useAppDispatch();
+  /* set state trạng thái */
   const [price, setPrice] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0);
-  const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
-  const [checkedToppings, setCheckedToppings] = useState<string[]>([]);
+  // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
+  const [nameRadioInput, setNameRadioInput] = useState<TypeSize>(product.sizes[0]);
+  const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number }[]>([]);
 
+  /* xử lý sự kiện check box phân topping */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const toppingPrice = Number(event.target.value);
     const toppingName = event.target.name;
+    const data = { name: toppingName, price: toppingPrice };
 
     if (event.target.checked) {
       setTotalToppingPrice((prev) => prev + toppingPrice);
       setPrice((prev) => prev + toppingPrice);
-      setCheckedToppings((prev) => [...prev, toppingName]);
+      setCheckedToppings((prev) => [...prev, data]);
     } else {
       setTotalToppingPrice((prev) => prev - toppingPrice);
       setPrice((prev) => prev - toppingPrice);
-      setCheckedToppings((prev) => prev.filter((topping) => topping !== toppingName));
+      setCheckedToppings((prev) => {
+        return prev.filter((topping) => topping.name !== toppingName);
+      });
     }
   };
   const handleGetInfoPrd = (data: any) => {
@@ -39,7 +56,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     setQuantity(1);
     setTotalToppingPrice(0);
     setCheckedToppings([]);
-    setNameRadioInput(product.sizes[0].name);
+    // setNameRadioInput(product.sizes[0].name);
+    setNameRadioInput(product.sizes[0]);
 
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -56,9 +74,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
           <FaTimes className="text-2xl font-[900] transition-all hover:scale-[1.2]" />
         </div>
 
-        <div className="content w-full overflow-hidden">
+        <div className="w-full overflow-hidden content">
           <div className="flex flex-col h-full rounded-md">
-            <div className="info flex px-5 pb-3">
+            <div className="flex px-5 pb-3 info">
               <div className="left w-[180px] h-[180px]">
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
@@ -66,24 +84,24 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   alt=""
                 />
               </div>
-              <div className="right ml-4">
-                <div className="title mr-4">
+              <div className="ml-4 right">
+                <div className="mr-4 title">
                   <h4 className="text-lg font-semibold">{product.name}</h4>
                 </div>
-                <div className="price mt-4 flex items-end">
+                <div className="flex items-end mt-4 price">
                   <span className="new-price pr-[10px] text-[#8a733f] font-semibold text-sm">
                     {product.sale > 0
                       ? formatCurrency(price - product.sale)
                       : formatCurrency(price)}
                   </span>
                   {product.sale ? (
-                    <span className="old-price text-xs line-through">{formatCurrency(price)}</span>
+                    <span className="text-xs line-through old-price">{formatCurrency(price)}</span>
                   ) : (
                     ''
                   )}
                 </div>
-                <div className="quantity mt-5 flex items-center">
-                  <div className="change-quantity flex">
+                <div className="flex items-center mt-5 quantity">
+                  <div className="flex change-quantity">
                     <div
                       onClick={() =>
                         quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1)
@@ -103,14 +121,18 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   <button
                     onClick={() => {
                       togglePopup();
-                      handleGetInfoPrd({
-                        name: product.name,
-                        size: nameRadioInput,
-                        toppings: checkedToppings,
-                        quantity,
-                        price: price - product.sale,
-                        total: (price - product.sale) * quantity,
-                      });
+                      dispatch(
+                        addToCart({
+                          name: product.name,
+                          size: nameRadioInput,
+                          toppings: checkedToppings,
+                          quantity,
+                          image: product.images[0].url,
+                          // price: price - product.sale,
+                          price: nameRadioInput.price - product.sale,
+                          total: (price - product.sale) * quantity,
+                        })
+                      );
                     }}
                     className="btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] ml-[30px] text-sm"
                   >
@@ -125,9 +147,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
             <div
               className={`customize h-1/2 overflow-y-scroll p-5 grow  mb-5 ${styles.popup_body}`}
             >
-              {/* <div className="custom-type mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left font-semibold text-base">Chọn loại</div>
+              {/* <div className="mb-2 custom-type">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn loại</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -136,7 +158,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   <label className={`${styles.container_radio} block w-full group`}>
                     <span>Lạnh</span>
                     <input
-                      className="opacity-0 absolute"
+                      className="absolute opacity-0"
                       defaultChecked
                       type="radio"
                       name="type"
@@ -147,41 +169,46 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
               </div> */}
 
-              <div className="custom-size mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left font-semibold text-base">Chọn size</div>
+              <div className="mb-2 custom-size">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn size</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
                 </div>
                 <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded">
                   {product &&
-                    product?.sizes.map((item) => (
-                      <label
-                        onChange={() => {
-                          setPrice(item.price + totalToppingPrice);
-                          setNameRadioInput(item.name);
-                        }}
-                        key={item._id}
-                        className={`${styles.container_radio} block w-full group`}
-                      >
-                        <span className="block">Size {item.name}</span>
-                        <input
-                          className="opacity-0 absolute"
-                          defaultChecked={product.sizes[0].price === item.price ? true : false}
-                          type="radio"
-                          name="size"
-                          value={item.price}
-                        />
-                        <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                      </label>
-                    ))}
+                    product?.sizes.map((item) => {
+                      return (
+                        <label
+                          onChange={() => {
+                            setPrice(item.price + totalToppingPrice);
+                            // setNameRadioInput(item.name);
+                            setNameRadioInput(item);
+                          }}
+                          key={item._id}
+                          className={`${styles.container_radio} block w-full group`}
+                        >
+                          <span className="block">Size {item.name}</span>
+                          <input
+                            className="absolute opacity-0"
+                            defaultChecked={product.sizes[0].price === item.price ? true : false}
+                            type="radio"
+                            name="size"
+                            value={item.price}
+                          />
+                          <span
+                            className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}
+                          ></span>
+                        </label>
+                      );
+                    })}
                 </div>
               </div>
 
-              {/* <div className="custom-sugar mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left font-semibold text-base">Chọn đường</div>
+              {/* <div className="mb-2 custom-sugar">
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn đường</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
@@ -191,7 +218,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     <label key={index} className={`${styles.container_radio} block w-1/2 group`}>
                       <span>Size 1 LÍT</span>
                       <input
-                        className="opacity-0 absolute"
+                        className="absolute opacity-0"
                         defaultChecked
                         type="radio"
                         name="sug"
@@ -204,37 +231,45 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               </div> */}
 
               <div className="custom-topping">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left font-semibold text-base">Chọn topping</div>
+                <div className="flex items-center justify-between px-5 mb-2 title">
+                  <div className="text-base font-semibold left">Chọn topping</div>
                   <div className="right">
                     <FaAngleDown />
                   </div>
                 </div>
                 <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0_rgba(0,0,0,.05)] rounded">
                   {product &&
-                    product.toppings.map((item) => (
-                      <div
-                        key={item._id}
-                        className="topping-wrap flex w-full items-center justify-between"
-                      >
-                        <label className={`${styles.container_checkbox} group block w-full`}>
-                          <span className="text-sm capitalize">{item.name}</span>
-                          <input
-                            onChange={handleCheckboxChange}
-                            className="opacity-0 absolute h-0 w-0"
-                            type="checkbox"
-                            name={item.name}
-                            value={item.price}
-                            checked={checkedToppings.includes(item.name)}
-                          />
-                          <span
-                            className={`${styles.checkmark_checkbox} group-hover:bg-[#ccc]`}
-                          ></span>
-                        </label>
+                    product.toppings.map((item) => {
+                      return (
+                        <div
+                          key={item._id}
+                          className="flex items-center justify-between w-full topping-wrap"
+                        >
+                          <label className={`${styles.container_checkbox} group block w-full`}>
+                            <span className="text-sm capitalize">{item.name}</span>
+                            <input
+                              onChange={(e) => handleCheckboxChange(e)}
+                              className="absolute w-0 h-0 opacity-0"
+                              type="checkbox"
+                              name={item.name}
+                              value={item.price}
+                              checked={
+                                checkedToppings.find((topping) => topping.name === item.name)
+                                  ? true
+                                  : false
+                              }
+                            />
+                            <span
+                              className={`${styles.checkmark_checkbox} group-hover:bg-[#ccc]`}
+                            ></span>
+                          </label>
 
-                        <span className="topping-price text-sm">{formatCurrency(item.price)}</span>
-                      </div>
-                    ))}
+                          <span className="text-sm topping-price">
+                            {formatCurrency(item.price)}
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>

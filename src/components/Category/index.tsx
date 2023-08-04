@@ -1,5 +1,3 @@
-import { FaBars } from 'react-icons/fa';
-import { ICategory } from '../../interfaces/category.type';
 import {
   Divider,
   List,
@@ -12,14 +10,15 @@ import {
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 
+import { FaBars } from 'react-icons/fa';
+import { ICategory } from '../../interfaces/category.type';
+
 interface SidebarCateProps {
   categories: ICategory[];
   onClick: (id: string) => void;
 }
 
 const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
-  console.log(categories);
-
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: any) => {
