@@ -81,7 +81,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
                   src={product.images[0].url}
-                  alt=""
+                  alt={product.images[0].url}
                 />
               </div>
               <div className="ml-4 right">
@@ -178,7 +178,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded">
                   {product &&
-                    product?.sizes.map((item) => {
+
+<!--                     product?.sizes.map((item) => {
                       return (
                         <label
                           onChange={() => {
@@ -202,7 +203,28 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           ></span>
                         </label>
                       );
-                    })}
+                    })} -->
+                    product?.sizes.map((item) => (
+                      <label
+                        onChange={() => {
+                          setPrice(item.price + totalToppingPrice);
+                          setNameRadioInput(item.name);
+                        }}
+                        key={item._id}
+                        className={`${styles.container_radio} block w-full group`}
+                      >
+                        <span className="block">Size {item.name}</span>
+                        <input
+                          className="opacity-0 absolute"
+                          defaultChecked={product.sizes[0].price === item.price ? true : false}
+                          type="radio"
+                          name="size"
+                          value={item.price}
+                        />
+
+                        <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
+                      </label>
+                    ))}
                 </div>
               </div>
 

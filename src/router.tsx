@@ -14,6 +14,9 @@ import Categories from './pages/admin/Categories/Categories';
 import ProductsList from './pages/admin/Products/Products';
 import Topping from './pages/admin/Toppings/Topping';
 import Sizes from './pages/admin/Sizes/Sizes';
+import Role from './pages/admin/Role/Role';
+import Voucher from './pages/admin/Voucher/Voucher';
+import NotFound from './pages/Not-Found/NotFound';
 
 const routes = createBrowserRouter([
   {
@@ -27,6 +30,10 @@ const routes = createBrowserRouter([
   {
     path: '/signup',
     element: <Signup />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
   {
     path: '/products',
@@ -95,6 +102,14 @@ const routes = createBrowserRouter([
       {
         path: 'sizes',
         element: <Sizes />,
+      },
+      {
+        path: 'role',
+        element: <Role />,
+      },
+      {
+        path: 'voucher',
+        element: <Voucher />,
       },
     ],
   },

@@ -19,3 +19,32 @@ export type Register = Yup.InferType<typeof RegisterSchema>;
 export type Login = Yup.InferType<typeof LoginSchema>;
 
 // export default Register;
+
+//size schema
+export const SizeSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+  price: Yup.string().required('Price is required'),
+});
+
+// category schema
+export const CateSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+});
+
+export type SizeForm = Yup.InferType<typeof SizeSchema>;
+
+//role schema
+export const RoleSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+});
+
+export type RoleForm = Yup.InferType<typeof RoleSchema>;
+
+//voucher
+export const VoucherSchema = Yup.object({
+  code: Yup.string().required('Code is required'),
+  discount: Yup.string().required('Discount is required'),
+  sale: Yup.string().required('Sale is required'),
+});
+
+export type VoucherForm = Yup.InferType<typeof VoucherSchema>;
