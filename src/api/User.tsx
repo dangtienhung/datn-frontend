@@ -1,10 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
-import { responseUser } from '../interfaces/user.type';
+// import baseQueryWithReAuth from './requestRefresh';
+import { IUser, IUserDocs, responseUser } from '../interfaces/user.type';
+import { baseQueryWithReauth } from './Auth';
 
 export const ApiUser = createApi({
   reducerPath: 'ApiUser',
-  baseQuery: baseQueryWithReAuth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['user'],
   endpoints: (builder) => ({
     fetchUser: builder.query<responseUser, void>({
@@ -13,8 +15,23 @@ export const ApiUser = createApi({
         credentials: 'include',
       }),
     }),
+
+    //get all user
+    getAllUsers: builder.query<IUserDocs, number>({
+      query: (page = 5) => `/api/users?_page=${page}`,
+      providesTags: ['user'],
+    }),
+
+    //delete user
+    deleteUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['user'],
+    }),
   }),
 });
 
-export const { useFetchUserQuery } = ApiUser;
+export const { useFetchUserQuery, useGetAllUsersQuery, useDeleteUserMutation } = ApiUser;
 export const SizeReducer = ApiUser.reducer;

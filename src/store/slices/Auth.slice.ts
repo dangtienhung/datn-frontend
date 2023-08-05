@@ -2,6 +2,7 @@ import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { responseUser } from '../../interfaces/user.type';
 import { Auth } from '../../api/Auth';
 import { ApiUser } from '../../api/User';
+import { IRole } from '../../interfaces/role.type';
 
 const initialState: responseUser = {
   user: {
@@ -12,11 +13,10 @@ const initialState: responseUser = {
     username: '',
     account: '',
     avatar: '',
-    password: '',
     address: '',
     products: [],
     order: [],
-    role: '',
+    role: {} as IRole,
     accessToken: '',
     refreshToken: '',
   },
@@ -27,6 +27,7 @@ const AuthSlice = createSlice({
   initialState,
   reducers: {
     refreshUser: (state, { payload }) => {
+      console.log(payload);
       state.user = payload;
     },
   },

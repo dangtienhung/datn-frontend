@@ -1,10 +1,12 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from './requestRefresh';
 import { ISize, ISizeDocs } from '../interfaces/size.type';
+import { baseQueryWithReauth } from './Auth';
 
 const SizeApi = createApi({
   reducerPath: 'Size',
-  baseQuery: baseQueryWithReAuth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['size'],
   endpoints: (builder) => ({
     getAllSizes: builder.query<ISizeDocs, void>({
