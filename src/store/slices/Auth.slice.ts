@@ -34,11 +34,9 @@ const AuthSlice = createSlice({
     builder.addMatcher(
       isAnyOf(Auth.endpoints.login.matchFulfilled, Auth.endpoints.fetchUser.matchFulfilled),
       (state, { payload }) => {
-        console.log(payload);
-
-        // if (payload.user) {
-        state.user = payload.user;
-        // }
+        if (payload.user) {
+          state.user = payload.user;
+        }
       }
     );
     builder.addMatcher(Auth.endpoints.logout.matchFulfilled, (state) => {
