@@ -8,6 +8,7 @@ import {
   useFetchProductsQuery,
 } from '../../api/Product';
 import { FaPlus } from 'react-icons/fa';
+import { formatCurrency } from '../../utils/formatCurrency';
 
 const ProductsTable: FC = function () {
   const [isOpenModalEdit, setOpenModalEdit] = useState(false);
@@ -52,7 +53,7 @@ const ProductsTable: FC = function () {
                 {product.category.name}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {product.price} VND
+                {formatCurrency(product.price)}
               </Table.Cell>
               <Table.Cell className="space-x-2 whitespace-nowrap p-4">
                 <div className="flex items-center gap-x-3">

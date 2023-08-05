@@ -1,11 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
-import { ISize, ISizeDocs } from '../interfaces/size.type';
 import { ICategory, ICategoryDocs } from '../interfaces/category.type';
+import { baseQueryWithReauth } from './Auth';
 
 const CategoryApi = createApi({
   reducerPath: 'CategoryApi',
-  baseQuery: baseQueryWithReAuth,
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['category'],
   endpoints: (builder) => ({
     getAllCategory: builder.query<ICategoryDocs, void>({

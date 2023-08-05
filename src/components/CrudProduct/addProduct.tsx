@@ -127,7 +127,7 @@ const AddProductModal = ({
           <Typography className="p-6 bg-[#e2e8f0]" variant="h5" component="h3">
             Add Product
           </Typography>
-          <form>
+          <form autoComplete="off">
             <div className="grid gap-6 lg:grid-cols-2">
               <div>
                 <Label htmlFor="productName">Product name</Label>

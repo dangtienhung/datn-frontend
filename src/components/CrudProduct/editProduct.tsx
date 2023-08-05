@@ -23,6 +23,7 @@ import CategoryApi from '../../api/category';
 import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../api/Product';
 import { IProduct } from '../../interfaces/products.type';
 import { BiEditAlt } from 'react-icons/bi';
+import { toast } from 'react-toastify';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -66,7 +67,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [getDataSize, { data: DataSize }] = SizeApi.endpoints.getAllSizes.useLazyQuery();
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery();
 
-  const [updateProduct] = useUpdateProductMutation();
+  const [updateProduct, { isSuccess }] = useUpdateProductMutation();
 
   const {
     handleSubmit,
@@ -100,7 +101,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     setSizeState(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const onAddProduct = handleSubmit(async (data: any) => {
+  const onAddProduct = handleSubmit((data: any) => {
     if (data) {
       const DataPost =
         urls.length > 0
@@ -108,10 +109,10 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
           : { _id: DataEdit._id, ...data, images: [...DataEdit.images] };
       console.log(DataPost);
 
-      await updateProduct(DataPost);
+      updateProduct(DataPost).then((data: any) => {
+        data.error ? toast.error(data.error.data.err[0]) : setIsOpen(false);
+      });
     }
-
-    setIsOpen(false);
   });
 
   useEffect(() => {
@@ -147,7 +148,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
           <Typography className="p-6 bg-[#e2e8f0]" variant="h5" component="h3">
             Edit Product
           </Typography>
-          <form>
+          <form autoComplete="off">
             <div className="grid gap-6 lg:grid-cols-2">
               <div>
                 <Label htmlFor="productName">Product name</Label>

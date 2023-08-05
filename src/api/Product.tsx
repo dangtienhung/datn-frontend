@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
 import { IProduct, IProductDocs } from '../interfaces/products.type';
 import { IResImage } from '../interfaces/image.type';
+import { baseQueryWithReauth } from './Auth';
 
 export const ApiProducts = createApi({
   reducerPath: 'ApiProduct',
   // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
-  baseQuery: baseQueryWithReAuth,
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['product'],
   endpoints: (builder) => ({
     fetchProducts: builder.query<IProductDocs, void>({

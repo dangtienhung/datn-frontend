@@ -28,7 +28,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart'],
+  whitelist: ['cart', 'auth'],
 };
 const rootReducer = combineReducers({
   products: productReducer,
@@ -42,7 +42,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: {
     persistedReducer,
-    [Auth.reducerPath]: Auth.reducer,
     [ApiUser.reducerPath]: ApiUser.reducer,
     [ApiProducts.reducerPath]: ApiProducts.reducer,
     [ToppingAPI.reducerPath]: ToppingAPI.reducer,
@@ -50,6 +49,7 @@ export const store = configureStore({
     [SizeApi.reducerPath]: SizeApi.reducer,
     [RoleApi.reducerPath]: RoleApi.reducer,
     [CategoryApi.reducerPath]: CategoryApi.reducer,
+    [Auth.reducerPath]: Auth.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -57,14 +57,14 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(
-      Auth.middleware,
       ApiUser.middleware,
       ApiProducts.middleware,
       ToppingAPI.middleware,
       ApiVoucher.middleware,
       SizeApi.middleware,
       RoleApi.middleware,
-      CategoryApi.middleware
+      CategoryApi.middleware,
+      Auth.middleware
     ),
 });
 

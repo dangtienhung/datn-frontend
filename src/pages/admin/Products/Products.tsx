@@ -1,32 +1,9 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Table,
-  Textarea,
-  TextInput,
-  Select,
-} from 'flowbite-react';
-import SelectMui, { SelectChangeEvent } from '@mui/material/Select';
+import { Breadcrumb, Button, Label, TextInput } from 'flowbite-react';
 import type { FC } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import {
-  HiCog,
-  HiDotsVertical,
-  HiExclamationCircle,
-  HiHome,
-  HiPencilAlt,
-  HiTrash,
-  HiUpload,
-} from 'react-icons/hi';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { getAllProducts } from '../../../store/services/product.service';
-import { RootState } from '../../../store/store';
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'react-icons/hi';
 import AddProductModal from '../../../components/CrudProduct/addProduct';
-import { useFetchProductsQuery } from '../../../api/Product';
 import ProductsTable from '../../../components/CrudProduct/listProduct';
 
 type Props = {};

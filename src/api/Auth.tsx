@@ -1,12 +1,45 @@
 import { IUser, responseUser } from '../interfaces/user.type';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import baseQueryWithReAuth from './requestRefresh';
+import { RootState } from '../store/store';
+import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { refreshUser } from '../store/slices/Auth.slice';
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: 'http://localhost:8000',
+  credentials: 'include',
+  prepareHeaders: (headers, { getState }) => {
+    const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken;
+
+    if (accessToken) {
+      headers.set('authorization', `Bearer ${accessToken}`);
+    }
+    return headers;
+  },
+});
+
+export const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  const result = await baseQuery(args, api, extraOptions);
+  if (result.meta?.response?.status === 403) {
+    // try to get a new token
+    const refreshToken = await baseQuery('/api/refreshToken', api, extraOptions); // Request refreshToken
+    if (refreshToken.data) {
+      // store the new token
+      const { user } = (api.getState() as RootState).persistedReducer.auth;
+      api.dispatch(refreshUser({ ...refreshToken.data, user })); // Cấp lại AccessToken
+    }
+  }
+  return result;
+};
 
 export const Auth = createApi({
   reducerPath: 'Auth',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
-  // baseQuery: baseQueryWithReAuth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     register: builder.mutation<void, IUser>({
       query: ({ ...rest }) => ({
