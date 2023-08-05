@@ -1,11 +1,12 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser, responseUser } from '../interfaces/user.type';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import baseQueryWithReAuth from './requestRefresh';
 
 export const Auth = createApi({
   reducerPath: 'Auth',
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
-  baseQuery: baseQueryWithReAuth,
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  // baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     register: builder.mutation<void, IUser>({
       query: ({ ...rest }) => ({

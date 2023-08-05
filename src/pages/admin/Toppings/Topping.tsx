@@ -1,22 +1,22 @@
 import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi';
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
   useGetAllToppingQuery,
   useUpdateToppingMutation,
 } from '../../../api/topping';
-import { ITopping } from '../../../interfaces/topping.type';
-import { useForm } from 'react-hook-form';
-import { SizeSchema } from '../../../validate/Form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Swal from 'sweetalert2';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
 
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi';
+import type { FC } from 'react';
+import { ITopping } from '../../../interfaces/topping.type';
 import Loading from '../../../components/Loading';
+import { SizeSchema } from '../../../validate/Form';
+import Swal from 'sweetalert2';
 import { formatCurrency } from '../../../utils/formatCurrency';
+import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const Topping = () => {
   return (
@@ -180,7 +180,7 @@ const AddToppingModal: FC = function () {
     reset,
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver<any>(SizeSchema),
   });
 
   const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
@@ -209,7 +209,7 @@ const AddToppingModal: FC = function () {
           <strong>Add new Topping</strong>
         </Modal.Header>
         <Modal.Body>
-          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2" autoComplete="off">
             <div>
               <Label htmlFor="firstName">Name Topping</Label>
               <div className="mt-1">
@@ -254,7 +254,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     reset,
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver<any>(SizeSchema),
   });
 
   useEffect(() => {
@@ -287,7 +287,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
           <strong>Edit Topping</strong>
         </Modal.Header>
         <Modal.Body>
-          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <form className="grid grid-cols-1 gap-6 sm:grid-cols-2" autoComplete="off">
             <div>
               <Label htmlFor="firstName">Name Topping</Label>
               <div className="mt-1">

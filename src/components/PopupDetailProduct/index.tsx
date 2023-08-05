@@ -26,7 +26,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [quantity, setQuantity] = useState<number>(1);
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0);
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
-  const [nameRadioInput, setNameRadioInput] = useState<TypeSize>(product.sizes[0]);
+  const [nameRadioInput, setNameRadioInput] = useState<any>(product.sizes[0]);
   const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number }[]>([]);
 
   /* xử lý sự kiện check box phân topping */
@@ -81,7 +81,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
                   src={product.images[0].url}
-                  alt={product.images[0].url}
+                  alt=""
                 />
               </div>
               <div className="ml-4 right">
@@ -178,8 +178,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded">
                   {product &&
-
-<!--                     product?.sizes.map((item) => {
+                    product?.sizes.map((item) => {
                       return (
                         <label
                           onChange={() => {
@@ -203,28 +202,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           ></span>
                         </label>
                       );
-                    })} -->
-                    product?.sizes.map((item) => (
-                      <label
-                        onChange={() => {
-                          setPrice(item.price + totalToppingPrice);
-                          setNameRadioInput(item.name);
-                        }}
-                        key={item._id}
-                        className={`${styles.container_radio} block w-full group`}
-                      >
-                        <span className="block">Size {item.name}</span>
-                        <input
-                          className="opacity-0 absolute"
-                          defaultChecked={product.sizes[0].price === item.price ? true : false}
-                          type="radio"
-                          name="size"
-                          value={item.price}
-                        />
-
-                        <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                      </label>
-                    ))}
+                    })}
                 </div>
               </div>
 

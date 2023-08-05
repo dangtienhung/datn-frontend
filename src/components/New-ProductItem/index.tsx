@@ -19,7 +19,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
             className="flex items-center justify-center h-10 w-10 font-bold
     bg-[#282828] text-[#d3b673] rounded-[50%]"
           >
-            {saleCaculator(product.sizes[0].price, product.sale)}%
+            {saleCaculator(product?.sizes[0]?.price, product?.sale)}%
           </span>
         )}
       </div>
