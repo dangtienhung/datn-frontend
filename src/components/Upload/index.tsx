@@ -10,9 +10,11 @@ import { Link } from 'react-router-dom';
 interface Props {
   urls: IImage[];
   setUrl: any;
+  setLoadingUpload: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const BoxUpload = ({ urls, setUrl }: Props) => {
+const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) => {
   const [lenghtFiles, setLenghtFiles] = useState(0);
   const [id, setId] = useState<string>();
   const [uploadImages, { isLoading }] = useUploadImagesProductMutation();
@@ -33,6 +35,11 @@ const BoxUpload = ({ urls, setUrl }: Props) => {
       setUrl((pre: IImage[]) => [...pre, ...data.urls]);
     });
   };
+
+  useEffect(() => {
+    setLoadingUpload(isLoading);
+    setLoadingDelete(deleting);
+  }, [isLoading, deleting]);
 
   return (
     <>

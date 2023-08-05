@@ -16,7 +16,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions);
 
   if (result.meta?.response?.status === 403) {
     //AccessToken Hết hạn

@@ -8,7 +8,8 @@ export interface IProduct {
   name: string;
   images: IImage[];
   description: string;
-  sale: number;
+  price: string;
+  sale?: number;
   category: ICategory;
   sizes: ISize[];
   toppings: ITopping[];
@@ -35,6 +36,7 @@ export interface IAddProduct {
   name: string;
   images: IImage[];
   description: string;
+  price: Number;
   sale: number;
   category: ICategory;
   sizes: ISize[];

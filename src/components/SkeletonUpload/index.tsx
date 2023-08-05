@@ -1,5 +1,4 @@
-import { Box, Paper, Typography } from '@mui/material';
-import { BiFile, BiTrash } from 'react-icons/bi';
+import { Box, Typography } from '@mui/material';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
