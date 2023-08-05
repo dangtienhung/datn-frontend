@@ -1,35 +1,39 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { productReducer } from './slices/product.slice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { ApiProducts } from '../api/Product';
+import { ApiUser } from '../api/User';
+import ApiVoucher from '../api/voucher';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
-import { ApiUser } from '../api/User';
-import { ApiProducts } from '../api/Product';
-import { categoriesReducer } from './slices/categories';
-import { ToppingAPI } from '../api/topping';
-import ApiVoucher from '../api/voucher';
-import SizeApi from '../api/size';
 import RoleApi from '../api/role';
+import SizeApi from '../api/size';
+import { ToppingAPI } from '../api/topping';
+import cartReducer from './slices/cart.slice';
+import { categoriesReducer } from './slices/categories';
+import { productReducer } from './slices/product.slice';
+import storage from 'redux-persist/lib/storage';
 import CategoryApi from '../api/category';
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  whitelist: ['cart'],
 };
 const rootReducer = combineReducers({
   products: productReducer,
   auth: AuthReducer,
+  cart: cartReducer,
   category: categoriesReducer,
 });
 

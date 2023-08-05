@@ -1,4 +1,5 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa';
+import { useRef, useState } from 'react';
 
 import { Button } from '..';
 import CardOrder from '../Card-Order';
@@ -6,7 +7,6 @@ import { ICategory } from '../../interfaces/category.type';
 import { IProduct } from '../../interfaces/products.type';
 import { Link } from 'react-router-dom';
 import ListProductItem from '../List-ProductItem';
-import { useRef, useState } from 'react';
 import PopupDetailProduct from '../PopupDetailProduct';
 import http from '../../api/instance';
 
@@ -80,7 +80,7 @@ const ListProducts = ({ products }: ListProductsProps) => {
               {/* Chưa có sản phẩm nào */}
 
               {/* Khi thêm sản phẩm */}
-              <CardOrder />
+              {/* <CardOrder /> */}
             </div>
           </div>
 

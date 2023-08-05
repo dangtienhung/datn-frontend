@@ -17,6 +17,7 @@ import Sizes from './pages/admin/Sizes/Sizes';
 import PageNotFound from './pages/404/404';
 import Role from './pages/admin/Role/Role';
 import Voucher from './pages/admin/Voucher/Voucher';
+import NotFound from './pages/Not-Found/NotFound';
 
 const routes = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const routes = createBrowserRouter([
   {
     path: '/signup',
     element: <Signup />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
   {
     path: '/products',
