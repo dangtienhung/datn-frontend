@@ -1,10 +1,12 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from './requestRefresh';
 import { IRole, IRoleDocs } from '../interfaces/role.type';
+import { baseQueryWithReauth } from './Auth';
 
 const RoleApi = createApi({
   reducerPath: 'Role',
-  baseQuery: baseQueryWithReAuth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['role'],
   endpoints: (builder) => ({
     getAllRoles: builder.query<IRoleDocs, void>({

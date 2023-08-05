@@ -1,10 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
+// import baseQueryWithReAuth from './requestRefresh';
 import { IUser, IUserDocs, responseUser } from '../interfaces/user.type';
+import { baseQueryWithReauth } from './Auth';
 
 export const ApiUser = createApi({
   reducerPath: 'ApiUser',
-  baseQuery: baseQueryWithReAuth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['user'],
   endpoints: (builder) => ({
     fetchUser: builder.query<responseUser, void>({

@@ -20,7 +20,7 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
     >
       {prefix && prefix}
       <input
-        className={`p-0  ${
+        className={`p-0 outline-none  ${
           type === 'auth' &&
           'border-transparent border border-b-[#d6cdbc] text-sm outline-none py-[10px] w-full focus:ring-0'
         } 

@@ -1,11 +1,13 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from './requestRefresh';
 import { ITopping, IToppingResList } from '../interfaces/topping.type';
+import { baseQueryWithReauth } from './Auth';
 
 export const ToppingAPI = createApi({
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   reducerPath: 'Topping',
   tagTypes: ['Topping'],
-  baseQuery: baseQueryWithReAuth,
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getAllTopping: builder.query<IToppingResList, void>({
       query: () => '/api/toppings',
@@ -46,7 +48,6 @@ export const ToppingAPI = createApi({
     }),
   }),
 });
-// console.log(ToppingAPI);
 
 export const {
   useGetAllToppingQuery,

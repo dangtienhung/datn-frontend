@@ -21,7 +21,7 @@ import { RootState } from '../../store/store';
 
 const Signin = () => {
   const [loginUser, { isSuccess }] = useLoginMutation();
-  const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+  // const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
   const {
     register,
     handleSubmit,
@@ -32,8 +32,9 @@ const Signin = () => {
   });
   useEffect(() => {
     if (isSuccess) {
-      if (Object.keys(user).length > 0 && user.role?.name === 'admin') navigate('/admin');
-      if (Object.keys(user).length > 0 && user.role?.name === 'customer') navigate('/');
+      // if (Object.keys(user).length > 0 && user.role?.name === 'admin') navigate('/admin');
+      // if (Object.keys(user).length > 0 && user.role?.name === 'customer') navigate('/');
+      navigate('/');
     }
   });
   const navigate = useNavigate();
@@ -106,8 +107,10 @@ const Signin = () => {
             </div>
             <div className="flex items-center justify-center my-5 text-sm gap-x-2">
               <div>Bạn chưa có tài khoản?</div>
-              <div className="font-semibold text-[#d4b774]">
-                <Link to="/signup">Tạo tài khoản</Link>
+              <div className="font-semibold ">
+                <Link to="/signup" className="text-[#d4b774]">
+                  Tạo tài khoản
+                </Link>
               </div>
             </div>
           </form>
@@ -118,7 +121,7 @@ const Signin = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };
