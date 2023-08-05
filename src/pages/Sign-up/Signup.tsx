@@ -26,6 +26,8 @@ const Signup = () => {
   });
 
   const onRegister = (registerData: Register) => {
+    console.log(registerData);
+
     registerUser(registerData);
   };
 
