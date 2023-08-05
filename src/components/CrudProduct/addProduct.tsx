@@ -21,6 +21,7 @@ import BoxUpload from '../Upload/index';
 import Modal from '@mui/material/Modal';
 import CategoryApi from '../../api/category';
 import { useAddProductMutation } from '../../api/Product';
+import { toast } from 'react-toastify';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -92,12 +93,10 @@ const AddProductModal = ({
   const onAddProduct = handleSubmit(async (data: any) => {
     if (data) {
       const DataPost = { ...data, images: [...urls] };
-      await addProduct(DataPost);
+      await addProduct(DataPost).then((data: any) => {
+        data.error ? toast.error(data.error.data.err[0]) : setIsOpen(false);
+      });
     }
-
-    console.log({ ...data, images: [...urls] });
-
-    setIsOpen(false);
   });
 
   useEffect(() => {

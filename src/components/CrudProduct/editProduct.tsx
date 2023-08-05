@@ -101,7 +101,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     setSizeState(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const onAddProduct = handleSubmit((data: any) => {
+  const onEditProduct = handleSubmit((data: any) => {
     if (data) {
       const DataPost =
         urls.length > 0
@@ -316,7 +316,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
               Edit product
             </Button>
           ) : (
-            <Button color="primary" className="mt-[10px]" onClick={onAddProduct}>
+            <Button color="primary" className="mt-[10px]" onClick={onEditProduct}>
               Edit product
             </Button>
           )}
