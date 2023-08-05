@@ -5,12 +5,9 @@ import {
   Label,
   Modal,
   Table,
-  Textarea,
   TextInput,
+  Textarea,
 } from 'flowbite-react';
-import type { FC } from 'react';
-import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
 import {
   HiCog,
   HiDotsVertical,
@@ -21,10 +18,16 @@ import {
   HiUpload,
 } from 'react-icons/hi';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { useEffect } from 'react';
-import { getAllProducts } from '../../../store/services/product.service';
-import { RootState } from '../../../store/store';
+
+import { AiFillEye } from 'react-icons/ai';
+import type { FC } from 'react';
+import { FaPlus } from 'react-icons/fa';
 import { IProduct } from '../../../interfaces/products.type';
+import { RootState } from '../../../store/store';
+import { formatCurrency } from '../../../utils/formatCurrency';
+import { getAllProducts } from '../../../store/services/product.service';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const ProductsList = () => {
   return (
@@ -203,8 +206,8 @@ const EditProductModal: FC = function () {
   return (
     <>
       <Button color="primary" onClick={() => setOpen(!isOpen)}>
-        <HiPencilAlt className="mr-2 text-lg" />
-        Edit item
+        <HiPencilAlt className="text-lg" />
+        {/* Edit item */}
       </Button>
       <Modal onClose={() => setOpen(false)} show={isOpen}>
         <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
@@ -325,7 +328,7 @@ const ProductsTable: FC = function () {
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
-  
+
   return (
     <Table className="min-w-full  divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700">
@@ -335,7 +338,7 @@ const ProductsTable: FC = function () {
         </Table.HeadCell>
         <Table.HeadCell>Product Name</Table.HeadCell>
         <Table.HeadCell>Image</Table.HeadCell>
-        <Table.HeadCell>ID</Table.HeadCell>
+        {/* <Table.HeadCell>ID</Table.HeadCell> */}
         <Table.HeadCell>Price</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
@@ -351,23 +354,23 @@ const ProductsTable: FC = function () {
                 <div className="text-base font-semibold text-gray-900 dark:text-white">
                   {item.name}
                 </div>
-                <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                  Html templates
+                <div className="text-sm font-normal truncate text-gray-500 dark:text-gray-400">
+                  {item?.description.slice(0, 10).concat('...')}
                 </div>
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 <img width={100} src={item.images[0].url} alt="" />
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+              {/* <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 {item._id}{' '}
-              </Table.Cell>
+              </Table.Cell> */}
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 {item.sizes.map((productSize, ind: number) => {
                   return (
                     <ul key={ind}>
                       <li className="flex justify-between px-1">
                         <span>{productSize.name}</span>
-                        <span>{productSize.price}</span>
+                        <span>{formatCurrency(productSize.price)}</span>
                       </li>
                     </ul>
                   );
@@ -375,10 +378,14 @@ const ProductsTable: FC = function () {
               </Table.Cell>
               <Table.Cell className="space-x-2 whitespace-nowrap p-4">
                 <div className="flex items-center gap-x-3">
+                  <Button className="bg-yellow-300">
+                    <AiFillEye className="text-lg" />
+                    {/* Delete item */}
+                  </Button>
                   <EditProductModal />
                   <Button color="failure">
-                    <HiTrash className="mr-2 text-lg" />
-                    Delete item
+                    <HiTrash className="text-lg" />
+                    {/* Delete item */}
                   </Button>
                 </div>
               </Table.Cell>

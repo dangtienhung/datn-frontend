@@ -10,21 +10,18 @@ import {
 } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
+import { ApiProduct } from '../api/Product';
 import { ApiUser } from '../api/User';
+import ApiVoucher from '../api/voucher';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
-
+import RoleApi from '../api/role';
+import SizeApi from '../api/size';
+import { ToppingAPI } from '../api/topping';
 import cartReducer from './slices/cart.slice';
+import { categoriesReducer } from './slices/categories';
 import { productReducer } from './slices/product.slice';
 import storage from 'redux-persist/lib/storage';
-import { ApiUser } from '../api/User';
-import { ApiProduct } from '../api/Product';
-
-import { categoriesReducer } from './slices/categories';
-import { ToppingAPI } from '../api/topping';
-import ApiVoucher from '../api/voucher';
-import SizeApi from '../api/size';
-import RoleApi from '../api/role';
 
 const persistConfig = {
   key: 'root',

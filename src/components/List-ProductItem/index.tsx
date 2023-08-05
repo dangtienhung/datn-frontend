@@ -1,7 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import { IProduct } from '../../interfaces/products.type';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { useState } from 'react';
 
 interface ListProductItemProps {
   product: IProduct;
@@ -9,7 +8,6 @@ interface ListProductItemProps {
 }
 
 const ListProductItem = ({ product, fetchProductById }: ListProductItemProps) => {
-  console.log('🚀 ~ file: index.tsx:12 ~ ListProductItem ~ product:', product);
   return (
     <div
       onClick={() => fetchProductById(product._id!)}
