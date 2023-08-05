@@ -3,6 +3,7 @@ import { FaTimes, FaAngleDown } from 'react-icons/fa';
 import { IProduct } from '../../interfaces/products.type';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useEffect, useState } from 'react';
+import { useAppSelector } from '../../store/hooks';
 type PopupDetailProductProps = {
   showPopup: boolean;
   togglePopup: () => void;
