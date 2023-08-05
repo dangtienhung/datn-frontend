@@ -13,14 +13,7 @@ Yup.addMethod<Yup.StringSchema>(Yup.string, 'regexMatch', function (message: str
 Yup.addMethod<Yup.StringSchema>(Yup.string, 'checkLength', function (message) {
   return this.test('len', message, function (value) {
     const { path, createError } = this;
-    return (value && value.length >= 6) || createError({ path, message: message });
-  });
-});
-
-Yup.addMethod<Yup.StringSchema>(Yup.string, 'checkEmpty', function (message) {
-  return this.test('empty', message, function (value) {
-    const { path, createError } = this;
-    return value?.length == 0 || createError({ path, message: message });
+    return (value && value.length >= 6) || createError({ path, message });
   });
 });
 

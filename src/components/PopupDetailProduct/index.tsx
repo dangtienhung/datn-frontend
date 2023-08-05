@@ -52,7 +52,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   };
 
   useEffect(() => {
-    setPrice(product.sizes[0].price);
+    setPrice(product.sizes[0]?.price);
     setQuantity(1);
     setTotalToppingPrice(0);
     setCheckedToppings([]);
@@ -80,7 +80,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               <div className="left w-[180px] h-[180px]">
                 <img
                   className="w-full h-full rounded-md max-w-[180px] max-h-[180px]"
-                  src={product.images[0].url}
+                  src={product.images[0]?.url}
                   alt=""
                 />
               </div>
@@ -90,8 +90,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className="flex items-end mt-4 price">
                   <span className="new-price pr-[10px] text-[#8a733f] font-semibold text-sm">
-                    {product.sale > 0
-                      ? formatCurrency(price - product.sale)
+                    {product.sale && product.sale > 0
+                      ? formatCurrency(price - product?.sale)
                       : formatCurrency(price)}
                   </span>
                   {product.sale ? (
@@ -129,15 +129,15 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           quantity,
                           image: product.images[0].url,
                           // price: price - product.sale,
-                          price: nameRadioInput.price - product.sale,
-                          total: (price - product.sale) * quantity,
+                          price: nameRadioInput.price - product.sale!,
+                          total: (price - product.sale!) * quantity,
                         })
                       );
                     }}
                     className="btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] ml-[30px] text-sm"
                   >
                     +
-                    {product.sale > 0
+                    {product.sale && product.sale > 0
                       ? formatCurrency((price - product.sale) * quantity)
                       : formatCurrency(price * quantity)}
                   </button>
