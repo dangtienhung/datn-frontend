@@ -14,6 +14,9 @@ export interface IUser {
   products?: string[];
   order?: string[];
   role?: IRole;
+  email?: string;
+  status?: string;
+  deleted?: boolean;
   accessToken?: string;
   refreshToken?: string;
 }

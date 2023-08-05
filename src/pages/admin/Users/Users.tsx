@@ -1,4 +1,13 @@
-import { Breadcrumb, Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react';
+import {
+  Breadcrumb,
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  Select,
+  Table,
+  TextInput,
+} from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import {
@@ -13,8 +22,24 @@ import {
   HiPlus,
   HiTrash,
 } from 'react-icons/hi';
+import { useDeleteUserMutation, useGetAllUsersQuery } from '../../../api/User';
+import Loading from '../../../components/Loading';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import { IUserDocs } from '../../../interfaces/user.type';
+import Pagination from '../../../components/admin/Pagination';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const UserList: FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { data: users, isLoading, isError } = useGetAllUsersQuery(currentPage);
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
   return (
     <>
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
@@ -97,19 +122,55 @@ const UserList: FC = () => {
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow">
-              <AllUsersTable />
+              <AllUsersTable users={users!} isLoading={isLoading} isError={isError} />
             </div>
           </div>
         </div>
       </div>
-      <Pagination />
+      <Pagination
+        nextPage={handleNextPage}
+        prevPage={handlePrevPage}
+        hasPrev={users?.hasPrevPage!}
+        hasNext={users?.hasNextPage!}
+      />
     </>
   );
 };
 
-const AllUsersTable: FC = function () {
+type AllUsersTableProps = {
+  users: IUserDocs;
+  isLoading: boolean;
+  isError: boolean;
+};
+const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProps) {
+  const [deleteUser, { isLoading: isDeleting, isError: isDeleteErr }] = useDeleteUserMutation();
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      icon: 'question',
+      title: 'Do you want to delete this user?',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteUser(id).then(() => {
+          if (!isDeleteErr) {
+            toast.success('Deleted success');
+          } else {
+            toast.error('Delete failed');
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Everything is safe',
+        });
+      }
+    });
+  };
+
+  if (isLoading) return <Loading />;
+  if (isError) return <div>Loi roi</div>;
   return (
-    <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+    <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700">
         <Table.HeadCell>
           <Label htmlFor="select-all" className="sr-only">
@@ -117,62 +178,78 @@ const AllUsersTable: FC = function () {
           </Label>
           <Checkbox id="select-all" name="select-all" />
         </Table.HeadCell>
-        <Table.HeadCell>Name</Table.HeadCell>
+        <Table.HeadCell>User Name</Table.HeadCell>
         <Table.HeadCell>Position</Table.HeadCell>
-        <Table.HeadCell>Country</Table.HeadCell>
+        <Table.HeadCell>Deleted</Table.HeadCell>
         <Table.HeadCell>Status</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((_, index: number) => (
-          <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Table.Cell className="w-4 p-4">
-              <div className="flex items-center">
-                <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
-                <label htmlFor="checkbox-1" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </Table.Cell>
-            <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-              <img
-                className="h-10 w-10 rounded-full"
-                src="/images/users/neil-sims.png"
-                alt="Neil Sims avatar"
-              />
-              <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                <div className="text-base font-semibold text-gray-900 dark:text-white">
-                  Neil Sims
+        {users?.docs &&
+          users?.docs.map((user) => (
+            <Table.Row key={user._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Table.Cell className="w-4 p-4">
+                <div className="flex items-center">
+                  <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
+                  <label htmlFor="checkbox-1" className="sr-only">
+                    checkbox
+                  </label>
                 </div>
+              </Table.Cell>
+              <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={user.avatar || `https://api.multiavatar.com/${user.username}.png`}
+                  alt={user.username}
+                />
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                  neil.sims@flowbite.com
-                </div>
-              </div>
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              Front-end developer
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-              United States
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-normal text-gray-900 dark:text-white">
-              <div className="flex items-center">
-                <div className="mr-2 h-2.5 w-2.5 rounded-full bg-green-400"></div> Active
-              </div>
-            </Table.Cell>
-            <Table.Cell>
-              <div className="flex items-center gap-x-3 whitespace-nowrap">
-                <EditUserModal />
-                <Button color="failure">
-                  <div className="flex items-center gap-x-2">
-                    <HiTrash className="text-lg" />
-                    Delete user
+                  <div className="text-base font-semibold text-gray-900 dark:text-white">
+                    {user.username}
                   </div>
-                </Button>
-              </div>
-            </Table.Cell>
-          </Table.Row>
-        ))}
+                  <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    {user?.account || user?.email}
+                  </div>
+                </div>
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
+                {user?.role?.name}
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-white dark:text-white capitalize ">
+                <span
+                  className={`${
+                    user?.deleted === true ? 'bg-red-400 ' : 'bg-green-400 '
+                  } rounded inline-block px-2`}
+                >
+                  {user?.deleted === true ? 'true' : 'false'}
+                </span>
+              </Table.Cell>
+              <Table.Cell className="whitespace-nowrap p-4 text-base font-normal text-gray-900 dark:text-white">
+                <div className="flex items-center  capitalize">
+                  <div
+                    className={`mr-2 h-2.5 w-2.5 rounded-full  ${
+                      user?.status === 'active' ? 'bg-green-400' : 'bg-red-400'
+                    }`}
+                  ></div>
+                  {user?.status || 'Not Active'}
+                </div>
+              </Table.Cell>
+              <Table.Cell>
+                <div className="flex items-center gap-x-3 whitespace-nowrap">
+                  <EditUserModal />
+                  <Button color="failure" onClick={() => handleDelete(user._id!)}>
+                    <div className="flex items-center gap-x-2">
+                      {isDeleting ? (
+                        <AiOutlineLoading3Quarters className="text-lg rotate" />
+                      ) : (
+                        <HiTrash className="text-lg" />
+                      )}
+                      Delete user
+                    </div>
+                  </Button>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          ))}
       </Table.Body>
     </Table>
   );
@@ -263,59 +340,54 @@ const EditUserModal: FC = function () {
             <div>
               <Label htmlFor="firstName">First name</Label>
               <div className="mt-1">
-                <TextInput id="firstName" name="firstName" placeholder="Bonnie" />
+                <TextInput name="firstName" placeholder="Bonnie" />
               </div>
             </div>
             <div>
               <Label htmlFor="lastName">Last name</Label>
               <div className="mt-1">
-                <TextInput id="lastName" name="lastName" placeholder="Green" />
+                <TextInput name="lastName" placeholder="Green" />
               </div>
             </div>
             <div>
               <Label htmlFor="email">Email</Label>
               <div className="mt-1">
-                <TextInput id="email" name="email" placeholder="example@company.com" type="email" />
+                <TextInput name="email" placeholder="example@company.com" type="email" />
               </div>
             </div>
             <div>
               <Label htmlFor="phone">Phone number</Label>
               <div className="mt-1">
-                <TextInput id="phone" name="phone" placeholder="e.g., +(12)3456 789" type="tel" />
+                <TextInput name="phone" placeholder="e.g., +(12)3456 789" type="tel" />
               </div>
             </div>
             <div>
               <Label htmlFor="department">Department</Label>
               <div className="mt-1">
-                <TextInput id="department" name="department" placeholder="Development" />
+                <TextInput name="department" placeholder="Development" />
               </div>
             </div>
             <div>
-              <Label htmlFor="company">Company</Label>
+              <Label htmlFor="company">Role</Label>
               <div className="mt-1">
-                <TextInput id="company" name="company" placeholder="Somewhere" />
+                <Select>
+                  <option value="">abc</option>
+                  <option value="">xyz</option>
+                  <option value="">111</option>
+                </Select>
+                {/* <TextInput name="company" placeholder="Somewhere" /> */}
               </div>
             </div>
             <div>
               <Label htmlFor="passwordCurrent">Current password</Label>
               <div className="mt-1">
-                <TextInput
-                  id="passwordCurrent"
-                  name="passwordCurrent"
-                  placeholder="••••••••"
-                  type="password"
-                />
+                <TextInput name="passwordCurrent" placeholder="••••••••" type="password" />
               </div>
             </div>
             <div>
               <Label htmlFor="passwordNew">New password</Label>
               <div className="mt-1">
-                <TextInput
-                  id="passwordNew"
-                  name="passwordNew"
-                  placeholder="••••••••"
-                  type="password"
-                />
+                <TextInput name="passwordNew" placeholder="••••••••" type="password" />
               </div>
             </div>
           </div>
@@ -330,48 +402,4 @@ const EditUserModal: FC = function () {
   );
 };
 
-const Pagination: FC = function () {
-  return (
-    <div className="sticky right-0 bottom-0 w-full items-center border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between">
-      <div className="mb-4 flex items-center sm:mb-0">
-        <a
-          href="#"
-          className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <span className="sr-only">Previous page</span>
-          <HiChevronLeft className="text-2xl" />
-        </a>
-        <a
-          href="#"
-          className="mr-2 inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <span className="sr-only">Next page</span>
-          <HiChevronRight className="text-2xl" />
-        </a>
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-          Showing&nbsp;
-          <span className="font-semibold text-gray-900 dark:text-white">1-20</span>
-          &nbsp;of&nbsp;
-          <span className="font-semibold text-gray-900 dark:text-white">2290</span>
-        </span>
-      </div>
-      <div className="flex items-center space-x-3">
-        <a
-          href="#"
-          className="inline-flex flex-1 items-center justify-center rounded-lg bg-primary-700 py-2 px-3 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          <HiChevronLeft className="mr-1 text-base" />
-          Previous
-        </a>
-        <a
-          href="#"
-          className="inline-flex flex-1 items-center justify-center rounded-lg bg-primary-700 py-2 px-3 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          Next
-          <HiChevronRight className="ml-1 text-base" />
-        </a>
-      </div>
-    </div>
-  );
-};
 export default UserList;

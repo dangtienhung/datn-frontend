@@ -214,7 +214,7 @@ const AddVoucherModal = function () {
       toast.success(`Added voucher ${data.code}`);
       reset();
     } else {
-      toast.success(`Added failed`);
+      toast.error(`Added failed`);
     }
     setOpen(false);
   };
