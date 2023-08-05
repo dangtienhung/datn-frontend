@@ -8,7 +8,7 @@ export interface IProduct {
   name: string;
   images: IImage[];
   description: string;
-  price: string;
+  price: number;
   sale?: number;
   category: ICategory;
   sizes: ISize[];
