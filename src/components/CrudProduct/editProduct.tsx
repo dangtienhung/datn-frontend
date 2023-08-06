@@ -24,6 +24,7 @@ import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../api/Pr
 import { IProduct } from '../../interfaces/products.type';
 import { BiEditAlt } from 'react-icons/bi';
 import { toast } from 'react-toastify';
+import DynamicallyField from '../DynamicallyField';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -55,7 +56,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
       sale: DataEdit.sale,
       description: DataEdit.description,
       toppings: DataEdit.toppings.map((item) => item._id!),
-      sizes: DataEdit.sizes?.map((item) => item._id!),
     } as any,
   });
 
@@ -65,6 +65,8 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
 
   const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery();
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery();
+  const [DynamicSize, setDynamicSize] = useState<any[]>([]);
+  const [submit, setSubmit] = useState(false);
 
   const [updateProduct, { isSuccess }] = useUpdateProductMutation();
 
@@ -92,20 +94,20 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     setToppingState(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const handleChangeSize = (event: SelectChangeEvent<typeof sizeState>) => {
-    setValue('sizes', event.target.value as any, { shouldValidate: true });
-    const {
-      target: { value },
-    } = event;
-    setSizeState(typeof value === 'string' ? value.split(',') : value);
-  };
-
   const onEditProduct = handleSubmit((data: any) => {
-    if (data) {
+    console.log({
+      _id: DataEdit._id,
+      ...data,
+      images: [...DataEdit.images],
+      sizes: [...DynamicSize],
+    });
+
+    // { ...data, images: [...urls], sizes: [...DynamicSize] }
+    if (data && submit) {
       const DataPost =
         urls.length > 0
           ? { _id: DataEdit._id, ...data, images: [...urls] }
-          : { _id: DataEdit._id, ...data, images: [...DataEdit.images] };
+          : { _id: DataEdit._id, ...data, images: [...DataEdit.images], sizes: [...DynamicSize] };
 
       updateProduct(DataPost).then((data: any) => {
         data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
@@ -247,6 +249,15 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                   {errors.sale && errors.sale.message}
                 </span>
               </div>
+              <div>
+                <Label htmlFor="price">Size</Label>
+                <DynamicallyField
+                  setSubmit={setSubmit}
+                  setDynamic={setDynamicSize}
+                  submit={submit}
+                  dataSize={DataEdit.sizes}
+                />
+              </div>
               <div className="lg:col-span-2">
                 <Label htmlFor="producTable.Celletails">Product details</Label>
                 <Textarea
@@ -274,7 +285,14 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
               Edit product
             </Button>
           ) : (
-            <Button color="primary" className="mt-[10px]" onClick={onEditProduct}>
+            <Button
+              color="primary"
+              className="mt-[10px]"
+              onClick={() => {
+                onEditProduct();
+                setSubmit(true);
+              }}
+            >
               Edit product
             </Button>
           )}

@@ -22,6 +22,8 @@ import Modal from '@mui/material/Modal';
 import CategoryApi from '../../api/category';
 import { useAddProductMutation } from '../../api/Product';
 import { toast } from 'react-toastify';
+import { BiPlusMedical } from 'react-icons/bi';
+import DynamicField from '../DynamicallyField';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -57,9 +59,10 @@ const AddProductModal = ({
 
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [DynamicSize, setDynamicSize] = useState<any[]>([]);
+  const [submit, setSubmit] = useState(false);
 
   const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery();
-  const [getDataSize, { data: DataSize }] = SizeApi.endpoints.getAllSizes.useLazyQuery();
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery();
   const [addProduct] = useAddProductMutation();
   const {
@@ -72,7 +75,6 @@ const AddProductModal = ({
   const [urls, setUrl] = useState<IImage[]>([]);
   const theme = useTheme();
   const [toppingState, setToppingState] = useState<string[]>([]);
-  const [sizeState, setSizeState] = useState<string[]>([]);
 
   const handleChangeTopping = (event: SelectChangeEvent<typeof toppingState>) => {
     setValue('toppings', event.target.value as any, { shouldValidate: true });
@@ -82,20 +84,18 @@ const AddProductModal = ({
     setToppingState(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const handleChangeSize = (event: SelectChangeEvent<typeof sizeState>) => {
-    setValue('sizes', event.target.value as any, { shouldValidate: true });
-    const {
-      target: { value },
-    } = event;
-    setSizeState(typeof value === 'string' ? value.split(',') : value);
-  };
-
   const onAddProduct = handleSubmit(async (data: any) => {
-    if (data) {
-      const DataPost = { ...data, images: [...urls] };
-      await addProduct(DataPost).then((data: any) => {
-        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
+    if (submit) {
+      DynamicSize.forEach((item) => {
+        return delete item.errors;
       });
+      console.log(DynamicSize);
+      console.log({ ...data, images: [...urls], sizes: [...DynamicSize] });
+      await addProduct({ ...data, images: [...urls], sizes: [...DynamicSize] }).then(
+        (data: any) => {
+          data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
+        }
+      );
     }
   });
 
@@ -228,6 +228,10 @@ const AddProductModal = ({
                   {errors.sale && errors.sale.message}
                 </span>
               </div>
+              <div>
+                <Label htmlFor="price">Size</Label>
+                <DynamicField setSubmit={setSubmit} setDynamic={setDynamicSize} submit={submit} />
+              </div>
               <div className="lg:col-span-2">
                 <Label htmlFor="producTable.Celletails">Product details</Label>
                 <Textarea
@@ -255,7 +259,14 @@ const AddProductModal = ({
               Add product
             </Button>
           ) : (
-            <Button color="primary" className="mt-[10px]" onClick={onAddProduct}>
+            <Button
+              color="primary"
+              className="mt-[10px]"
+              onClick={() => {
+                onAddProduct();
+                setSubmit(true);
+              }}
+            >
               Add product
             </Button>
           )}
@@ -265,4 +276,4 @@ const AddProductModal = ({
   );
 };
 
-export default memo(AddProductModal);
+export default AddProductModal;
