@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import CardSigin from '../../components/CardSignin';
 import { BiLogoGoogle, BiLogoFacebookSquare, BiLogoTwitter } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 // type Props = {};
 
 // type Login = {
@@ -19,6 +21,7 @@ import { BiLogoGoogle, BiLogoFacebookSquare, BiLogoTwitter } from 'react-icons/b
 
 const Signin = () => {
   const [loginUser, { isSuccess }] = useLoginMutation();
+  // const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
   const {
     register,
     handleSubmit,
@@ -27,7 +30,6 @@ const Signin = () => {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema),
   });
-
   const navigate = useNavigate();
   const onLogin = (loginData: IUser) => {
     loginUser(loginData).then((data: any) => {
@@ -96,8 +98,10 @@ const Signin = () => {
             </div>
             <div className="flex items-center justify-center my-5 text-sm gap-x-2">
               <div>Bạn chưa có tài khoản?</div>
-              <div className="font-semibold text-[#d4b774]">
-                <Link to="/signup">Tạo tài khoản</Link>
+              <div className="font-semibold ">
+                <Link to="/signup" className="text-[#d4b774]">
+                  Tạo tài khoản
+                </Link>
               </div>
             </div>
           </form>
@@ -108,7 +112,7 @@ const Signin = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { responseUser } from '../interfaces/user.type';
+// import baseQueryWithReAuth from './requestRefresh';
+import { IUser, IUserDocs, responseUser } from '../interfaces/user.type';
 import { baseQueryWithReauth } from './Auth';
 
 export const ApiUser = createApi({
@@ -14,8 +15,23 @@ export const ApiUser = createApi({
         credentials: 'include',
       }),
     }),
+
+    //get all user
+    getAllUsers: builder.query<IUserDocs, number>({
+      query: (page = 5) => `/api/users?_page=${page}`,
+      providesTags: ['user'],
+    }),
+
+    //delete user
+    deleteUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['user'],
+    }),
   }),
 });
 
-export const { useFetchUserQuery } = ApiUser;
+export const { useFetchUserQuery, useGetAllUsersQuery, useDeleteUserMutation } = ApiUser;
 export const SizeReducer = ApiUser.reducer;

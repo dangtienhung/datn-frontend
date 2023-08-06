@@ -26,13 +26,13 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
       <div className="img">
         <img
           className="transition-all group-hover:scale-[1.2]"
-          src={product.images[0].url}
-          alt={product.name}
+          src={product.images[0]?.url}
+          alt={product?.name}
         />
       </div>
       <div className="product-content relative top-[50px] flex flex-col items-center transition-all bg-[#f5f5f5] group-hover:top-0">
         <div className="item-title w-full text-[16px] font-[700] px-2 mt-[18px] text-center">
-          <h4 className="line-clamp-2">{product.name}</h4>
+          <h4 className="line-clamp-2">{product?.name}</h4>
         </div>
         <div className="flex items-center mt-6 item-price gap-x-2">
           <span className="text-[#8a733f] text-sm font-[700] ">
@@ -40,7 +40,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
               ? formatCurrency(product.sizes[0]?.price - product.sale)
               : formatCurrency(product.sizes && product.sizes[0].price)}
           </span>
-          {product.sale !== 0 && (
+          {product?.sale !== 0 && (
             <span className="text-[#bebebe] text-sm line-through">
               {formatCurrency(product.sizes && product.sizes[0]?.price)}
             </span>

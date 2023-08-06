@@ -10,9 +10,6 @@ type Props = {};
 const AccountLayout = () => {
   const [logout, { isSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (isSuccess) window.location.href = '/';
-  // });
   return (
     <>
       <Header />
