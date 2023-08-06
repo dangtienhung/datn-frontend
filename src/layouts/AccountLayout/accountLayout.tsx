@@ -12,6 +12,7 @@ const AccountLayout = (props: Props) => {
   useEffect(() => {
     if (isSuccess) window.location.href = '/';
   });
+
   return (
     <>
       <Header />

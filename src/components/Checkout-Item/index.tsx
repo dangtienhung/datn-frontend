@@ -1,27 +1,44 @@
-import React from 'react';
+import { CartLists } from '../../store/slices/types/cart.type';
+import { formatCurrency } from '../../utils/formatCurrency';
+import { v4 as uuidv4 } from 'uuid';
 
-type Props = {};
+type Props = {
+  dataCartCheckout: CartLists;
+};
 
-const CheckoutItem = (props: Props) => {
+const CheckoutItem = ({ dataCartCheckout }: Props) => {
   return (
-    <div className="item py-2 flex gap-x-3 border-transparent border border-b-[#f1f1f1]">
-      <img
-        className="w-[70px] max-w-[70px]"
-        src="https://tocotocotea.com/wp-content/uploads/2023/05/O-Long-Man-Chanh-Leo.jpg"
-        alt=""
-      />
-      <div className="content-item">
-        <div className="title pb-[5px]">
-          <h4 className="font-bold text-sm ">Ô Long Mận Chanh Leo(M)</h4>
+    <>
+      {dataCartCheckout.items.map((item) => (
+        <div
+          key={uuidv4()}
+          className="item py-2 flex gap-x-3 border-transparent border border-b-[#f1f1f1]"
+        >
+          <img className="w-[70px] max-w-[70px]" src={item.image} alt="" />
+          <div className="content-item">
+            <div className="title pb-[5px]">
+              <h4 className="font-bold text-sm ">
+                {dataCartCheckout.name}({item.size.name})
+              </h4>
+            </div>
+            <div className="cutoms pl-[5px] ">
+              <span className="text-[#7c7c7c] text-[13px] ">
+                {item.toppings.map(
+                  (topping) => `${topping.name} (${formatCurrency(topping.price)}) ,`
+                )}
+              </span>
+            </div>
+            <div className="quanlity pl-[5px] pt-[3px]">
+              <p className="text-[13px] text-[#8a733f] font-bold">
+                {item.price} x {item.quantity}{' '}
+                {item.toppings.map((item) => (item ? `+ ${item.price}` : ''))}={' '}
+                {formatCurrency(item.total)}{' '}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="cutoms pl-[5px] ">
-          <span className="text-[#7c7c7c] text-[13px] ">70% đường,Làm nóng,</span>
-        </div>
-        <div className="quanlity pl-[5px] pt-[3px]">
-          <p className="text-[13px] text-[#8a733f] font-bold">25.000đ x 1 = 25.000đ</p>
-        </div>
-      </div>
-    </div>
+      ))}
+    </>
   );
 };
 

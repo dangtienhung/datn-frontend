@@ -10,7 +10,7 @@ import {
 } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { ApiProduct } from '../api/Product';
+import { ApiProducts } from '../api/Product';
 import { ApiUser } from '../api/User';
 import ApiVoucher from '../api/voucher';
 import { Auth } from '../api/Auth';
@@ -22,12 +22,13 @@ import cartReducer from './slices/cart.slice';
 import { categoriesReducer } from './slices/categories';
 import { productReducer } from './slices/product.slice';
 import storage from 'redux-persist/lib/storage';
+import CategoryApi from '../api/category';
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart'],
+  whitelist: ['cart', 'auth'],
 };
 const rootReducer = combineReducers({
   products: productReducer,
@@ -41,27 +42,30 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: {
     persistedReducer,
-    [Auth.reducerPath]: Auth.reducer,
     [ApiUser.reducerPath]: ApiUser.reducer,
-    [ApiProduct.reducerPath]: ApiProduct.reducer,
+    [ApiProducts.reducerPath]: ApiProducts.reducer,
     [ToppingAPI.reducerPath]: ToppingAPI.reducer,
     [ApiVoucher.reducerPath]: ApiVoucher.reducer,
     [SizeApi.reducerPath]: SizeApi.reducer,
     [RoleApi.reducerPath]: RoleApi.reducer,
+    [CategoryApi.reducerPath]: CategoryApi.reducer,
+    [Auth.reducerPath]: Auth.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    })
-      .concat(Auth.middleware)
-      .concat(ApiUser.middleware)
-      .concat(ApiProduct.middleware)
-      .concat(ToppingAPI.middleware)
-      .concat(ApiVoucher.middleware)
-      .concat(SizeApi.middleware)
-      .concat(RoleApi.middleware),
+    }).concat(
+      ApiUser.middleware,
+      ApiProducts.middleware,
+      ToppingAPI.middleware,
+      ApiVoucher.middleware,
+      SizeApi.middleware,
+      RoleApi.middleware,
+      CategoryApi.middleware,
+      Auth.middleware
+    ),
 });
 
 export const persistor = persistStore(store);
