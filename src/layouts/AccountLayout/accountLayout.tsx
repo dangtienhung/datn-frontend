@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AiFillHome, AiOutlineUser, AiFillCreditCard } from 'react-icons/ai';
 import { GrLogout } from 'react-icons/gr';
 import { MdShoppingCart } from 'react-icons/md';
@@ -7,11 +7,12 @@ import { useLogoutMutation } from '../../api/Auth';
 import { useEffect } from 'react';
 type Props = {};
 
-const AccountLayout = (props: Props) => {
+const AccountLayout = () => {
   const [logout, { isSuccess }] = useLogoutMutation();
-  useEffect(() => {
-    if (isSuccess) window.location.href = '/';
-  });
+  const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (isSuccess) window.location.href = '/';
+  // });
   return (
     <>
       <Header />
@@ -40,7 +41,10 @@ const AccountLayout = (props: Props) => {
 
             <div className="menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]">
               <GrLogout className="text-[14px] mr-2 " />
-              <p onClick={() => logout()} className="cursor-pointer">
+              <p
+                onClick={() => logout().then(() => (window.location.href = '/'))}
+                className="cursor-pointer"
+              >
                 Đăng xuất
               </p>
             </div>

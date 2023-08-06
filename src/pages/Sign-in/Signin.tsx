@@ -27,9 +27,7 @@ const Signin = () => {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema),
   });
-  useEffect(() => {
-    if (isSuccess) navigate('/');
-  });
+
   const navigate = useNavigate();
   const onLogin = (loginData: IUser) => {
     loginUser(loginData).then((data: any) => {
@@ -37,6 +35,8 @@ const Signin = () => {
         return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
+      } else {
+        window.location.href = '/';
       }
     });
   };

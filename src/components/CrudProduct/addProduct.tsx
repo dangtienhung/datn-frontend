@@ -94,14 +94,13 @@ const AddProductModal = ({
     if (data) {
       const DataPost = { ...data, images: [...urls] };
       await addProduct(DataPost).then((data: any) => {
-        data.error ? toast.error(data.error.data.err[0]) : setIsOpen(false);
+        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
       });
     }
   });
 
   useEffect(() => {
     getDataTopping();
-    getDataSize();
     getCategory();
   }, [DataCategory]);
 
@@ -198,44 +197,6 @@ const AddProductModal = ({
                 </SelectMui>
                 <span className="text-red-500 text-sm block my-2">
                   {errors.toppings && errors.toppings.message}
-                </span>
-              </div>
-              <div>
-                <Label htmlFor="brand">Size</Label>
-                <SelectMui
-                  className="w-full mt-1"
-                  labelId="demo-multiple-chip-label"
-                  id="demo-multiple-chip"
-                  multiple
-                  value={sizeState}
-                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip
-                          key={value}
-                          label={DataSize?.docs.find((item) => item._id === value)?.name}
-                        />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                  {...register('sizes')}
-                  name="sizes"
-                  onChange={handleChangeSize}
-                >
-                  {DataSize?.docs.map((size) => (
-                    <MenuItem
-                      key={size._id}
-                      value={size._id}
-                      style={getStyles(size.name, sizeState, theme)}
-                    >
-                      {size.name}
-                    </MenuItem>
-                  ))}
-                </SelectMui>
-                <span className="text-red-500 text-sm block my-2">
-                  {errors.sizes && errors.sizes.message}
                 </span>
               </div>
               <div>

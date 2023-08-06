@@ -39,7 +39,7 @@ const MenuProps = {
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      personName?.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
@@ -55,7 +55,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
       sale: DataEdit.sale,
       description: DataEdit.description,
       toppings: DataEdit.toppings.map((item) => item._id!),
-      sizes: DataEdit.sizes.map((item) => item._id!),
+      sizes: DataEdit.sizes?.map((item) => item._id!),
     } as any,
   });
 
@@ -64,7 +64,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery();
-  const [getDataSize, { data: DataSize }] = SizeApi.endpoints.getAllSizes.useLazyQuery();
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery();
 
   const [updateProduct, { isSuccess }] = useUpdateProductMutation();
@@ -107,21 +106,18 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
         urls.length > 0
           ? { _id: DataEdit._id, ...data, images: [...urls] }
           : { _id: DataEdit._id, ...data, images: [...DataEdit.images] };
-      console.log(DataPost);
 
       updateProduct(DataPost).then((data: any) => {
-        data.error ? toast.error(data.error.data.err[0]) : setIsOpen(false);
+        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
       });
     }
   });
 
   useEffect(() => {
     getDataTopping();
-    getDataSize();
     getCategory();
     setToppingState(DataEdit.toppings.map((item) => item._id!));
-    setSizeState(DataEdit.sizes.map((item) => item._id!));
-  }, [DataCategory]);
+  }, []);
 
   return (
     <div>
@@ -167,7 +163,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   labelId="demo-simple-select-label"
-                  defaultValue={DataEdit.category._id}
+                  defaultValue={DataEdit.category?._id}
                   id="demo-simple-select"
                   label="Age"
                   className="w-full h-[42px] mt-1"
@@ -220,44 +216,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                 </SelectMui>
                 <span className="text-red-500 text-sm block my-2">
                   {errors.toppings && errors.toppings.message}
-                </span>
-              </div>
-              <div>
-                <Label htmlFor="brand">Size</Label>
-                <SelectMui
-                  className="w-full mt-1"
-                  labelId="demo-multiple-chip-label"
-                  id="demo-multiple-chip"
-                  multiple
-                  value={sizeState}
-                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip
-                          key={value}
-                          label={DataSize?.docs.find((item) => item._id === value)?.name}
-                        />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                  {...register('sizes')}
-                  name="sizes"
-                  onChange={handleChangeSize}
-                >
-                  {DataSize?.docs.map((size) => (
-                    <MenuItem
-                      key={size._id}
-                      value={size._id}
-                      style={getStyles(size.name, sizeState, theme)}
-                    >
-                      {size.name}
-                    </MenuItem>
-                  ))}
-                </SelectMui>
-                <span className="text-red-500 text-sm block my-2">
-                  {errors.sizes && errors.sizes.message}
                 </span>
               </div>
               <div>

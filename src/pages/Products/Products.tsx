@@ -12,6 +12,8 @@ const ProductsPage = () => {
       try {
         /* gọi api categories */
         const response = await http.get('/categories?_page=1');
+        console.log(response);
+
         const categories = response.data;
         /* set categories thành 1 mảng */
         setCategories(categories.docs);

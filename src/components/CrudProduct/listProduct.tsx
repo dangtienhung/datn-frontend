@@ -50,7 +50,7 @@ const ProductsTable: FC = function () {
                 <img src={product.images[0]?.url} alt="" />
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {product.category.name}
+                {product.category?.name}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 {formatCurrency(product.price)}
