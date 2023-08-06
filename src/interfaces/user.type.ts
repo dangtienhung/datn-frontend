@@ -1,3 +1,5 @@
+import { IRole } from './role.type';
+
 export interface IUser {
   _id?: string;
   googleId?: string;
@@ -11,7 +13,10 @@ export interface IUser {
   address?: string;
   products?: string[];
   order?: string[];
-  role?: string;
+  role?: IRole;
+  email?: string;
+  status?: string;
+  deleted?: boolean;
   accessToken?: string;
   refreshToken?: string;
 }

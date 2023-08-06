@@ -14,35 +14,35 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         <span className="-rotate-12 bg-[#d3b673] rounded-[50%] flex justify-center items-center text-white w-10 h-10 text-sm font-bold ">
           new
         </span>
-        {product.sale !== 0 && (
+        {product?.sale !== 0 && product.sizes && (
           <span
             className="flex items-center justify-center h-10 w-10 font-bold
-    bg-[#282828] text-[#d3b673] rounded-[50%]"
+      bg-[#282828] text-[#d3b673] rounded-[50%]"
           >
-            {saleCaculator(product.sizes[0].price, product.sale)}%
+            {saleCaculator(product.sizes[0]?.price, product.sale as number)}%
           </span>
         )}
       </div>
       <div className="img">
         <img
           className="transition-all group-hover:scale-[1.2]"
-          src={product.images[0].url}
-          alt={product.name}
+          src={product.images[0]?.url}
+          alt={product?.name}
         />
       </div>
       <div className="product-content relative top-[50px] flex flex-col items-center transition-all bg-[#f5f5f5] group-hover:top-0">
         <div className="item-title w-full text-[16px] font-[700] px-2 mt-[18px] text-center">
-          <h4 className="line-clamp-2">{product.name}</h4>
+          <h4 className="line-clamp-2">{product?.name}</h4>
         </div>
         <div className="flex items-center mt-6 item-price gap-x-2">
           <span className="text-[#8a733f] text-sm font-[700] ">
-            {product.sale
+            {product.sale && product.sizes
               ? formatCurrency(product.sizes[0].price - product.sale)
-              : formatCurrency(product.sizes[0].price)}
+              : formatCurrency(product.sizes && product.sizes[0].price)}
           </span>
-          {product.sale !== 0 && (
+          {product?.sale !== 0 && (
             <span className="text-[#bebebe] text-sm line-through">
-              {formatCurrency(product.sizes[0].price)}
+              {formatCurrency(product?.sizes[0]?.price)}
             </span>
           )}
         </div>
@@ -55,8 +55,8 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
             Đặt hàng
           </Button>
           {/* <button className="border border-[#d3b673] bg-[#d3b673] text-white uppercase text-[16px] py-[2px]  px-4">
-            Đặt hàng
-          </button> */}
+              Đặt hàng
+            </button> */}
         </div>
       </div>
     </div>

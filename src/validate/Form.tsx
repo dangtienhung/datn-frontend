@@ -18,12 +18,10 @@ export type Register = Yup.InferType<typeof RegisterSchema>;
 
 export type Login = Yup.InferType<typeof LoginSchema>;
 
-// export default Register;
-
 //size schema
 export const SizeSchema = Yup.object({
   name: Yup.string().required('Name is required'),
-  price: Yup.string().required('Price is required'),
+  price: Yup.number().required('Price is required'),
 });
 
 // category schema
@@ -48,3 +46,23 @@ export const VoucherSchema = Yup.object({
 });
 
 export type VoucherForm = Yup.InferType<typeof VoucherSchema>;
+
+export const ProductSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+  description: Yup.string().required('Description is required'),
+  price: Yup.number().typeError('Price is required').required(''),
+  sale: Yup.number().default(0),
+  category: Yup.string().required('Category is required'),
+  sizes: Yup.array().typeError('Size is required').min(1, 'Please select one Size'),
+  toppings: Yup.array().typeError('Topping is required').min(1, 'Please select one Topping'),
+});
+
+export type ProductForm = Yup.InferType<typeof ProductSchema>;
+
+export const UserCheckoutSchema = Yup.object({
+  name: Yup.string().required(),
+  phone: Yup.string().required(),
+  shippingLocation: Yup.string().required(),
+  shippingNote: Yup.string().required(),
+  paymentMethod: Yup.string().required(),
+});
