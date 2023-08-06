@@ -22,6 +22,7 @@ import cartReducer from './slices/cart.slice';
 import { categoriesReducer } from './slices/categories';
 import { productReducer } from './slices/product.slice';
 import storage from 'redux-persist/lib/storage';
+import { OrderAPI } from './slices/order';
 
 const persistConfig = {
   key: 'root',
@@ -48,6 +49,7 @@ export const store = configureStore({
     [ApiVoucher.reducerPath]: ApiVoucher.reducer,
     [SizeApi.reducerPath]: SizeApi.reducer,
     [RoleApi.reducerPath]: RoleApi.reducer,
+    [OrderAPI.reducerPath]: OrderAPI.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -61,7 +63,8 @@ export const store = configureStore({
       .concat(ToppingAPI.middleware)
       .concat(ApiVoucher.middleware)
       .concat(SizeApi.middleware)
-      .concat(RoleApi.middleware),
+      .concat(RoleApi.middleware)
+      .concat(OrderAPI.middleware),
 });
 
 export const persistor = persistStore(store);
