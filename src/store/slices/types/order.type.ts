@@ -9,3 +9,78 @@ export interface IOrderRes {
   paymentMethodId: string;
   inforOrderShipping: { name: string; phone: string; address: string; noteShipping: string };
 }
+
+enum StatusOrder {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  DELIVERED = 'delivered',
+  DONE = 'done',
+  CANCELED = 'canceled',
+}
+
+enum PaymentMethod {
+  COD = 'cod',
+  MOMO = 'momo',
+  ZALO = 'zalo',
+}
+
+export interface IOrder {
+  inforOrderShipping: {
+    name: string;
+    address: string;
+    phone: string;
+    noteShipping: string;
+  };
+  _id: string;
+  user: {
+    _id: string;
+    googleId: string;
+    username: string;
+    avatar: string;
+  };
+  items: [
+    {
+      size: {
+        name: string;
+        price: number;
+      };
+      product: {
+        _id: string;
+        name: string;
+        sale: number;
+      };
+      image: string;
+      quantity: number;
+      price: number;
+      toppings: [
+        {
+          name: string;
+          price: number;
+          _id: string;
+        }
+      ];
+      _id: string;
+    }
+  ];
+  status: StatusOrder;
+  noteOrder: string;
+  total: number;
+  priceShipping: number;
+  paymentMethodId: PaymentMethod;
+  is_active: true;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IDocsTypeOrder {
+  docs: IOrder[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: null | number;
+  nextPage: null | number;
+}
