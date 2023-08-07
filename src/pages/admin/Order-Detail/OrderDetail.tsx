@@ -100,7 +100,7 @@ const OrderDetail = (props: Props) => {
 const OrderDetailTable = () => {
   return (
     <>
-      <div className="bg-gray-50 dark:bg-gray-800 w-full  flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col ">
+      <div className="bg-gray-300 dark:bg-gray-800 w-full  flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col ">
         <h3 className="text-xl dark:text-white font-semibold leading-5 text-gray-800">Customer</h3>
         <div className="flex justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 ">
           <div className="flex flex-col justify-start items-start flex-shrink-0 flex-1">

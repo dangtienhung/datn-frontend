@@ -95,14 +95,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   };
 
   const onEditProduct = handleSubmit((data: any) => {
-    console.log({
-      _id: DataEdit._id,
-      ...data,
-      images: [...DataEdit.images],
-      sizes: [...DynamicSize],
-    });
-
-    // { ...data, images: [...urls], sizes: [...DynamicSize] }
     if (data && submit) {
       const DataPost =
         urls.length > 0
@@ -124,8 +116,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   return (
     <div>
       <Button color="primary" onClick={() => setIsOpen(true)}>
-        <BiEditAlt className="mr-3 text-sm" />
-        Edit product
+        <BiEditAlt className="text-sm" />
       </Button>
       <Modal
         open={isOpen}
@@ -218,20 +209,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                 </SelectMui>
                 <span className="text-red-500 text-sm block my-2">
                   {errors.toppings && errors.toppings.message}
-                </span>
-              </div>
-              <div>
-                <Label htmlFor="price">Price</Label>
-                <TextInput
-                  id="price"
-                  type="number"
-                  placeholder="Price..."
-                  className="mt-1"
-                  {...register('price')}
-                  name="price"
-                />
-                <span className="text-red-500 text-sm block my-2">
-                  {errors.price && errors.price.message}
                 </span>
               </div>
               <div>
