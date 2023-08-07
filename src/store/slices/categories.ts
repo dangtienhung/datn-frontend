@@ -1,16 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { addCate, deleteCate, getAllCates, getOneCate, updateCate } from '../services/categories';
 
 import { ICategory } from '../../interfaces/category.type';
-import { addCate, deleteCate, getAllCates, updateCate } from '../services/categories';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface iCategories {
   categories: ICategory[];
+  category: ICategory;
   isLoading: boolean;
   error: string;
 }
 
 const initialState: iCategories = {
   categories: [],
+  category: {} as ICategory,
   isLoading: false,
   error: '',
 };
@@ -62,6 +64,18 @@ export const categoriesSlice = createSlice({
       console.log(action.payload);
 
       state.error = action.payload;
+    });
+
+    //get one size
+    builder.addCase(getOneCate.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getOneCate.fulfilled, (state, action) => {
+      state.category = action.payload;
+    });
+    builder.addCase(getOneCate.rejected, (state, action) => {
+      state.error = action.error.message || '';
+      state.isLoading = false;
     });
   },
 });
