@@ -50,20 +50,32 @@ export type VoucherForm = Yup.InferType<typeof VoucherSchema>;
 export const ProductSchema = Yup.object({
   name: Yup.string().required('Name is required'),
   description: Yup.string().required('Description is required'),
-  price: Yup.number().min(0).typeError('Price is required').required(''),
+  // price: Yup.number().min(0).typeError('Price is required').required(''),
   sale: Yup.number().default(0),
   category: Yup.string().required('Category is required'),
-  // sizes: Yup.array(
-  //   Yup.object({
-  //     name: Yup.string().required('Name size is required'),
-  //     price: Yup.number().typeError('Price category is required').required(''),
-  //   })
-  // ).required(),
   toppings: Yup.array().typeError('Topping is required').min(1, 'Please select one Topping'),
 });
 
 export type ProductForm = Yup.InferType<typeof ProductSchema>;
 
+export const AddUserSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  password: Yup.string().required('Password is required').checkLength('Password >= 5 charactor'),
+  role: Yup.string().required('Role is required'),
+  address: Yup.string().required('Address is required'),
+});
+
+export type AddUserForm = Yup.InferType<typeof AddUserSchema>;
+
+export const UpdateUserSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  role: Yup.string().required('Role is required'),
+  address: Yup.string().required('Address is required'),
+});
+
+export type UpdateUserForm = Yup.InferType<typeof UpdateUserSchema>;
 export const UserCheckoutSchema = Yup.object({
   name: Yup.string().required(),
   phone: Yup.string().required(),
