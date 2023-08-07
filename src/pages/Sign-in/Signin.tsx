@@ -30,24 +30,15 @@ const Signin = () => {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema),
   });
-  useEffect(() => {
-    if (isSuccess) {
-      // if (Object.keys(user).length > 0 && user.role?.name === 'admin') navigate('/admin');
-      // if (Object.keys(user).length > 0 && user.role?.name === 'customer') navigate('/');
-      navigate('/');
-    }
-  });
   const navigate = useNavigate();
   const onLogin = (loginData: IUser) => {
-    console.log(loginData);
-
     loginUser(loginData).then((data: any) => {
       if (data.error) {
         return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
       } else {
-        return toast.success('Logged in successfully');
+        window.location.href = '/';
       }
     });
   };

@@ -42,7 +42,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
           </span>
           {product?.sale !== 0 && (
             <span className="text-[#bebebe] text-sm line-through">
-              {formatCurrency(product?.sizes[0]?.price)}
+              {formatCurrency(product.sizes && product.sizes[0]?.price)}
             </span>
           )}
         </div>

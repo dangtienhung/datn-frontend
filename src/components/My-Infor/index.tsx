@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { useAppSelector } from '../../store/hooks';
 
 type Props = {};
 
 const MyInfor = (props: Props) => {
-  const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth);
   console.log(user);
 
   return (
