@@ -13,7 +13,7 @@ import { AiFillEye } from 'react-icons/ai';
 import ShowProduct from './showProduct';
 
 const ProductsTable: FC = function () {
-  const [isOpenModalEdit, setOpenModalEdit] = useState(false);
+  // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
   const { data, isLoading } = useFetchProductsQuery();
   const [deleteFakeProduct] = useDeleteFakeProductMutation();
 
