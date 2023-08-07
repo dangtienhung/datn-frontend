@@ -60,6 +60,13 @@ const AllOrdersCanceled = () => {
               </Table.Cell>
             </Table.Row>
           ))}
+        {data && data.docs.length === 0 && (
+          <Table.Row className="dark:border-gray-700 dark:bg-gray-800 w-full bg-white">
+            <Table.Cell className="whitespace-nowrap dark:text-white flex items-center justify-center font-medium text-gray-900">
+              No data
+            </Table.Cell>
+          </Table.Row>
+        )}
       </Table.Body>
     </Table>
   );
