@@ -59,6 +59,24 @@ export const ProductSchema = Yup.object({
 
 export type ProductForm = Yup.InferType<typeof ProductSchema>;
 
+export const AddUserSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  password: Yup.string().required('Password is required').checkLength('Password >= 5 charactor'),
+  role: Yup.string().required('Role is required'),
+  address: Yup.string().required('Address is required'),
+});
+
+export type AddUserForm = Yup.InferType<typeof AddUserSchema>;
+
+export const UpdateUserSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  role: Yup.string().required('Role is required'),
+  address: Yup.string().required('Address is required'),
+});
+
+export type UpdateUserForm = Yup.InferType<typeof UpdateUserSchema>;
 export const UserCheckoutSchema = Yup.object({
   name: Yup.string().required(),
   phone: Yup.string().required(),
