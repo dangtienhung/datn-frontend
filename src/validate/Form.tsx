@@ -21,7 +21,7 @@ export type Login = Yup.InferType<typeof LoginSchema>;
 //size schema
 export const SizeSchema = Yup.object({
   name: Yup.string().required('Name is required'),
-  price: Yup.string().required('Price is required'),
+  price: Yup.number().required('Price is required'),
 });
 
 // category schema
@@ -77,3 +77,10 @@ export const UpdateUserSchema = Yup.object({
 });
 
 export type UpdateUserForm = Yup.InferType<typeof UpdateUserSchema>;
+export const UserCheckoutSchema = Yup.object({
+  name: Yup.string().required(),
+  phone: Yup.string().required(),
+  shippingLocation: Yup.string().required(),
+  shippingNote: Yup.string().required(),
+  paymentMethod: Yup.string().required(),
+});
