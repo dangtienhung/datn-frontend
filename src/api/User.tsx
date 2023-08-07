@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 // import baseQueryWithReAuth from './requestRefresh';
 import { IUser, IUserDocs, responseUser } from '../interfaces/user.type';
 import { baseQueryWithReauth } from './Auth';
+import { IImage, IResImage } from '../interfaces/image.type';
 
 export const ApiUser = createApi({
   reducerPath: 'ApiUser',
@@ -30,8 +31,61 @@ export const ApiUser = createApi({
       }),
       invalidatesTags: ['user'],
     }),
+
+    //add new user
+    addUser: builder.mutation<void, IUser>({
+      query: (user) => ({
+        url: '/api/users',
+        method: 'POST',
+        body: user,
+      }),
+      invalidatesTags: ['user'],
+    }),
+
+    //update user
+    updateUser: builder.mutation<void, IUser>({
+      query: (user) => ({
+        url: `/api/users/${user._id}`,
+        method: 'PATCH',
+        body: {
+          username: user.username,
+          password: user.password,
+          account: user.account,
+          role: user.role,
+          address: user.address,
+          avatar: user.avatar,
+        },
+      }),
+      invalidatesTags: ['user'],
+    }),
+
+    //Upload image user
+    upLoadAvartaUser: builder.mutation<IResImage, any>({
+      query: (file) => ({
+        url: '/api/uploadImages',
+        method: 'POST',
+        body: file,
+      }),
+    }),
+
+    //Delete avarta
+    deleteImageUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/deleteImages/${id}`,
+        method: 'DELETE',
+        body: id,
+      }),
+    }),
   }),
 });
 
-export const { useFetchUserQuery, useGetAllUsersQuery, useDeleteUserMutation } = ApiUser;
+export const {
+  useFetchUserQuery,
+  useGetAllUsersQuery,
+  useDeleteUserMutation,
+  useAddUserMutation,
+  useUpdateUserMutation,
+  useUpLoadAvartaUserMutation,
+  useDeleteImageUserMutation,
+} = ApiUser;
 export const SizeReducer = ApiUser.reducer;
