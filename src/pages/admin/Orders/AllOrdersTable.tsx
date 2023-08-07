@@ -1,15 +1,6 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Select,
-  Table,
-  TextInput,
-} from 'flowbite-react';
+import { Button, Checkbox, Label, Table } from 'flowbite-react';
 import { useEffect } from 'react';
-import { HiPlus, HiTrash } from 'react-icons/hi';
+import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useLazyGetAllOrderQuery } from '../../../store/slices/order';
 

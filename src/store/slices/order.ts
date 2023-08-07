@@ -1,15 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from '../../api/requestRefresh';
-import { IOrder, IOrderDetailResponse } from '../../interfaces/order.type';
-import { IOrderCheckout, IOrderRes } from './types/order.type';
-
+import { IOrderDetailResponse } from '../../interfaces/order.type';
+import { IDocsTypeOrder, IOrderCheckout } from './types/order.type';
 
 export const OrderAPI = createApi({
   reducerPath: 'Order',
   tagTypes: ['Order'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
-    getAllOrder: builder.query<IOrderRes, void>({
+    getAllOrder: builder.query<IDocsTypeOrder, void>({
       query: () => '/api/orders',
       // providesTags: (result) => {
       // if (result) {

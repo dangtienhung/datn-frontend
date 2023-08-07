@@ -10,6 +10,20 @@ interface inforOrderShipping {
   address: string;
   noteShipping: string;
 }
+
+enum StatusOrder {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  DELIVERED = 'delivered',
+  DONE = 'done',
+  CANCELED = 'canceled',
+}
+
+enum PaymentMethod {
+  COD = 'cod',
+  MOMO = 'momo',
+  ZALO = 'zalo',
+}
 export interface IOrderCheckout {
   user: string;
   items: Omit<CartItemState, 'total'>[] | number[];
@@ -28,9 +42,10 @@ export interface dataDocsOrderRes {
     username: string;
     avatar: string;
     account: string;
-    role: Omit<IRole, 'users'>;
+    googleId?: string;
   };
   items: {
+    _id: string;
     size: {
       name: string;
       price: number;
@@ -40,15 +55,16 @@ export interface dataDocsOrderRes {
     quantity: number;
     price: number;
   }[];
-  status: string;
+  status: StatusOrder;
   total: number;
   priceShipping: number;
-  paymentMethodId: string;
+  paymentMethodId: PaymentMethod;
   is_active: boolean;
   createdAt: string;
   updatedAt: string;
+  noteOrder: string;
 }
-export interface IOrderRes {
+export interface IDocsTypeOrder {
   docs: dataDocsOrderRes[];
   totalDocs: number;
   limit: number;
@@ -57,6 +73,6 @@ export interface IOrderRes {
   pagingCounter: number;
   hasPrevPage: boolean;
   hasNextPage: boolean;
-  prevPage: null;
-  nextPage: null;
+  prevPage: null | number;
+  nextPage: null | number;
 }

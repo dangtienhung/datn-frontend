@@ -1,30 +1,25 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Select,
-  Table,
-  TextInput,
-} from 'flowbite-react';
+import { Button, Checkbox, Label, Table } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { useGetAllOrderQuery } from '../../../store/slices/order';
+
 import Loading from '../../../components/Loading';
 import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
 import formatDate from '../../../utils/formatDate';
 
-const AllOrdersPending = () => {
-  const { data: dataOrderPending, isLoading } = useGetAllOrderQuery();
+interface IProps {
+  dataOrderPending: dataDocsOrderRes[];
+  isLoading: boolean;
+  isError: boolean;
+}
+const AllOrdersPending = ({ dataOrderPending, isLoading }: IProps) => {
   const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([]);
   useEffect(() => {
-    if (dataOrderPending?.docs) {
-      setOrderPending(dataOrderPending.docs);
+    if (dataOrderPending) {
+      setOrderPending(dataOrderPending);
     }
   }, [dataOrderPending]);
-  console.log(dataOrderPending?.docs);
+
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
