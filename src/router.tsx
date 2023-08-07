@@ -18,6 +18,8 @@ import PageNotFound from './pages/404/404';
 import Role from './pages/admin/Role/Role';
 import Voucher from './pages/admin/Voucher/Voucher';
 import NotFound from './pages/Not-Found/NotFound';
+import Orders from './pages/admin/Orders/Orders';
+import OrderDetail from './pages/admin/Order-Detail/OrderDetail';
 import { GuardExistUser, GuardNotUser } from './guardRoute';
 
 const routes = createBrowserRouter([
@@ -87,11 +89,11 @@ const routes = createBrowserRouter([
       },
       {
         path: 'orders',
-        element: 'order',
+        element: <Orders />,
       },
       {
         path: 'orders/:id',
-        element: 'Order-detail',
+        element: <OrderDetail />,
       },
       {
         path: 'toppings',

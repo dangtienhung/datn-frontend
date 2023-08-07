@@ -1,8 +1,6 @@
 import { CartItem, CartLists } from './types/cart.type';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import Swal from 'sweetalert2';
-
 interface CartState {
   items: CartLists[];
 }
@@ -31,6 +29,7 @@ const cartSlice = createSlice({
               size: product.size,
               toppings: product.toppings,
               total: product.total,
+              product: product.product,
             },
           ],
         });
@@ -47,6 +46,7 @@ const cartSlice = createSlice({
             size: product.size,
             toppings: product.toppings,
             total: product.total,
+            product: product.product,
           };
           state.items[productIndex].items.push(newProduct);
         } else {
@@ -73,6 +73,7 @@ const cartSlice = createSlice({
               size: product.size,
               toppings: product.toppings,
               total: product.total,
+              product: product.product,
             };
             console.log('test1');
             state.items[productIndex].items.push(newProduct);
@@ -89,6 +90,7 @@ const cartSlice = createSlice({
               size: product.size,
               toppings: product.toppings,
               total: product.total,
+              product: product.product,
             };
             state.items[productIndex].items.push(newProduct);
           }
@@ -103,6 +105,7 @@ const cartSlice = createSlice({
         quantity: number;
         size: { _id: string; name: string; price: number };
         toppings: { name: string; price: number }[];
+        product: string;
       }>
     ) => {
       const payload = action.payload;
@@ -132,6 +135,7 @@ const cartSlice = createSlice({
         quantity: number;
         size: { _id: string; name: string; price: number };
         toppings: { name: string; price: number }[];
+        product: string;
       }>
     ) => {
       const result = action.payload;

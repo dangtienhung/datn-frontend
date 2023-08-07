@@ -180,7 +180,7 @@ const AddToppingModal: FC = function () {
     reset,
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver<any>(SizeSchema),
   });
 
   const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
@@ -254,7 +254,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     reset,
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver(SizeSchema),
+    resolver: yupResolver<any>(SizeSchema),
   });
 
   useEffect(() => {
