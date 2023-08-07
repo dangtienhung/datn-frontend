@@ -199,7 +199,7 @@ const AddProductModal = ({
                   {errors.toppings && errors.toppings.message}
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <Label htmlFor="price">Price</Label>
                 <TextInput
                   id="price"
@@ -212,7 +212,7 @@ const AddProductModal = ({
                 <span className="text-red-500 text-sm block my-2">
                   {errors.price && errors.price.message}
                 </span>
-              </div>
+              </div> */}
               <div>
                 <Label htmlFor="price">Sale</Label>
                 <TextInput
