@@ -50,15 +50,9 @@ export type VoucherForm = Yup.InferType<typeof VoucherSchema>;
 export const ProductSchema = Yup.object({
   name: Yup.string().required('Name is required'),
   description: Yup.string().required('Description is required'),
-  price: Yup.number().min(0).typeError('Price is required').required(''),
+  // price: Yup.number().min(0).typeError('Price is required').required(''),
   sale: Yup.number().default(0),
   category: Yup.string().required('Category is required'),
-  // sizes: Yup.array(
-  //   Yup.object({
-  //     name: Yup.string().required('Name size is required'),
-  //     price: Yup.number().typeError('Price category is required').required(''),
-  //   })
-  // ).required(),
   toppings: Yup.array().typeError('Topping is required').min(1, 'Please select one Topping'),
 });
 

@@ -9,6 +9,8 @@ import {
 } from '../../api/Product';
 import { FaPlus } from 'react-icons/fa';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { AiFillEye } from 'react-icons/ai';
+import ShowProduct from './showProduct';
 
 const ProductsTable: FC = function () {
   const [isOpenModalEdit, setOpenModalEdit] = useState(false);
@@ -22,12 +24,11 @@ const ProductsTable: FC = function () {
           <span className="sr-only">Toggle selected</span>
           <Checkbox />
         </Table.HeadCell>
-        <Table.HeadCell>ID</Table.HeadCell>
+        <Table.HeadCell>Index</Table.HeadCell>
         <Table.HeadCell>Product Name</Table.HeadCell>
         <Table.HeadCell>Images</Table.HeadCell>
         <Table.HeadCell>Category</Table.HeadCell>
-        <Table.HeadCell>Price</Table.HeadCell>
-        <Table.HeadCell>Actions</Table.HeadCell>
+        <Table.HeadCell colSpan={3}>Actions</Table.HeadCell>
       </Table.Head>
       {isLoading ? (
         <h2>Loading</h2>
@@ -39,7 +40,7 @@ const ProductsTable: FC = function () {
                 <Checkbox />
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {product._id}
+                {index + 1}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
                 <div className="text-base font-semibold text-gray-900 dark:text-white">
@@ -47,7 +48,7 @@ const ProductsTable: FC = function () {
                 </div>
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                <img src={product.images[0]?.url} alt="" />
+                <img src={product.images[0]?.url} alt="" className="h-10 w-10" />
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 {product.category?.name}
@@ -61,10 +62,10 @@ const ProductsTable: FC = function () {
                     <FaPlus className="mr-3 text-sm" />
                     Edit product
                   </Button> */}
+                  <ShowProduct product={product} />
                   <EditProductModal DataEdit={product} />
                   <Button color="failure" onClick={() => deleteFakeProduct(product._id!)}>
-                    <HiTrash className="mr-2 text-lg" />
-                    Delete item
+                    <HiTrash className="text-center" />
                   </Button>
                   {/* {isOpenModalEdit ? ( */}
                   {/* ) : (
