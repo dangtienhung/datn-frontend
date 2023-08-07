@@ -1,10 +1,10 @@
+import { ICategory } from '../../interfaces/category.type';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import http from '../../api/instance';
-import { ICategory } from '../../interfaces/category.type';
 
 export const getAllCates = createAsyncThunk('cate/getAllCate', async () => {
   try {
-    const { data } = await http.get('/categories');
+    const { data } = await http.get('/categories?_page=1&_limit=10');
     return data.docs;
   } catch (error: any) {
     return error.message;
@@ -42,3 +42,12 @@ export const updateCate = createAsyncThunk(
     }
   }
 );
+
+export const getOneCate = createAsyncThunk('cate/getOneCate', async (id: string) => {
+  try {
+    const { data } = await http.get(`/category/${id}`);
+    return data;
+  } catch (error: any) {
+    return error.message;
+  }
+});

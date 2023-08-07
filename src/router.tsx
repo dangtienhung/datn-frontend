@@ -18,6 +18,7 @@ import PageNotFound from './pages/404/404';
 import Role from './pages/admin/Role/Role';
 import Voucher from './pages/admin/Voucher/Voucher';
 import NotFound from './pages/Not-Found/NotFound';
+import { GuardExistUser, GuardNotUser } from './guardRoute';
 
 const routes = createBrowserRouter([
   {
@@ -26,15 +27,11 @@ const routes = createBrowserRouter([
   },
   {
     path: '/signin',
-    element: <Signin />,
+    element: <GuardNotUser JSX={Signin} />,
   },
   {
     path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
+    element: <GuardNotUser JSX={Signup} />,
   },
   {
     path: '/products',
@@ -52,7 +49,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/account-layout',
-    element: <AccountLayout />,
+    element: <GuardExistUser JSX={AccountLayout} />,
     children: [
       {
         index: true,
@@ -116,7 +113,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '*',
-    element: <PageNotFound />,
+    element: <NotFound />,
   },
 ]);
 

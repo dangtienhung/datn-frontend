@@ -7,6 +7,7 @@ export interface CartItem {
   size: { name: string; price: number; _id: string };
   toppings: { name: string; price: number }[];
   total: number;
+  product: string;
 }
 
 export interface CartItemState {
@@ -16,6 +17,7 @@ export interface CartItemState {
   size: { name: string; price: number; _id: string };
   toppings: { name: string; price: number }[];
   total: number;
+  product: string;
 }
 
 export interface CartLists {

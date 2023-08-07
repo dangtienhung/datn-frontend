@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { IProductDocs } from '../../interfaces/products.type';
 import { getAllProducts } from '../services/product.service';
 
@@ -23,7 +24,7 @@ export const productSlice = createSlice({
     builder.addCase(getAllProducts.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(getAllProducts.fulfilled, (state, action) => {
+    builder.addCase(getAllProducts.fulfilled, (state, action: PayloadAction<IProductDocs>) => {
       state.isLoading = false;
       state.products = action.payload;
     });
