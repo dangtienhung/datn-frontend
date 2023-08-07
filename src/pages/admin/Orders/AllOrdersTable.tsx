@@ -1,29 +1,18 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Select,
-  Table,
-  TextInput,
-} from 'flowbite-react';
-import { useEffect, type FC } from 'react';
-import { HiPlus, HiTrash } from 'react-icons/hi';
+import { Button, Checkbox, Label, Table } from 'flowbite-react';
+import { useEffect } from 'react';
+import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useLazyGetAllOrderQuery } from '../../../store/slices/order';
-import { IOrder } from '../../../interfaces/order.type';
+
 import formatDate from '../../../utils/formatDate';
 import Loading from '../../../components/Loading';
-import { useForm } from 'react-hook-form';
-type Props = {};
 
-const AllOrdersTable = (props: Props) => {
+const AllOrdersTable = () => {
   const [trigger, { data: orders, isLoading }] = useLazyGetAllOrderQuery();
 
   useEffect(() => {
     trigger();
-  }, []);
+  }, [trigger]);
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -44,7 +33,7 @@ const AllOrdersTable = (props: Props) => {
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
         {orders &&
           orders.docs.length > 0 &&
-          orders.docs.map((order: IOrder) => (
+          orders.docs.map((order) => (
             <Table.Row key={order._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
               <Table.Cell className="w-4 p-4">
                 <div className="flex items-center">
@@ -61,7 +50,7 @@ const AllOrdersTable = (props: Props) => {
                     {order.user.username}
                   </div>
                   <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {order.user.account || order.user.email}
+                    {order.user.account || (order.user as any)?.email}
                   </div>
                 </div>
               </Table.Cell>
