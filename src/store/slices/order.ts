@@ -1,7 +1,8 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from '../../api/requestRefresh';
-import { IOrderDetailResponse } from '../../interfaces/order.type';
 import { IDocsTypeOrder, IOrderCheckout } from './types/order.type';
+import { IOrder, IOrderDetailResponse } from '../../interfaces/order.type';
+
+import baseQueryWithReAuth from '../../api/requestRefresh';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const OrderAPI = createApi({
   reducerPath: 'Order',
@@ -70,6 +71,16 @@ export const OrderAPI = createApi({
       invalidatesTags: ['Order'],
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
+
+    /* get all order done */
+    getAllOrderDone: builder.query<IDocsTypeOrder, void>({
+      query: () => '/api/order-done',
+    }),
+
+    /* get all order cancel */
+    getAllOrderCancel: builder.query<IDocsTypeOrder, void>({
+      query: () => '/api/order-canceled',
+    }),
     orderPending: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/pending/${id}`,
@@ -92,4 +103,6 @@ export const {
   useDoneOrderMutation,
   useLazyGetAllOrderQuery,
   useGetOrderByidQuery,
+  useGetAllOrderDoneQuery,
+  useGetAllOrderCancelQuery,
 } = OrderAPI;
