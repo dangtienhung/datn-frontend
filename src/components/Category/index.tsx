@@ -8,12 +8,11 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import { FaBars } from 'react-icons/fa';
 import { ICategory } from '../../interfaces/category.type';
-import { getAllProducts } from '../../store/services/product.service';
-import { useAppDispatch } from '../../store/hooks';
+import http from '../../api/instance';
 
 interface SidebarCateProps {
   categories: ICategory[];
@@ -21,7 +20,6 @@ interface SidebarCateProps {
 }
 
 const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
-  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: any) => {
@@ -31,19 +29,27 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleFetch = async () => {
+    try {
+      const { data } = await http.get('/products');
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
-      <div className="sidebar shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block">
+      <div className="sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block">
         <div className="border border-transparent border-b-[#f1f1f1] uppercase px-4 py-2">
           Danh mục
         </div>
         <div className="">
-          <div
-            onClick={() => dispatch(getAllProducts())}
+          {/* <div
+            onClick={() => onClick()}
             className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
           >
             <div className="cat-name capitalize">Tất cả sản phẩm</div>
-          </div>
+          </div> */}
           {categories &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
