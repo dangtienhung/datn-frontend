@@ -41,6 +41,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
                         quantity: item.quantity,
                         size: item.size,
                         toppings: item.toppings,
+                        product: item.product,
                       })
                     )
                   }
@@ -58,6 +59,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
                         quantity: item.quantity,
                         size: item.size,
                         toppings: item.toppings,
+                        product: item.product,
                       })
                     )
                   }

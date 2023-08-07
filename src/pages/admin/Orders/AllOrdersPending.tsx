@@ -1,21 +1,19 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Select,
-  Table,
-  TextInput,
-} from 'flowbite-react';
-import { HiPlus } from 'react-icons/hi';
+import { Button, Checkbox, Label, Table } from 'flowbite-react';
+import { BiSolidDetail } from 'react-icons/bi';
+import { GiConfirmed } from 'react-icons/gi';
+import { FcCancel } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-type Props = {};
 
-const AllOrdersPending = (props: Props) => {
+type Props = {
+  data: IOrderDocs;
+};
+
+const AllOrdersPending = ({ data }: Props) => {
+  const orderPending = data.docs.filter((item) => item.status === 'pending');
+
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
-      <Table.Head className="bg-gray-100 dark:bg-gray-700">
+      <Table.Head className="bg-gray-100 dark:bg-gray-700 text-center">
         <Table.HeadCell>
           <Label htmlFor="select-all" className="sr-only">
             Select all
@@ -24,14 +22,15 @@ const AllOrdersPending = (props: Props) => {
         </Table.HeadCell>
         <Table.HeadCell>User Name</Table.HeadCell>
         <Table.HeadCell>Address</Table.HeadCell>
-        <Table.HeadCell>Position</Table.HeadCell>
-        <Table.HeadCell>Deleted</Table.HeadCell>
         <Table.HeadCell>Status</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        {[0, 1, 2, 3].map((_, index) => (
-          <Table.Row key={index} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
+        {orderPending.map((item, index) => (
+          <Table.Row
+            key={index}
+            className={` hover:bg-gray-100 dark:hover:bg-gray-700 text-center`}
+          >
             <Table.Cell className="w-4 p-4">
               <div className="flex items-center">
                 <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
@@ -40,42 +39,44 @@ const AllOrdersPending = (props: Props) => {
                 </label>
               </div>
             </Table.Cell>
-            <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
+            <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0 text-center">
               <img
                 className="h-10 w-10 rounded-full"
                 src={`https://api.multiavatar.com/datnguyen`}
                 alt=""
               />
               <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                <div className="text-base font-semibold text-gray-900 dark:text-white">abc</div>
+                <div className="text-base font-semibold text-gray-900 dark:text-white">
+                  {item.user}
+                </div>
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">abc</div>
               </div>
             </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-              pending
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-              abc
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-white dark:text-white capitalize ">
-              <span className={` rounded inline-block px-2`}>abc</span>
-            </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-normal text-gray-900 dark:text-white">
-              <div className="flex items-center  capitalize">
-                <div className={`mr-2 h-2.5 w-2.5 rounded-full  `}></div>
-                abc
+              <div className="flex items-center justify-center capitalize">
+                <div className={`mr-2 h-2.5 w-2.5 rounded-full `}></div>
+                {item.address}
               </div>
             </Table.Cell>
+            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
+              {item.status}
+            </Table.Cell>
             <Table.Cell>
-              <div className="flex items-center gap-x-3 whitespace-nowrap">
+              <div className="flex items-center justify-center gap-x-3 whitespace-nowrap">
                 <Button color="primary">
                   <Link to={`/admin/orders/abc`} className="flex items-center gap-x-3">
-                    <HiPlus className="text-xl" />
-                    Detail
+                    <BiSolidDetail className="text-xl" />
                   </Link>
                 </Button>
-                <Button color="failure">
-                  <div className="flex items-center gap-x-2">Delete order</div>
+                <Button className="bg-red-300">
+                  <div className="flex items-center gap-x-2 text-xl text-red-200">
+                    <FcCancel />
+                  </div>
+                </Button>
+                <Button className="bg-orange-500">
+                  <div className="flex items-center gap-x-2 text-xl">
+                    <GiConfirmed />
+                  </div>
                 </Button>
               </div>
             </Table.Cell>
