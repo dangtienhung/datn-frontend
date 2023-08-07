@@ -1,20 +1,20 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa';
+import { IProduct, IProductDocs } from '../../interfaces/products.type';
 import { useRef, useState } from 'react';
 
 import { Button } from '..';
-import CardOrder from '../Card-Order';
 import { ICategory } from '../../interfaces/category.type';
-import { IProduct } from '../../interfaces/products.type';
 import { Link } from 'react-router-dom';
 import ListProductItem from '../List-ProductItem';
 import PopupDetailProduct from '../PopupDetailProduct';
 import http from '../../api/instance';
 
 interface ListProductsProps {
-  products: ICategory;
+  categoryItem: ICategory;
+  products?: IProductDocs;
 }
 
-const ListProducts = ({ products }: ListProductsProps) => {
+const ListProducts = ({ categoryItem, products }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null);
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
   const [product, setProduct] = useState<any>({});
@@ -42,22 +42,30 @@ const ListProducts = ({ products }: ListProductsProps) => {
         <div className="pb-[160px]">
           <div className="category ">
             <div className="category-name flex items-center justify-between px-[20px] py-[16px]">
-              <div className="text-lg capitalize select-none">{products.name}</div>
+              <div className="text-lg capitalize select-none">
+                {categoryItem?.name || 'Tất cả sản phẩm'}
+              </div>
               <div className="right">
                 <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />
               </div>
             </div>
             <div className="list-product xl:mx-0 lg:grid-cols-3 grid grid-cols-2 gap-3">
-              {products &&
-                products?.products &&
-                products?.products?.length > 0 &&
-                products?.products?.map((product: IProduct) => (
-                  <ListProductItem
-                    key={product._id}
-                    product={product}
-                    fetchProductById={fetchProductById}
-                  />
-                ))}
+              {categoryItem && categoryItem?.products
+                ? categoryItem?.products?.map((product: IProduct) => (
+                    <ListProductItem
+                      key={product._id}
+                      product={product}
+                      fetchProductById={fetchProductById}
+                    />
+                  ))
+                : products?.docs &&
+                  products?.docs?.map((product: IProduct) => (
+                    <ListProductItem
+                      key={product._id}
+                      product={product}
+                      fetchProductById={fetchProductById}
+                    />
+                  ))}
             </div>
           </div>
         </div>

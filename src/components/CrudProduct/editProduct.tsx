@@ -24,6 +24,7 @@ import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../api/Pr
 import { IProduct } from '../../interfaces/products.type';
 import { BiEditAlt } from 'react-icons/bi';
 import { toast } from 'react-toastify';
+import DynamicallyField from '../DynamicallyField';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,7 +40,7 @@ const MenuProps = {
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      personName?.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
@@ -55,7 +56,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
       sale: DataEdit.sale,
       description: DataEdit.description,
       toppings: DataEdit.toppings.map((item) => item._id!),
-      sizes: DataEdit.sizes.map((item) => item._id!),
     } as any,
   });
 
@@ -64,8 +64,9 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery();
-  const [getDataSize, { data: DataSize }] = SizeApi.endpoints.getAllSizes.useLazyQuery();
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery();
+  const [DynamicSize, setDynamicSize] = useState<any[]>([]);
+  const [submit, setSubmit] = useState(false);
 
   const [updateProduct, { isSuccess }] = useUpdateProductMutation();
 
@@ -93,35 +94,32 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     setToppingState(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const handleChangeSize = (event: SelectChangeEvent<typeof sizeState>) => {
-    setValue('sizes', event.target.value as any, { shouldValidate: true });
-    const {
-      target: { value },
-    } = event;
-    setSizeState(typeof value === 'string' ? value.split(',') : value);
-  };
+  const onEditProduct = handleSubmit((data: any) => {
+    console.log({
+      _id: DataEdit._id,
+      ...data,
+      images: [...DataEdit.images],
+      sizes: [...DynamicSize],
+    });
 
-  const onAddProduct = handleSubmit((data: any) => {
-    if (data) {
+    // { ...data, images: [...urls], sizes: [...DynamicSize] }
+    if (data && submit) {
       const DataPost =
         urls.length > 0
           ? { _id: DataEdit._id, ...data, images: [...urls] }
-          : { _id: DataEdit._id, ...data, images: [...DataEdit.images] };
-      console.log(DataPost);
+          : { _id: DataEdit._id, ...data, images: [...DataEdit.images], sizes: [...DynamicSize] };
 
       updateProduct(DataPost).then((data: any) => {
-        data.error ? toast.error(data.error.data.err[0]) : setIsOpen(false);
+        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false);
       });
     }
   });
 
   useEffect(() => {
     getDataTopping();
-    getDataSize();
     getCategory();
     setToppingState(DataEdit.toppings.map((item) => item._id!));
-    setSizeState(DataEdit.sizes.map((item) => item._id!));
-  }, [DataCategory]);
+  }, []);
 
   return (
     <div>
@@ -167,7 +165,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   labelId="demo-simple-select-label"
-                  defaultValue={DataEdit.category._id}
+                  defaultValue={DataEdit.category?._id}
                   id="demo-simple-select"
                   label="Age"
                   className="w-full h-[42px] mt-1"
@@ -223,44 +221,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                 </span>
               </div>
               <div>
-                <Label htmlFor="brand">Size</Label>
-                <SelectMui
-                  className="w-full mt-1"
-                  labelId="demo-multiple-chip-label"
-                  id="demo-multiple-chip"
-                  multiple
-                  value={sizeState}
-                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip
-                          key={value}
-                          label={DataSize?.docs.find((item) => item._id === value)?.name}
-                        />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                  {...register('sizes')}
-                  name="sizes"
-                  onChange={handleChangeSize}
-                >
-                  {DataSize?.docs.map((size) => (
-                    <MenuItem
-                      key={size._id}
-                      value={size._id}
-                      style={getStyles(size.name, sizeState, theme)}
-                    >
-                      {size.name}
-                    </MenuItem>
-                  ))}
-                </SelectMui>
-                <span className="text-red-500 text-sm block my-2">
-                  {errors.sizes && errors.sizes.message}
-                </span>
-              </div>
-              <div>
                 <Label htmlFor="price">Price</Label>
                 <TextInput
                   id="price"
@@ -289,6 +249,15 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                   {errors.sale && errors.sale.message}
                 </span>
               </div>
+              <div>
+                <Label htmlFor="price">Size</Label>
+                <DynamicallyField
+                  setSubmit={setSubmit}
+                  setDynamic={setDynamicSize}
+                  submit={submit}
+                  dataSize={DataEdit.sizes}
+                />
+              </div>
               <div className="lg:col-span-2">
                 <Label htmlFor="producTable.Celletails">Product details</Label>
                 <Textarea
@@ -316,7 +285,14 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
               Edit product
             </Button>
           ) : (
-            <Button color="primary" className="mt-[10px]" onClick={onAddProduct}>
+            <Button
+              color="primary"
+              className="mt-[10px]"
+              onClick={() => {
+                onEditProduct();
+                setSubmit(true);
+              }}
+            >
               Edit product
             </Button>
           )}
