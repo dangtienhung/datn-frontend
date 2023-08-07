@@ -1,13 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReAuth from '../../api/requestRefresh';
 import { IOrder, IOrderDetailResponse } from '../../interfaces/order.type';
+import { IOrderCheckout, IOrderRes } from './types/order.type';
+
 
 export const OrderAPI = createApi({
   reducerPath: 'Order',
   tagTypes: ['Order'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
-    getAllOrder: builder.query<any, void>({
+    getAllOrder: builder.query<IOrderRes, void>({
       query: () => '/api/orders',
       // providesTags: (result) => {
       // if (result) {
@@ -29,7 +31,7 @@ export const OrderAPI = createApi({
     }),
 
     createOrder: builder.mutation({
-      query: (body: any) => ({
+      query: (body: IOrderCheckout) => ({
         url: '/api/create-order',
         body: body,
         method: 'POST',
@@ -69,6 +71,14 @@ export const OrderAPI = createApi({
       invalidatesTags: ['Order'],
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
+    orderPending: builder.mutation({
+      query: (id: string) => ({
+        url: `/api/order/pending/${id}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Order'],
+      // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
+    }),
   }),
 });
 // console.log(ToppingAPI);
@@ -76,6 +86,7 @@ export const OrderAPI = createApi({
 export const {
   useConfirmOrderMutation,
   useCreateOrderMutation,
+  useOrderPendingMutation,
   useGetAllOrderQuery,
   useCanceledOrderMutation,
   useDeliveredOrderMutation,
