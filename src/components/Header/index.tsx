@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Input } from '..';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { useAppDispatch } from '../../store/hooks';
+import { getAllProducts } from '../../store/services/product.service';
 
 type Props = {};
 
 const Header = (props: Props) => {
+  const [text, setText] = useState('');
+  const dispatch = useAppDispatch();
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+
+  useEffect(() => {
+    dispatch(getAllProducts(text));
+  }, [text]);
 
   return (
     <div className="header flex justify-between items-center px-4 py-2 gap-2">
@@ -22,6 +30,7 @@ const Header = (props: Props) => {
           prefix={<AiOutlineSearch className="text-xl ml-2 text-[#bebec2] absolute" />}
           type="search"
           placeholder="Tìm kiếm sản phẩm..."
+          setText={setText}
         />
       </div>
       {user?.avatar ? (
@@ -41,8 +50,6 @@ const Header = (props: Props) => {
           </Link>
         </div>
       )}
-
-      {/* Nếu tồn tại user */}
     </div>
   );
 };
