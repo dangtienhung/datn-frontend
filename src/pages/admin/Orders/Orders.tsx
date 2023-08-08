@@ -8,79 +8,19 @@ import AllOrderDelivered from './AllOrderDelivered';
 import AllOrdersDone from './AllOrdersDone';
 import AllOrdersCanceled from './AllOrdersCanceled';
 import { FaTimesCircle } from 'react-icons/fa';
-import { v4 as uuidv4 } from 'uuid';
-import { IOrderDocs } from '../../../interfaces/order.type';
-
-const FakeOrder: IOrderDocs = {
-  docs: [
-    {
-      user: {
-        username: '10',
-      },
-      items: [
-        {
-          product: {
-            name: 'string',
-            images: [
-              {
-                url: '',
-                publicId: '',
-              },
-            ],
-            toppings: [{ name: '', price: 10 }],
-            description: 'string',
-            price: 10,
-            sale: 10,
-            category: {
-              name: 'test',
-              slug: '12',
-            },
-            sizes: [
-              {
-                name: '',
-                price: 10,
-              },
-            ],
-          },
-          quantity: 10,
-          price: 10,
-          topping: [
-            {
-              name: '',
-              price: 10,
-            },
-          ],
-          size: {
-            name: '12',
-            price: 10,
-          },
-        },
-      ],
-      status: 'pending',
-      noteOrder: '',
-      priceShipping: 10,
-      inforOrderShipping: {
-        name: 'string',
-        address: 'string',
-        phone: 'string',
-        noteShipping: 'string',
-        is_active: false,
-      },
-      total: 10,
-    },
-  ],
-  totalDocs: 0,
-  limit: 0,
-  totalPages: 0,
-  page: 0,
-  pagingCounter: 0,
-  hasPrevPage: false,
-  hasNextPage: false,
-  prevPage: null,
-  nextPage: null,
-};
+import { useGetAllOrderQuery } from '../../../store/slices/order';
+import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
+import { useEffect, useState } from 'react';
 
 const Orders = () => {
+  const { data, isLoading, isError } = useGetAllOrderQuery();
+  const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([]);
+  useEffect(() => {
+    if (data?.docs) {
+      setOrderPending(data.docs);
+    }
+  }, [data]);
+  console.log(data?.docs);
   return (
     <div className="p-2">
       <Tabs.Group aria-label="Default tabs" style="default">
@@ -88,10 +28,18 @@ const Orders = () => {
           <AllOrdersTable />
         </Tabs.Item>
         <Tabs.Item icon={HiClipboard} title="Order pending">
-          <AllOrdersPending data={FakeOrder} />
+          <AllOrdersPending
+            dataOrderPending={orderPending}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </Tabs.Item>
         <Tabs.Item icon={HiClipboardCheck} title="Order comfirmed">
-          <AllOrdersConfirmed />
+          <AllOrdersConfirmed
+            dataOrderCofirmed={orderPending}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </Tabs.Item>
         <Tabs.Item icon={MdLocalShipping} title="Order delivered">
           <AllOrderDelivered />

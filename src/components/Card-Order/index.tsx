@@ -11,6 +11,7 @@ type CardOrderProps = {
 };
 
 const CardOrder = ({ product }: CardOrderProps) => {
+  console.log('🚀 ~ file: index.tsx:14 ~ CardOrder ~ product:', product);
   const dispatch = useAppDispatch();
   return (
     <div className="card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight ">
@@ -48,7 +49,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
                 >
                   <AiOutlineLine className="" />
                 </div>
-                <div className="mx-2 amount">{item.quantity}</div>
+                <div className="amount mx-2">{item.quantity}</div>
                 <div
                   className="quantity w-[20px] cursor-pointer h-[20px] bg-[#799dd9] rounded-full text-white flex justify-around items-center"
                   onClick={() =>

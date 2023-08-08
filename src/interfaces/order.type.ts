@@ -2,42 +2,24 @@ import { IProduct } from './products.type';
 import { IUser } from './user.type';
 
 export interface IOrder {
+  _id?: string;
+  inforOrderShipping: IInforOrderShipping;
   user: IUser;
-  items: {
-    product: IProduct;
-    quantity: number;
-    price: number;
-    topping: {
-      name: string;
-      price: number;
-    }[];
-    size: {
-      name: string;
-      price: number;
-    };
-  }[];
-  status: 'pending' | 'confirmed' | 'delivered' | 'done' | 'canceled';
+  items: any[];
+  status: string;
+  paymentMethodId: string;
   total: number;
-  noteOrder?: string;
   priceShipping: number;
-  inforOrderShipping: {
-    name: string;
-    address: string;
-    phone: string;
-    noteShipping?: string;
-    is_active: boolean;
-  };
+  createdAt: string;
 }
 
-export interface IOrderDocs {
-  docs: IOrder[];
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: false;
-  hasNextPage: false;
-  prevPage: null;
-  nextPage: null;
+export interface IInforOrderShipping {
+  name: string;
+  address: string;
+  phone: string | number;
+  noteShipping: string;
+}
+
+export interface IOrderDetailResponse {
+  order: IOrder;
 }
