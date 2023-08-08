@@ -9,113 +9,64 @@ import AllOrdersDone from './AllOrdersDone';
 import AllOrdersCanceled from './AllOrdersCanceled';
 import { FaTimesCircle } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
+import { IOrderDocs } from '../../../interfaces/order.type';
 
 const FakeOrder: IOrderDocs = {
   docs: [
     {
-      user: uuidv4(),
+      user: {
+        username: '10',
+      },
       items: [
         {
-          product: uuidv4(),
+          product: {
+            name: 'string',
+            images: [
+              {
+                url: '',
+                publicId: '',
+              },
+            ],
+            toppings: [{ name: '', price: 10 }],
+            description: 'string',
+            price: 10,
+            sale: 10,
+            category: {
+              name: 'test',
+              slug: '12',
+            },
+            sizes: [
+              {
+                name: '',
+                price: 10,
+              },
+            ],
+          },
           quantity: 10,
-          price: 100,
+          price: 10,
+          topping: [
+            {
+              name: '',
+              price: 10,
+            },
+          ],
+          size: {
+            name: '12',
+            price: 10,
+          },
         },
       ],
       status: 'pending',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'pending',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'pending',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'confirmed',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'delivered',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'done',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
-    },
-    {
-      user: uuidv4(),
-      items: [
-        {
-          product: uuidv4(),
-          quantity: 10,
-          price: 100,
-        },
-      ],
-      status: 'pending',
-      total: 1000,
-      priceShipping: 0,
-      address: 'HN',
-      is_active: true,
+      noteOrder: '',
+      priceShipping: 10,
+      inforOrderShipping: {
+        name: 'string',
+        address: 'string',
+        phone: 'string',
+        noteShipping: 'string',
+        is_active: false,
+      },
+      total: 10,
     },
   ],
   totalDocs: 0,

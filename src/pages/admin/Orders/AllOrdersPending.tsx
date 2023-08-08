@@ -3,6 +3,7 @@ import { BiSolidDetail } from 'react-icons/bi';
 import { GiConfirmed } from 'react-icons/gi';
 import { FcCancel } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
+import { IOrderDocs } from '../../../interfaces/order.type';
 
 type Props = {
   data: IOrderDocs;
@@ -47,7 +48,7 @@ const AllOrdersPending = ({ data }: Props) => {
               />
               <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 <div className="text-base font-semibold text-gray-900 dark:text-white">
-                  {item.user}
+                  {item.user.username}
                 </div>
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">abc</div>
               </div>
@@ -55,7 +56,7 @@ const AllOrdersPending = ({ data }: Props) => {
             <Table.Cell className="whitespace-nowrap p-4 text-base font-normal text-gray-900 dark:text-white">
               <div className="flex items-center justify-center capitalize">
                 <div className={`mr-2 h-2.5 w-2.5 rounded-full `}></div>
-                {item.address}
+                {item.inforOrderShipping.address}
               </div>
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">

@@ -67,7 +67,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: <GuardExistUser JSX={AdminLayout} />,
     children: [
       {
         index: true,
