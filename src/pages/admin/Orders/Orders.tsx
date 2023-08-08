@@ -51,6 +51,11 @@ const Orders = () => {
         </Tabs.Item>
         <Tabs.Item icon={MdLocalShipping} title="Order delivered">
           <AllOrderDelivered dataOrderDelivery={orderConfirmed} isFetching={isFetching} />
+          {/* <AllOrderDelivered
+            dataOrderDeliver={orderPending}
+            isLoading={isLoading}
+            isError={isError}
+          /> */}
         </Tabs.Item>
         <Tabs.Item icon={HiCheckCircle} title="Order done">
           <AllOrdersDone />

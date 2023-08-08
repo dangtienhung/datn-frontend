@@ -39,7 +39,7 @@ const AllOrdersTable = ({ hanleUpdateOrderCancel }: AllOrdersTableProps) => {
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
         {orders &&
-          orders.docs.length > 0 &&
+          orders?.docs.length > 0 &&
           orders.docs.map((order, index) => (
             <Table.Row key={order._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
               {/* <Table.Cell className="w-4 p-4">

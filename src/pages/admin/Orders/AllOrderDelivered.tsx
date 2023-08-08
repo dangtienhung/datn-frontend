@@ -1,7 +1,6 @@
-import { Button, Checkbox, Label, Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 
-import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';
 import { LuClipboardEdit } from 'react-icons/lu';
@@ -23,6 +22,27 @@ const AllOrderDelivered = ({ dataOrderDelivery, isFetching }: AllOrderDeliveredP
     }
   }, [dataOrderDelivery]);
   if (isFetching) return <Loading />;
+  // import { Link } from 'react-router-dom';
+  // import { HiPlus } from 'react-icons/hi';
+  // import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
+  // import { useEffect, useState } from 'react';
+  // import Loading from '../../../components/Loading';
+  // import formatDate from '../../../utils/formatDate';
+
+  // interface IProps {
+  //   dataOrderDeliver: dataDocsOrderRes[];
+  //   isLoading: boolean;
+  //   isError: boolean;
+  // }
+  // const AllOrderDelivered = ({ dataOrderDeliver, isLoading }: IProps) => {
+  //   const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([]);
+  //   useEffect(() => {
+  //     if (dataOrderDeliver) {
+  //       setOrderPending(dataOrderDeliver);
+  //     }
+  //   }, [dataOrderDeliver]);
+
+  //   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head>
