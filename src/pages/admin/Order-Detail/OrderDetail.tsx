@@ -1,6 +1,5 @@
-import { Breadcrumb, Button, Checkbox, Label, Select, Table, TextInput } from 'flowbite-react';
-import React from 'react';
 import { AiFillMail, AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { Breadcrumb, Button, Checkbox, Label, Select, Table, TextInput } from 'flowbite-react';
 import {
   HiCog,
   HiDocumentDownload,
@@ -9,7 +8,6 @@ import {
   HiPhone,
   HiTrash,
 } from 'react-icons/hi';
-import { useParams } from 'react-router-dom';
 import {
   useCanceledOrderMutation,
   useConfirmOrderMutation,
@@ -17,10 +15,13 @@ import {
   useDoneOrderMutation,
   useGetOrderByidQuery,
 } from '../../../store/slices/order';
-import { formatCurrency } from '../../../utils/formatCurrency';
-import Loading from '../../../components/Loading';
-import { toast } from 'react-toastify';
+
 import { IOrderDetailResponse } from '../../../interfaces/order.type';
+import Loading from '../../../components/Loading';
+import React from 'react';
+import { formatCurrency } from '../../../utils/formatCurrency';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 type Props = {};
 
@@ -225,10 +226,10 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
         <div className="flex justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 ">
           <div className="flex flex-col justify-start items-start flex-shrink-0 flex-1">
             <div className="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-              <img src={orderDetail?.order && orderDetail?.order.user.avatar} alt="avatar" />
+              <img src={orderDetail?.order && orderDetail?.order?.user?.avatar} alt="avatar" />
               <div className="flex justify-start items-start flex-col space-y-2">
                 <p className="text-base dark:text-white font-semibold leading-4 text-left text-gray-800">
-                  {orderDetail?.order && orderDetail.order.user.username}
+                  {orderDetail?.order && orderDetail.order.user?.username}
                 </p>
               </div>
             </div>
@@ -236,7 +237,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
               <div
                 className={`${
                   orderDetail?.order &&
-                  (orderDetail.order.user.email || orderDetail.order.user.account)
+                  (orderDetail.order.user?.email || orderDetail.order.user?.account)
                     ? ''
                     : 'hidden'
                 } flex items-center gap-x-3`}
@@ -244,7 +245,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                 <AiFillMail />
                 <p className="cursor-pointer text-sm leading-5 ">
                   {orderDetail?.order &&
-                    (orderDetail.order.user.email || orderDetail.order.user.account)}
+                    (orderDetail.order.user?.email || orderDetail.order.user?.account)}
                 </p>
               </div>
               <div className="flex items-center gap-x-3">
