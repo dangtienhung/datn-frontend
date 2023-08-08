@@ -6,6 +6,7 @@ import Loading from '../../../components/Loading';
 import { LuClipboardEdit } from 'react-icons/lu';
 import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
 import formatDate from '../../../utils/formatDate';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IProps {
   dataOrderPending: dataDocsOrderRes[];
@@ -79,19 +80,22 @@ const AllOrdersPending = ({ dataOrderPending, isLoading }: IProps) => {
                 //     </div>
                 //   </Table.Cell>
                 // </Table.Row>
-                <Table.Row className="dark:border-gray-700 dark:bg-gray-800 bg-white">
+                <Table.Row
+                  className="dark:border-gray-700 dark:bg-gray-800 bg-white"
+                  key={uuidv4()}
+                >
                   <Table.Cell className="whitespace-nowrap dark:text-white font-medium text-gray-900">
                     {index + 1}
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-2">
-                      <img className="w-10 h-10 rounded-full" src={item.user.avatar} alt="" />
+                      <img className="w-10 h-10 rounded-full" src={item.user?.avatar} alt="" />
                       <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
                         <div className="dark:text-white text-base font-semibold text-gray-900">
-                          {item.user.username}
+                          {item.user?.username}
                         </div>
                         <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
-                          {item.user.account}
+                          {item.user?.account}
                         </div>{' '}
                       </div>
                     </div>

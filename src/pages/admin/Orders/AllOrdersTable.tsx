@@ -1,18 +1,22 @@
 import { Button, Checkbox, Label, Table } from 'flowbite-react';
-import { useEffect } from 'react';
+import { useCanceledOrderMutation, useLazyGetAllOrderQuery } from '../../../store/slices/order';
+
 import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { useLazyGetAllOrderQuery } from '../../../store/slices/order';
-
-import formatDate from '../../../utils/formatDate';
 import Loading from '../../../components/Loading';
+import Tooltip from '@mui/material/Tooltip';
+import formatDate from '../../../utils/formatDate';
+import { useEffect } from 'react';
 
 const AllOrdersTable = () => {
   const [trigger, { data: orders, isLoading }] = useLazyGetAllOrderQuery();
-
+  const [updateOrderCancel, result] = useCanceledOrderMutation();
   useEffect(() => {
     trigger();
   }, [trigger]);
+  const hanleUpdateOrderCancel = (id: string) => {
+    updateOrderCancel(id);
+  };
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -44,13 +48,13 @@ const AllOrdersTable = () => {
                 </div>
               </Table.Cell>
               <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-                <img className="h-10 w-10 rounded-full" src={order.user.avatar} alt="" />
+                <img className="h-10 w-10 rounded-full" src={order?.user?.avatar} alt="" />
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                   <div className="text-base font-semibold text-gray-900 dark:text-white">
-                    {order.user.username}
+                    {order?.user?.username}
                   </div>
                   <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {order.user.account || (order.user as any)?.email}
+                    {order?.user?.account || (order?.user as any)?.email}
                   </div>
                 </div>
               </Table.Cell>
@@ -84,9 +88,11 @@ const AllOrdersTable = () => {
                       Detail
                     </Link>
                   </Button>
-                  <Button color="failure">
-                    <div className="flex items-center gap-x-2">Delete order</div>
-                  </Button>
+                  <Tooltip title="Hủy Đơn Hàng">
+                    <Button color="failure" onClick={() => hanleUpdateOrderCancel(order._id)}>
+                      <div className="flex items-center gap-x-2">Cancel</div>
+                    </Button>
+                  </Tooltip>
                 </div>
               </Table.Cell>
             </Table.Row>
