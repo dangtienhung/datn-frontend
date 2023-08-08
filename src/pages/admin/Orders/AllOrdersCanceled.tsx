@@ -1,10 +1,11 @@
 import { Button, Table } from 'flowbite-react';
+
 import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { useGetAllOrderCancelQuery } from '../../../store/slices/order';
 import { LuClipboardEdit } from 'react-icons/lu';
-import { v4 as uuid } from 'uuid';
 import formatDate from '../../../utils/formatDate';
+import { useGetAllOrderCancelQuery } from '../../../store/slices/order';
+import { v4 as uuid } from 'uuid';
 
 const AllOrdersCanceled = () => {
   const { data } = useGetAllOrderCancelQuery();
@@ -35,12 +36,12 @@ const AllOrdersCanceled = () => {
                 <div className="flex items-center gap-4">
                   <img
                     className="h-14 w-14 object-cover rounded-full"
-                    src={order.user.avatar}
+                    src={order.user?.avatar}
                     alt={order.inforOrderShipping.name}
                   />
                   <div className="">
                     <p className="dark:text-white text-base font-semibold text-gray-900">
-                      {order.user.username}
+                      {order.user?.username}
                     </p>
                     <p className="dark:text-gray-400 text-sm font-normal text-gray-500">
                       {order.inforOrderShipping.phone}
@@ -60,6 +61,13 @@ const AllOrdersCanceled = () => {
               </Table.Cell>
             </Table.Row>
           ))}
+        {data && data.docs.length === 0 && (
+          <Table.Row className="dark:border-gray-700 dark:bg-gray-800 w-full bg-white">
+            <Table.Cell className="whitespace-nowrap dark:text-white flex items-center justify-center font-medium text-gray-900">
+              No data
+            </Table.Cell>
+          </Table.Row>
+        )}
       </Table.Body>
     </Table>
   );
