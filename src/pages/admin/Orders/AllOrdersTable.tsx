@@ -32,7 +32,7 @@ const AllOrdersTable = () => {
       </Table.Head>
       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
         {orders &&
-          orders.docs.length > 0 &&
+          orders?.docs.length > 0 &&
           orders.docs.map((order) => (
             <Table.Row key={order._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
               <Table.Cell className="w-4 p-4">
@@ -44,13 +44,17 @@ const AllOrdersTable = () => {
                 </div>
               </Table.Cell>
               <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-                <img className="h-10 w-10 rounded-full" src={order.user.avatar} alt="" />
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={order.user && order.user?.avatar}
+                  alt={order.user && order.user.username}
+                />
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                   <div className="text-base font-semibold text-gray-900 dark:text-white">
-                    {order.user.username}
+                    {order.user && order.user.username}
                   </div>
                   <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {order.user.account || (order.user as any)?.email}
+                    {order.user && order.user.account}
                   </div>
                 </div>
               </Table.Cell>

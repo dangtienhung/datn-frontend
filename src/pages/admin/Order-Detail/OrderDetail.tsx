@@ -1,5 +1,5 @@
-import { Breadcrumb, Button, Checkbox, Label, Select, Table, TextInput } from 'flowbite-react';
-import React from 'react';
+import { Button, Checkbox, Label, Table, TextInput } from 'flowbite-react';
+
 import { AiFillMail, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import {
   HiCog,
@@ -21,10 +21,9 @@ import { formatCurrency } from '../../../utils/formatCurrency';
 import Loading from '../../../components/Loading';
 import { toast } from 'react-toastify';
 import { IOrderDetailResponse } from '../../../interfaces/order.type';
+import { ITopping } from '../../../interfaces/topping.type';
 
-type Props = {};
-
-const OrderDetail = (props: Props) => {
+const OrderDetail = () => {
   const { id } = useParams();
   const { data: orderDetail, isLoading } = useGetOrderByidQuery(id!);
   const [confirmOrder, { isError: isConfirmErr, isLoading: isConfirming }] =
@@ -359,7 +358,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                   {formatCurrency(order.size.price)}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap p-4 text-base font-medium  dark:text-white capitalize ">
-                  {order.toppings.map((item: any) => (
+                  {order.toppings.map((item: ITopping) => (
                     <>
                       <br />
                       <span>{item.name}</span>

@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import { AiFillEye } from 'react-icons/ai';
 import { IProduct } from '../../interfaces/products.type';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   product: IProduct;
@@ -57,7 +58,7 @@ const ShowProduct = ({ product }: Props) => {
                       Sizes:
                       <Box sx={{ display: 'flex', gap: '10px' }}>
                         {product.sizes.map((item) => (
-                          <Button className="bg-orange-400">
+                          <Button key={uuidv4()} className="bg-orange-400">
                             {item.name}: {formatCurrency(item.price)}
                           </Button>
                         ))}
@@ -67,7 +68,7 @@ const ShowProduct = ({ product }: Props) => {
                       Toppings:
                       <Box sx={{ display: 'flex', gap: '10px' }}>
                         {product.toppings.map((item) => (
-                          <Button className="bg-purple-400">
+                          <Button key={uuidv4()+"io"} className="bg-purple-400">
                             {item.name}: {formatCurrency(item.price)}
                           </Button>
                         ))}
