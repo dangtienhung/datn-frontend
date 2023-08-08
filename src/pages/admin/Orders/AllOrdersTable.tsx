@@ -1,29 +1,19 @@
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Select,
-  Table,
-  TextInput,
-} from 'flowbite-react';
-import { useEffect, type FC } from 'react';
-import { HiPlus, HiTrash } from 'react-icons/hi';
+import { Button, Checkbox, Label, Table } from 'flowbite-react';
+import { useEffect } from 'react';
+import { HiPlus } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useLazyGetAllOrderQuery } from '../../../store/slices/order';
-import { IOrder } from '../../../interfaces/order.type';
+
 import formatDate from '../../../utils/formatDate';
 import Loading from '../../../components/Loading';
-import { useForm } from 'react-hook-form';
-type Props = {};
+import { IOrder } from '../../../interfaces/order.type';
 
-const AllOrdersTable = (props: Props) => {
+const AllOrdersTable = () => {
   const [trigger, { data: orders, isLoading }] = useLazyGetAllOrderQuery();
 
   useEffect(() => {
     trigger();
-  }, []);
+  }, [trigger]);
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
@@ -55,13 +45,17 @@ const AllOrdersTable = (props: Props) => {
                 </div>
               </Table.Cell>
               <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-                <img className="h-10 w-10 rounded-full" src={order.user.avatar} alt="" />
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={order.user && order.user.avatar}
+                  alt=""
+                />
                 <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                   <div className="text-base font-semibold text-gray-900 dark:text-white">
-                    {order.user.username}
+                    {order.user && order.user.username}
                   </div>
                   <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {order.user.account || order.user.email}
+                    {order.user?.account || order.user?.email}
                   </div>
                 </div>
               </Table.Cell>

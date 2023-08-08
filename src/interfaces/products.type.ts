@@ -11,12 +11,12 @@ export interface IProduct {
   price: number;
   sale?: number;
   category: ICategory;
-  sizes: ISize[];
+  sizes: { name: string; price: number }[];
   toppings: ITopping[];
-  is_deleted: boolean;
-  is_active: boolean;
-  createdAt: string;
-  updatedAt: string;
+  is_deleted?: boolean;
+  is_active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IProductDocs {
@@ -36,7 +36,7 @@ export interface IAddProduct {
   name: string;
   images: IImage[];
   description: string;
-  price: Number;
+  price: number;
   sale: number;
   category: ICategory;
   sizes: ISize[];
