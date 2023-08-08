@@ -1,9 +1,9 @@
 import { Button, Table } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LuClipboardEdit } from 'react-icons/lu';
 
+import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';
+import { LuClipboardEdit } from 'react-icons/lu';
 import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
 import formatDate from '../../../utils/formatDate';
 
