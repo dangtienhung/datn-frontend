@@ -23,7 +23,7 @@ const AllOrdersPending = ({ dataOrderPending, isLoading }: IProps) => {
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
-      <Table.Head className="bg-gray-100 dark:bg-gray-700">
+      <Table.Head className="bg-gray-100 dark:bg-gray-700 text-center">
         <Table.HeadCell>
           <Label htmlFor="select-all" className="sr-only">
             Select all
