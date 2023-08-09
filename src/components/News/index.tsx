@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '..';
+import { Link } from 'react-router-dom';
+import React from 'react';
+
 type Props = {};
 
 const News = (props: Props) => {
@@ -9,7 +10,7 @@ const News = (props: Props) => {
       <div className="title flex flex-col items-center mb-8">
         <h4 className="text-[#d3b673] text-[22px] mb-[5px] font-bold">Tin Tức và Khuyến Mãi</h4>
         <h3 className="text-center  text-3xl md:text-4xl font-bold text-black uppercase mb-2">
-          KHÁM PHÁ TOCOTOCO NHẬN NGAY KHUYẾN MÃI
+          KHÁM PHÁ NHẬN NGAY KHUYẾN MÃI
         </h3>
         <div className="bg_title"></div>
       </div>
@@ -29,13 +30,13 @@ const News = (props: Props) => {
             <div className="info p-[15px]">
               <div className="title">
                 <h3 className="text-sm uppercase mb-[5px] text-[#282828] font-[700]">
-                  ToCoToCo Ice Cream – Coffee bán kem 10.000 đồng khiến mạng xã hội khấy đảo
+                  Ice Cream – Coffee bán kem 10.000 đồng khiến mạng xã hội khấy đảo
                 </h3>
               </div>
               <div className="description mt-8">
                 <p className="text-sm">
                   Với món kem 10.000 đồng và đồ uống chỉ 25.000 đồng, nhiều người trẻ với mức thu
-                  nhập trung bình dễ dàng chi trả, ToCoToCo Ice Cream – Coffee đang […]
+                  nhập trung bình dễ dàng chi trả, Ice Cream – Coffee đang […]
                 </p>
               </div>
               <div className="btn mt-4">
@@ -66,8 +67,8 @@ const News = (props: Props) => {
             <div className="info p-[15px] ">
               <div className="title">
                 <h3 className="text-sm uppercase mb-[5px] font-[700] text-[#282828]">
-                  ToCoToCo “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương
-                  trình Camp Aletheia
+                  “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương trình
+                  Camp Aletheia
                 </h3>
               </div>
             </div>
@@ -86,8 +87,8 @@ const News = (props: Props) => {
             <div className="info p-[15px] ">
               <div className="title">
                 <h3 className="text-sm uppercase mb-[5px] font-[700] text-[#282828]">
-                  ToCoToCo “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương
-                  trình Camp Aletheia
+                  “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương trình
+                  Camp Aletheia
                 </h3>
               </div>
             </div>
@@ -106,8 +107,8 @@ const News = (props: Props) => {
             <div className="info p-[15px] ">
               <div className="title">
                 <h3 className="text-sm uppercase mb-[5px] font-[700] text-[#282828]">
-                  ToCoToCo “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương
-                  trình Camp Aletheia
+                  “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương trình
+                  Camp Aletheia
                 </h3>
               </div>
             </div>
@@ -126,7 +127,7 @@ const News = (props: Props) => {
                 </div>
                 <div className="title py-2 px-1 absolute bottom-0 shadow-[0_2px_9px]">
                   <h3 className="text-white text-center text-sm md:text-[18px]">
-                    CON ĐƯỜNG KHỞI NGHIỆP CỦA NGƯỜI SÁNG LẬP THƯƠNG HIỆU TRÀ SỮA VIỆT NAM - TOCOTOCO
+                    CON ĐƯỜNG KHỞI NGHIỆP CỦA NGƯỜI SÁNG LẬP THƯƠNG HIỆU TRÀ SỮA VIỆT NAM -
                   </h3>
                 </div>
               </div>
@@ -143,7 +144,7 @@ const News = (props: Props) => {
                   </div>
                   <div className="title">
                     <h4 className="text-[#282828] text-[16px] font-[700]">
-                      ToCoToCo đạt top 10 thương hiệu Châu Á Thái Bình Dương 2021
+                      đạt top 10 thương hiệu Châu Á Thái Bình Dương 2021
                     </h4>
                   </div>
                 </div>
@@ -159,7 +160,7 @@ const News = (props: Props) => {
                   </div>
                   <div className="title">
                     <h4 className="text-[#282828] text-[16px] font-[700]">
-                      ToCoToCo đạt top 10 thương hiệu Châu Á Thái Bình Dương 2021
+                      đạt top 10 thương hiệu Châu Á Thái Bình Dương 2021
                     </h4>
                   </div>
                 </div>

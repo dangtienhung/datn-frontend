@@ -1,24 +1,25 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { GuardExistUser, GuardNotUser } from './guardRoute';
+import { MyInfor, MyOrder, MyVoucher } from './components';
+
+import AccountLayout from './layouts/AccountLayout/accountLayout';
+import AdminLayout from './layouts/admin';
+import Categories from './pages/admin/Categories/Categories';
+import Checkout from './pages/Checkout/Checkout';
+import ClientLayout from './layouts/client';
+import Dashboard from './pages/admin/Dashboard/Dashboard';
 import HomePage from './pages/Home/HomePage';
+import NotFound from './pages/Not-Found/NotFound';
+import OrderDetail from './pages/admin/Order-Detail/OrderDetail';
+import Orders from './pages/admin/Orders/Orders';
+import ProductsList from './pages/admin/Products/Products';
+import ProductsPage from './pages/Products/Products';
+import Role from './pages/admin/Role/Role';
 import Signin from './pages/Sign-in/Signin';
 import Signup from './pages/Sign-up/Signup';
-import ProductsPage from './pages/Products/Products';
-import Checkout from './pages/Checkout/Checkout';
-import AccountLayout from './layouts/AccountLayout/accountLayout';
-import { MyInfor, MyOrder, MyVoucher } from './components';
-import ClientLayout from './layouts/client';
-import AdminLayout from './layouts/admin';
-import Dashboard from './pages/admin/Dashboard/Dashboard';
-import UserList from './pages/admin/Users/Users';
-import Categories from './pages/admin/Categories/Categories';
-import ProductsList from './pages/admin/Products/Products';
 import Topping from './pages/admin/Toppings/Topping';
-import Role from './pages/admin/Role/Role';
+import UserList from './pages/admin/Users/Users';
 import Voucher from './pages/admin/Voucher/Voucher';
-import NotFound from './pages/Not-Found/NotFound';
-import Orders from './pages/admin/Orders/Orders';
-import OrderDetail from './pages/admin/Order-Detail/OrderDetail';
-import { GuardExistUser, GuardNotUser } from './guardRoute';
+import { createBrowserRouter } from 'react-router-dom';
 
 const routes = createBrowserRouter([
   {
@@ -67,7 +68,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <GuardExistUser JSX={AdminLayout} />,
+    element: <AdminLayout />,
     children: [
       {
         index: true,

@@ -1,6 +1,5 @@
-import { Breadcrumb, Button, Checkbox, Label, Select, Table, TextInput } from 'flowbite-react';
-import React from 'react';
 import { AiFillMail, AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { Button, Checkbox, Label, Select, Table, TextInput } from 'flowbite-react';
 import {
   HiCog,
   HiDocumentDownload,
@@ -9,7 +8,6 @@ import {
   HiPhone,
   HiTrash,
 } from 'react-icons/hi';
-import { useParams } from 'react-router-dom';
 import {
   useCanceledOrderMutation,
   useConfirmOrderMutation,
@@ -17,14 +15,15 @@ import {
   useDoneOrderMutation,
   useGetOrderByidQuery,
 } from '../../../store/slices/order';
-import { formatCurrency } from '../../../utils/formatCurrency';
-import Loading from '../../../components/Loading';
-import { toast } from 'react-toastify';
+
 import { IOrderDetailResponse } from '../../../interfaces/order.type';
+import Loading from '../../../components/Loading';
+import { formatCurrency } from '../../../utils/formatCurrency';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import { ITopping } from '../../../interfaces/topping.type';
 
-type Props = {};
-
-const OrderDetail = (props: Props) => {
+const OrderDetail = () => {
   const { id } = useParams();
   const { data: orderDetail, isLoading } = useGetOrderByidQuery(id!);
   const [confirmOrder, { isError: isConfirmErr, isLoading: isConfirming }] =
@@ -232,7 +231,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
               />
               <div className="flex justify-start items-start flex-col space-y-2">
                 <p className="text-base dark:text-white font-semibold leading-4 text-left text-gray-800">
-                  {orderDetail?.order && orderDetail.order.user.username}
+                  {orderDetail?.order && orderDetail.order.user?.username}
                 </p>
               </div>
             </div>
@@ -240,7 +239,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
               <div
                 className={`${
                   orderDetail?.order &&
-                  (orderDetail.order.user.email || orderDetail.order.user.account)
+                  (orderDetail.order.user?.email || orderDetail.order.user?.account)
                     ? ''
                     : 'hidden'
                 } flex items-center gap-x-3`}
@@ -248,7 +247,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                 <AiFillMail />
                 <p className="cursor-pointer text-sm leading-5 ">
                   {orderDetail?.order &&
-                    (orderDetail.order.user.email || orderDetail.order.user.account)}
+                    (orderDetail.order.user?.email || orderDetail.order.user?.account)}
                 </p>
               </div>
               <div className="flex items-center gap-x-3">
@@ -363,7 +362,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                   {formatCurrency(order.size.price)}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap p-4 text-base font-medium  dark:text-white capitalize ">
-                  {order.toppings.map((item: any) => (
+                  {order.toppings.map((item: ITopping) => (
                     <>
                       <br />
                       <span>{item.name}</span>
