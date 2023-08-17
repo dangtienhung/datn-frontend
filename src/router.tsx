@@ -20,6 +20,7 @@ import Topping from './pages/admin/Toppings/Topping';
 import UserList from './pages/admin/Users/Users';
 import Voucher from './pages/admin/Voucher/Voucher';
 import { createBrowserRouter } from 'react-router-dom';
+import StaffLayout from './layouts/Staff/StaffLayout';
 
 const routes = createBrowserRouter([
   {
@@ -101,6 +102,40 @@ const routes = createBrowserRouter([
       {
         path: 'role',
         element: <Role />,
+      },
+      {
+        path: 'voucher',
+        element: <Voucher />,
+      },
+    ],
+  },
+  {
+    path: '/staff', element: <StaffLayout />,
+    children: [
+      {
+        index: true,
+        path: 'dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: 'categories',
+        element: <Categories />,
+      },
+      {
+        path: 'products',
+        element: <ProductsList />,
+      },
+      {
+        path: 'orders',
+        element: <Orders />,
+      },
+      {
+        path: 'orders/:id',
+        element: <OrderDetail />,
+      },
+      {
+        path: 'toppings',
+        element: <Topping />,
       },
       {
         path: 'voucher',
