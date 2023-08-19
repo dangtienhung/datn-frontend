@@ -50,22 +50,14 @@ const ListProducts = ({ categoryItem, products }: ListProductsProps) => {
               </div>
             </div>
             <div className="list-product xl:mx-0 lg:grid-cols-3 grid grid-cols-2 gap-3">
-              {categoryItem && categoryItem?.products
-                ? categoryItem?.products?.map((product: IProduct) => (
-                    <ListProductItem
-                      key={product._id}
-                      product={product}
-                      fetchProductById={fetchProductById}
-                    />
-                  ))
-                : products?.docs &&
-                  products?.docs?.map((product: IProduct) => (
-                    <ListProductItem
-                      key={product._id}
-                      product={product}
-                      fetchProductById={fetchProductById}
-                    />
-                  ))}
+              {products?.docs &&
+                products?.docs?.map((product: IProduct) => (
+                  <ListProductItem
+                    key={product._id}
+                    product={product}
+                    fetchProductById={fetchProductById}
+                  />
+                ))}
             </div>
           </div>
         </div>
