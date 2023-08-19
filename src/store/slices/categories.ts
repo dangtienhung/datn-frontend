@@ -4,6 +4,7 @@ import { ICategory } from '../../interfaces/category.type';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface iCategories {
+  idCate: string;
   categories: ICategory[];
   category: ICategory;
   isLoading: boolean;
@@ -11,6 +12,7 @@ interface iCategories {
 }
 
 const initialState: iCategories = {
+  idCate: '',
   categories: [],
   category: {} as ICategory,
   isLoading: false,
@@ -20,7 +22,11 @@ const initialState: iCategories = {
 export const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
-  reducers: {},
+  reducers: {
+    getIdCate: (state, { payload }) => {
+      state.idCate = payload;
+    },
+  },
   extraReducers: (builder) => {
     //getAll
     builder.addCase(getAllCates.pending, (state) => {
@@ -79,5 +85,7 @@ export const categoriesSlice = createSlice({
     });
   },
 });
+
+export const { getIdCate } = categoriesSlice.actions;
 
 export const categoriesReducer = categoriesSlice.reducer;

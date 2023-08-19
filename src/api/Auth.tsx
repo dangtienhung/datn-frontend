@@ -39,7 +39,6 @@ export const baseQueryWithReauth: BaseQueryFn<
 
 export const Auth = createApi({
   reducerPath: 'Auth',
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     register: builder.mutation<void, IUser>({
@@ -47,6 +46,7 @@ export const Auth = createApi({
         url: '/api/register',
         body: rest,
         method: 'POST',
+        credentials: 'include',
       }),
     }),
     login: builder.mutation<responseUser, IUser>({
@@ -54,6 +54,7 @@ export const Auth = createApi({
         url: '/api/login',
         body: rest,
         method: 'POST',
+        credentials: 'include',
       }),
     }),
     logout: builder.mutation<any, void>({
