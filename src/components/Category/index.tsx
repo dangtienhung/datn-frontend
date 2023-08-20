@@ -38,11 +38,19 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
           Danh mục
         </div>
         <div className="">
+          <div
+            onClick={() => dispatch(getIdCate(''))}
+            className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
+          >
+            <div className="cat-name capitalize">All</div>
+          </div>
           {categories &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
-                onClick={() => dispatch(getIdCate(category._id))}
+                onClick={() =>
+                  dispatch(getIdCate({ idCate: category._id, nameCate: category.name }))
+                }
                 key={category._id}
                 className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
               >

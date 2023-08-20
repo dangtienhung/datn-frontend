@@ -10,11 +10,11 @@ import PopupDetailProduct from '../PopupDetailProduct';
 import http from '../../api/instance';
 
 interface ListProductsProps {
-  categoryItem: ICategory;
+  categoryName: string;
   products?: IProductDocs;
 }
 
-const ListProducts = ({ categoryItem, products }: ListProductsProps) => {
+const ListProducts = ({ categoryName, products }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null);
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
   const [product, setProduct] = useState<any>({});
@@ -43,7 +43,7 @@ const ListProducts = ({ categoryItem, products }: ListProductsProps) => {
           <div className="category ">
             <div className="category-name flex items-center justify-between px-[20px] py-[16px]">
               <div className="text-lg capitalize select-none">
-                {categoryItem?.name || 'Tất cả sản phẩm'}
+                {categoryName || 'Tất cả sản phẩm'}
               </div>
               <div className="right">
                 <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />

@@ -5,6 +5,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface iCategories {
   idCate: string;
+  nameCate: string;
   categories: ICategory[];
   category: ICategory;
   isLoading: boolean;
@@ -13,6 +14,7 @@ interface iCategories {
 
 const initialState: iCategories = {
   idCate: '',
+  nameCate: '',
   categories: [],
   category: {} as ICategory,
   isLoading: false,
@@ -24,7 +26,8 @@ export const categoriesSlice = createSlice({
   initialState,
   reducers: {
     getIdCate: (state, { payload }) => {
-      state.idCate = payload;
+      state.idCate = payload.idCate;
+      state.nameCate = payload.nameCate;
     },
   },
   extraReducers: (builder) => {

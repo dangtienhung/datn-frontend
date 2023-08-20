@@ -22,6 +22,7 @@ export const GuardSign = ({ JSX }: Props) => {
 
 export const GuardAccount = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (user.role?.name === 'admin' && user.role.status === 'active') {

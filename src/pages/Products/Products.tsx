@@ -18,10 +18,7 @@ const ProductsPage = () => {
         <div className="container pt-3 mx-auto">
           <div className="content md:flex-row flex flex-col justify-between">
             <SidebarCate categories={category.categories} />
-            <ListProducts
-              categoryItem={category.category || products.products.docs}
-              products={products.products}
-            />
+            <ListProducts categoryName={category.nameCate} products={products.products} />
             <MyCart />
           </div>
         </div>
