@@ -21,6 +21,7 @@ import UserList from './pages/admin/Users/Users';
 import Voucher from './pages/admin/Voucher/Voucher';
 import { createBrowserRouter } from 'react-router-dom';
 import StaffLayout from './layouts/Staff/StaffLayout';
+import List from './components/Staff/CrudProducts/List';
 
 const routes = createBrowserRouter([
   {
@@ -114,7 +115,6 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        path: 'dashboard',
         element: <Dashboard />,
       },
       {
@@ -123,7 +123,7 @@ const routes = createBrowserRouter([
       },
       {
         path: 'products',
-        element: <ProductsList />,
+        element: <List />,
       },
       {
         path: 'orders',
