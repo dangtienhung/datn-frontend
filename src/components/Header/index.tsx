@@ -1,5 +1,5 @@
-import { Input } from '..';
-import { useEffect, useState } from 'react';
+import { Input } from '..'
+import { useEffect, useState } from 'react'
 
 import { AiOutlineSearch } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
@@ -10,12 +10,12 @@ import { useSelector } from 'react-redux'
 import useDeBounce from '../../hook/userDeBounce'
 
 const Header = () => {
-  const [value, setValue] = useState('');
-  const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate);
-  const dispatch = useAppDispatch();
-  const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
-  const { page, valueSearch } = useSelector((state: RootState) => state.persistedReducer.products);
-  const debouncedSearchValue = useDeBounce(value, 1000, valueSearch);
+  const [value, setValue] = useState('')
+  const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate)
+  const dispatch = useAppDispatch()
+  const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
+  const { page, valueSearch } = useSelector((state: RootState) => state.persistedReducer.products)
+  const debouncedSearchValue = useDeBounce(value, 1000, valueSearch)
 
   useEffect(() => {
     dispatch(
@@ -23,10 +23,10 @@ const Header = () => {
         page: page,
         limit: 10,
         query: debouncedSearchValue || valueSearch,
-        category: iDcategory,
+        category: iDcategory
       })
-    );
-  }, [debouncedSearchValue, iDcategory, page]);
+    )
+  }, [debouncedSearchValue, iDcategory, page])
 
   return (
     <div className='header flex items-center justify-between gap-2 px-4 py-2'>
