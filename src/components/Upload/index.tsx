@@ -1,11 +1,11 @@
-import { Box, Button, Paper, Stack, Typography, CircularProgress } from '@mui/material'
-import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi'
-import { IImage } from '../../interfaces/image.type'
-import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product'
-import { useEffect, useState } from 'react'
-import { memo } from 'react'
-import SKUpload from '../SkeletonUpload'
-import { Link } from 'react-router-dom'
+import { Box, Button, Paper, Stack, Typography, CircularProgress } from '@mui/material';
+import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi';
+import { IImage } from '../../interfaces/image.type';
+import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product';
+import { useEffect, useState } from 'react';
+import { memo } from 'react';
+import SKUpload from '../Skeleton/SKUpload';
+import { Link } from 'react-router-dom';
 
 interface Props {
   urls: IImage[]
