@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { FaBars } from 'react-icons/fa';
 import { ICategory } from '../../interfaces/category.type';
@@ -17,33 +17,31 @@ import { getIdCate } from '../../store/slices/categories';
 import { savePage } from '../../store/slices/product.slice';
 
 interface SidebarCateProps {
-  categories: ICategory[];
+  categories: ICategory[]
 }
 
 const SidebarCate = ({ categories }: SidebarCateProps) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const dispatch = useAppDispatch();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const dispatch = useAppDispatch()
 
   const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <>
-      <div className="sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block">
-        <div className="border border-transparent border-b-[#f1f1f1] uppercase px-4 py-2">
-          Danh mục
-        </div>
-        <div className="">
+      <div className='sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
+        <div className='border border-transparent border-b-[#f1f1f1] uppercase px-4 py-2'>Danh mục</div>
+        <div className=''>
           <div
             onClick={() => dispatch(getIdCate(''))}
-            className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
+            className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
           >
-            <div className="cat-name capitalize">All</div>
+            <div className='cat-name capitalize'>All</div>
           </div>
           {categories &&
             categories?.length > 0 &&
@@ -54,16 +52,16 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
                   dispatch(savePage(1));
                 }}
                 key={category._id}
-                className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
+                className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
               >
-                <div className="cat-name capitalize">{category.name}</div>
-                <div className="cat-amount text-[#8a733f]">{category.products?.length}</div>
+                <div className='cat-name capitalize'>{category.name}</div>
+                <div className='cat-amount text-[#8a733f]'>{category.products?.length}</div>
               </div>
             ))}
         </div>
       </div>
       <div
-        className="btn-menu cursor-pointer fixed bottom-[100px] left-[16px] bg-[#ee4d2d] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center z-[3] lg:hidden"
+        className='btn-menu cursor-pointer fixed bottom-[100px] left-[16px] bg-[#ee4d2d] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center z-[3] lg:hidden'
         onClick={handleClick}
       >
         <FaBars />
@@ -74,16 +72,16 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'left'
         }}
         transformOrigin={{
           vertical: 'bottom',
-          horizontal: 'right',
+          horizontal: 'right'
         }}
       >
         <Paper elevation={3} sx={{ width: '25rem' }}>
           <Fragment>
-            <Typography component={'h1'} color="text.primary" fontWeight={500} padding={1}>
+            <Typography component={'h1'} color='text.primary' fontWeight={500} padding={1}>
               Danh mục
             </Typography>
           </Fragment>
@@ -93,7 +91,7 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
             sx={{
               width: '100%',
               maxHeight: 200,
-              overflow: 'auto',
+              overflow: 'auto'
             }}
           >
             <Stack onClick={handleClose}>
@@ -123,13 +121,13 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
                 <Stack key={category._id} onClick={handleClose}>
                   <ListItem>
                     <ListItemText
-                      className="cursor-pointer"
+                      className='cursor-pointer'
                       secondary={
                         <Fragment>
                           <Typography
                             component={'span'}
-                            className="flex justify-between w-full"
-                            color="text.primary"
+                            className='flex justify-between w-full'
+                            color='text.primary'
                             fontSize={13}
                           >
                             {category.name}
@@ -149,7 +147,7 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
         </Paper>
       </Popover>
     </>
-  );
-};
+  )
+}
 
-export default SidebarCate;
+export default SidebarCate

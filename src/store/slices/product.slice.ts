@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { IProductDocs } from '../../interfaces/products.type';
-import { getAllProducts } from '../services/product.service';
+import { IProductDocs } from '../../interfaces/products.type'
+import { getAllProducts } from '../services/product.service'
 
 interface ProductState {
   products: IProductDocs;
@@ -40,11 +40,11 @@ export const productSlice = createSlice({
       state.products = action.payload;
     });
     builder.addCase(getAllProducts.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error.message || '';
-    });
-  },
-});
+      state.isLoading = false
+      state.error = action.error.message || ''
+    })
+  }
+})
 
 export const { savePage, saveValueSearch } = productSlice.actions;
 export const productReducer = productSlice.reducer;
