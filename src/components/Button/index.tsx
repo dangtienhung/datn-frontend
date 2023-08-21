@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 type Props = {
-  type?: 'auth' | 'checkout' | 'keep-buying' | 'paying';
-  size: 'small' | 'medium' | 'large';
-  shape?: 'square' | 'round' | 'circle';
-  style?: string;
-  children: React.ReactNode;
-};
+  type?: 'auth' | 'checkout' | 'keep-buying' | 'paying'
+  size: 'small' | 'medium' | 'large'
+  shape?: 'square' | 'round' | 'circle'
+  style?: string
+  children: React.ReactNode
+}
 
 const Button = ({ children, type, size, shape, style }: Props) => {
   return (
@@ -16,10 +16,7 @@ const Button = ({ children, type, size, shape, style }: Props) => {
       ${type === 'auth' || type === 'checkout' || !type ? 'uppercase' : 'capitalize'}
       ${type === 'checkout' && 'bg-[#ee4d2d]'}
       ${type === 'keep-buying' && 'border border-[#d8b979] bg-[#ffffff] text-[#d8b979]'}
-      ${
-        type === 'paying' &&
-        'border border-[#d8b979] bg-[#d8b979] rounded-[30px] h-[30px] flex items-center '
-      }
+      ${type === 'paying' && 'border border-[#d8b979] bg-[#d8b979] rounded-[30px] h-[30px] flex items-center '}
       ${size === 'small' && 'py-[6px] px-[15px] '}
       ${size === 'large' && 'w-full font-semibold px-[5px] py-[10px] mt-6 btn-shadow '}
       ${size === 'medium' && 'py-2 px-[18px]'}
@@ -31,7 +28,7 @@ const Button = ({ children, type, size, shape, style }: Props) => {
     >
       {children}
     </button>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button
