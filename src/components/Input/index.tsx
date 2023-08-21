@@ -1,4 +1,6 @@
-import { UseFormRegister } from 'react-hook-form'
+import { UseFormRegister } from 'react-hook-form';
+import { useAppDispatch } from '../../store/hooks';
+import { savePage, saveValueSearch } from '../../store/slices/product.slice';
 
 type NameInput = 'password' | 'account' | 'username' | 'confirmpassword' | any
 
@@ -14,7 +16,18 @@ type Props = {
   searchValue?: string
 }
 
-const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText, searchValue }: Props) => {
+const Input = ({
+  placeholder,
+  type,
+  prefix,
+  name,
+  typeInput,
+  register,
+  error,
+  setText,
+  searchValue,
+}: Props) => {
+  const dispatch = useAppDispatch();
   return (
     <div className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}>
       {prefix && prefix}
@@ -32,8 +45,14 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
         placeholder={placeholder && placeholder}
         type={typeInput}
         {...register?.(name)}
-        onChange={(e) => setText && setText(e.target.value)}
         value={searchValue}
+        onChange={(e) => {
+          if (setText) {
+            setText(e.target.value);
+            dispatch(saveValueSearch(e.target.value));
+            dispatch(savePage(1));
+          }
+        }}
         name={name}
       />
       {error && <span className='text-red-500 text-[13px] self-start'>{error}</span>}

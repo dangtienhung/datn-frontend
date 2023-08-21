@@ -1,4 +1,4 @@
-import { IUser } from './user.type'
+import { IUser } from './user.type';
 
 export interface IOrder {
   _id?: string

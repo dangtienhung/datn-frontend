@@ -1,12 +1,18 @@
-import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
-import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { useRef, useState } from 'react'
+import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa';
+import { IProduct, IProductDocs } from '../../interfaces/products.type';
+import { useEffect, useRef, useState } from 'react';
 
-import { Button } from '..'
-import { Link } from 'react-router-dom'
-import ListProductItem from '../List-ProductItem'
-import PopupDetailProduct from '../PopupDetailProduct'
-import http from '../../api/instance'
+import { Button } from '..';
+import { Link } from 'react-router-dom';
+import ListProductItem from '../List-ProductItem';
+import PopupDetailProduct from '../PopupDetailProduct';
+import http from '../../api/instance';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import Paginate from '../Pagination';
+import SKProduct from '../Skeleton/SKProduct';
+import { useAppDispatch } from '../../store/hooks';
+import { savePage } from '../../store/slices/product.slice';
 
 interface ListProductsProps {
   categoryName: string
@@ -14,13 +20,22 @@ interface ListProductsProps {
 }
 
 const ListProducts = ({ categoryName, products }: ListProductsProps) => {
-  const orderRef = useRef<HTMLDivElement>(null)
-  const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
-  const [product, setProduct] = useState<any>({})
+  const orderRef = useRef<HTMLDivElement>(null);
+  const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
+  const [product, setProduct] = useState<any>({});
+  const { page } = useSelector((state: RootState) => state.persistedReducer.products);
+  const dispatch = useAppDispatch();
+  const { products: ListProduct, isLoading } = useSelector(
+    (state: RootState) => state.persistedReducer.products
+  );
 
   const handleTogglePopup = () => {
     setIsShowPopup(!isShowPopup)
   }
+
+  const paginatePage = (page: number) => {
+    dispatch(savePage(page));
+  };
 
   const fetchProductById = async (id: string | number) => {
     try {
@@ -46,13 +61,35 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
                 <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />
               </div>
             </div>
-            <div className='list-product xl:mx-0 lg:grid-cols-3 grid grid-cols-2 gap-3'>
-              {products?.docs &&
+            {ListProduct.docs && ListProduct.docs.length <= 0 ? (
+              <section className="flex flex-col justify-center bg-gray-100 items-center h-[70vh] font-bold my-5">
+                <img
+                  className="mx-auto"
+                  src="https://res.cloudinary.com/ddx8kaolc/image/upload/v1692621404/558-5585968_thumb-image-not-found-icon-png-transparent-png_w8saaq.png"
+                  width={200}
+                  alt=""
+                />
+                <h3>Không tìm thấy sản phẩm nào</h3>
+              </section>
+            ) : (
+              ''
+            )}
+            <div className="list-product xl:mx-0 lg:grid-cols-3 grid grid-cols-2 gap-3 overflow-y-auto">
+              {isLoading ? (
+                <SKProduct amount={10} />
+              ) : (
+                products?.docs &&
                 products?.docs?.map((product: IProduct) => (
-                  <ListProductItem key={product._id} product={product} fetchProductById={fetchProductById} />
-                ))}
+                  <ListProductItem
+                    key={product._id}
+                    product={product}
+                    fetchProductById={fetchProductById}
+                  />
+                ))
+              )}
             </div>
           </div>
+          <Paginate action={paginatePage} totalPages={products?.totalPages!} currentPage={page} />
         </div>
 
         <div className='order-bottom bg-[#fff] fixed bottom-0 w-[100vw] flex flex-col border-t border-[#f1f1f1] lg:hidden'>
