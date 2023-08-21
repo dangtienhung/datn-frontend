@@ -1,9 +1,9 @@
-import { Box, Typography } from '@mui/material';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import { Box, Typography } from '@mui/material'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 interface Props {
-  files: number;
+  files: number
 }
 
 const SKUpload = ({ files }: Props) => {
@@ -19,13 +19,13 @@ const SKUpload = ({ files }: Props) => {
               backgroundColor: '#d4d4d8',
               display: 'flex',
               gap: '10px',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
             <Box sx={{ fontSize: '30px' }}>
               <Skeleton width={30} />
             </Box>
-            <Typography component="p" sx={{ fontSize: '20px' }}>
+            <Typography component='p' sx={{ fontSize: '20px' }}>
               <Skeleton width={400} />
             </Typography>
             <Box sx={{ fontSize: '30px', cursor: 'pointer', marginLeft: 'auto', color: '#e11d48' }}>
@@ -34,7 +34,7 @@ const SKUpload = ({ files }: Props) => {
           </Box>
         ))}
     </>
-  );
-};
+  )
+}
 
-export default SKUpload;
+export default SKUpload
