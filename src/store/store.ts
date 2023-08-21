@@ -1,14 +1,5 @@
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-  persistReducer,
-  persistStore,
-} from 'redux-persist';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 // import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
 import { ApiProducts } from '../api/Product'
@@ -29,14 +20,14 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart', 'auth', 'category'],
-};
+  whitelist: ['cart', 'auth', 'category']
+}
 
 const productsPersistConfig = {
   key: 'products',
   storage,
-  blacklist: ['products'],
-};
+  blacklist: ['products']
+}
 
 const rootReducer = combineReducers({
   products: persistReducer(productsPersistConfig, productReducer),

@@ -1,27 +1,27 @@
 import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
 import { MyInfor, MyOrder, MyVoucher } from './components'
 
-import AccountLayout from './layouts/AccountLayout/accountLayout';
-import AdminLayout from './layouts/admin';
-import Categories from './pages/admin/Categories/Categories';
-import Checkout from './pages/Checkout/Checkout';
-import ClientLayout from './layouts/client';
-import Dashboard from './pages/admin/Dashboard/Dashboard';
-import HomePage from './pages/Home/HomePage';
-import NotFound from './pages/Not-Found/NotFound';
-import OrderDetail from './pages/admin/Order-Detail/OrderDetail';
-import Orders from './pages/admin/Orders/Orders';
-import ProductsList from './pages/admin/Products/Products';
-import ProductsPage from './pages/Products/Products';
-import Role from './pages/admin/Role/Role';
-import Signin from './pages/Sign-in/Signin';
-import Signup from './pages/Sign-up/Signup';
-import Topping from './pages/admin/Toppings/Topping';
-import UserList from './pages/admin/Users/Users';
-import Voucher from './pages/admin/Voucher/Voucher';
-import { createBrowserRouter } from 'react-router-dom';
-import StaffLayout from './layouts/Staff/StaffLayout';
-import List from './components/Staff/CrudProducts/List';
+import AccountLayout from './layouts/AccountLayout/accountLayout'
+import AdminLayout from './layouts/admin'
+import Categories from './pages/admin/Categories/Categories'
+import Checkout from './pages/Checkout/Checkout'
+import ClientLayout from './layouts/client'
+import Dashboard from './pages/admin/Dashboard/Dashboard'
+import HomePage from './pages/Home/HomePage'
+import NotFound from './pages/Not-Found/NotFound'
+import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
+import Orders from './pages/admin/Orders/Orders'
+import ProductsList from './pages/admin/Products/Products'
+import ProductsPage from './pages/Products/Products'
+import Role from './pages/admin/Role/Role'
+import Signin from './pages/Sign-in/Signin'
+import Signup from './pages/Sign-up/Signup'
+import Topping from './pages/admin/Toppings/Topping'
+import UserList from './pages/admin/Users/Users'
+import Voucher from './pages/admin/Voucher/Voucher'
+import { createBrowserRouter } from 'react-router-dom'
+import StaffLayout from './layouts/Staff/StaffLayout'
+import List from './components/Staff/CrudProducts/List'
 
 const routes = createBrowserRouter([
   {
@@ -116,37 +116,38 @@ const routes = createBrowserRouter([
     ]
   },
   {
-    path: '/staff', element: <StaffLayout />,
+    path: '/staff',
+    element: <StaffLayout />,
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: <Dashboard />
       },
       {
         path: 'categories',
-        element: <Categories />,
+        element: <Categories />
       },
       {
         path: 'products',
-        element: <List />,
+        element: <List />
       },
       {
         path: 'orders',
-        element: <Orders />,
+        element: <Orders />
       },
       {
         path: 'orders/:id',
-        element: <OrderDetail />,
+        element: <OrderDetail />
       },
       {
         path: 'toppings',
-        element: <Topping />,
+        element: <Topping />
       },
       {
         path: 'voucher',
-        element: <Voucher />,
-      },
-    ],
+        element: <Voucher />
+      }
+    ]
   },
   {
     path: '*',
