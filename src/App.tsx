@@ -1,6 +1,6 @@
 'use client';
 
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider, useLocation } from 'react-router-dom';
 
 import { Flowbite } from 'flowbite-react';
 import theme from './flowbite-theme';

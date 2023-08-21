@@ -225,7 +225,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
           <div className="flex flex-col justify-start items-start flex-shrink-0 flex-1">
             <div className="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
               <img
-                src={orderDetail?.order && orderDetail?.order.user.avatar}
+                src={orderDetail?.order && orderDetail?.order.user?.avatar}
                 alt="avatar"
                 className="w-32"
               />
