@@ -4,7 +4,7 @@ import { IImage } from '../../interfaces/image.type';
 import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product';
 import { useEffect, useState } from 'react';
 import { memo } from 'react';
-import SKUpload from '../SkeletonUpload';
+import SKUpload from '../Skeleton/SKUpload';
 import { Link } from 'react-router-dom';
 
 interface Props {

@@ -9,6 +9,7 @@ import {
   persistStore,
 } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+// import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
 import { ApiProducts } from '../api/Product';
 import { ApiUser } from '../api/User';
@@ -28,10 +29,17 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart', 'auth'],
+  whitelist: ['cart', 'auth', 'category'],
 };
+
+const productsPersistConfig = {
+  key: 'products',
+  storage,
+  blacklist: ['products'],
+};
+
 const rootReducer = combineReducers({
-  products: productReducer,
+  products: persistReducer(productsPersistConfig, productReducer),
   auth: AuthReducer,
   cart: cartReducer,
   category: categoriesReducer,

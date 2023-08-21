@@ -8,12 +8,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import { FaBars } from 'react-icons/fa';
 import { ICategory } from '../../interfaces/category.type';
 import { useAppDispatch } from '../../store/hooks';
 import { getIdCate } from '../../store/slices/categories';
+import { savePage } from '../../store/slices/product.slice';
 
 interface SidebarCateProps {
   categories: ICategory[];
@@ -48,9 +49,10 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
-                onClick={() =>
-                  dispatch(getIdCate({ idCate: category._id, nameCate: category.name }))
-                }
+                onClick={() => {
+                  dispatch(getIdCate({ idCate: category._id, nameCate: category.name }));
+                  dispatch(savePage(1));
+                }}
                 key={category._id}
                 className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
               >
@@ -94,6 +96,27 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
               overflow: 'auto',
             }}
           >
+            <Stack onClick={handleClose}>
+              <ListItem>
+                <ListItemText
+                  className="cursor-pointer"
+                  secondary={
+                    <Fragment>
+                      <Typography
+                        component={'span'}
+                        className="flex justify-between w-full"
+                        color="text.primary"
+                        fontSize={13}
+                      >
+                        All
+                      </Typography>
+                    </Fragment>
+                  }
+                  onClick={() => dispatch(getIdCate(''))}
+                />
+              </ListItem>
+              <Divider sx={{ marginLeft: '16px' }} />
+            </Stack>
             {categories &&
               categories?.length > 0 &&
               categories?.map((category: ICategory) => (
@@ -114,7 +137,9 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
                           </Typography>
                         </Fragment>
                       }
-                      onClick={() => dispatch(getIdCate(category._id))}
+                      onClick={() =>
+                        dispatch(getIdCate({ idCate: category._id, nameCate: category.name }))
+                      }
                     />
                   </ListItem>
                   <Divider sx={{ marginLeft: '16px' }} />

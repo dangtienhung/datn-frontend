@@ -1,4 +1,3 @@
-import { IProduct } from './products.type';
 import { IUser } from './user.type';
 
 export interface IOrder {

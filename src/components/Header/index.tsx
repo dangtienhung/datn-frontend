@@ -1,5 +1,5 @@
-import { Button, Input } from '..';
-import React, { useEffect, useState } from 'react';
+import { Input } from '..';
+import { useEffect, useState } from 'react';
 
 import { AiOutlineSearch } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
@@ -14,13 +14,19 @@ const Header = () => {
   const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate);
   const dispatch = useAppDispatch();
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
-  const debouncedSearchValue = useDeBounce(value, 1000);
+  const { page, valueSearch } = useSelector((state: RootState) => state.persistedReducer.products);
+  const debouncedSearchValue = useDeBounce(value, 1000, valueSearch);
 
   useEffect(() => {
     dispatch(
-      getAllProducts({ page: 1, limit: 20, query: debouncedSearchValue, category: iDcategory })
+      getAllProducts({
+        page: page,
+        limit: 10,
+        query: debouncedSearchValue || valueSearch,
+        category: iDcategory,
+      })
     );
-  }, [debouncedSearchValue, iDcategory]);
+  }, [debouncedSearchValue, iDcategory, page]);
 
   return (
     <div className="header flex justify-between items-center px-4 py-2 gap-2">
@@ -35,7 +41,7 @@ const Header = () => {
           type="search"
           placeholder="Tìm kiếm sản phẩm..."
           setText={setValue}
-          searchValue={value}
+          searchValue={value || valueSearch}
         />
       </div>
       {user?.avatar ? (
