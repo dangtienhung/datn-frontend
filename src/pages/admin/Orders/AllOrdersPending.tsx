@@ -1,33 +1,33 @@
-import { Button, Table } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { Button, Table } from 'flowbite-react'
+import { useEffect, useState } from 'react'
 
-import { Link } from 'react-router-dom';
-import Loading from '../../../components/Loading';
-import { LuClipboardEdit } from 'react-icons/lu';
-import { TbMapPinCancel } from 'react-icons/tb';
-import { Tooltip } from '@mui/material';
-import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
-import formatDate from '../../../utils/formatDate';
-import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom'
+import Loading from '../../../components/Loading'
+import { LuClipboardEdit } from 'react-icons/lu'
+import { TbMapPinCancel } from 'react-icons/tb'
+import { Tooltip } from '@mui/material'
+import { dataDocsOrderRes } from '../../../store/slices/types/order.type'
+import formatDate from '../../../utils/formatDate'
+import { v4 as uuidv4 } from 'uuid'
 
 interface IProps {
-  dataOrderPending: dataDocsOrderRes[];
-  isLoading: boolean;
-  isError: boolean;
-  hanleUpdateOrderCancel: (id: string) => void;
+  dataOrderPending: dataDocsOrderRes[]
+  isLoading: boolean
+  isError: boolean
+  hanleUpdateOrderCancel: (id: string) => void
 }
 const AllOrdersPending = ({ dataOrderPending, isLoading, hanleUpdateOrderCancel }: IProps) => {
-  const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([]);
+  const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([])
   useEffect(() => {
     if (dataOrderPending) {
-      setOrderPending(dataOrderPending);
+      setOrderPending(dataOrderPending)
     }
-  }, [dataOrderPending]);
+  }, [dataOrderPending])
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loading />
   return (
-    <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-      <Table.Head className="dark:bg-gray-700 bg-gray-100">
+    <Table className='min-w-full divide-y divide-gray-200 dark:divide-gray-600'>
+      <Table.Head className='dark:bg-gray-700 bg-gray-100'>
         <Table.HeadCell>Stt</Table.HeadCell>
         <Table.HeadCell>User Name</Table.HeadCell>
         <Table.HeadCell>Address</Table.HeadCell>
@@ -35,7 +35,7 @@ const AllOrdersPending = ({ dataOrderPending, isLoading, hanleUpdateOrderCancel 
         {/* <Table.HeadCell>Status</Table.HeadCell> */}
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
-      <Table.Body className="dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200">
+      <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
         {orderPending &&
           orderPending.map((item, index: number) => {
             if (item.status == 'pending')
@@ -83,21 +83,18 @@ const AllOrdersPending = ({ dataOrderPending, isLoading, hanleUpdateOrderCancel 
                 //     </div>
                 //   </Table.Cell>
                 // </Table.Row>
-                <Table.Row
-                  className="dark:border-gray-700 dark:bg-gray-800 bg-white"
-                  key={uuidv4()}
-                >
-                  <Table.Cell className="whitespace-nowrap dark:text-white font-medium text-gray-900">
+                <Table.Row className='dark:border-gray-700 dark:bg-gray-800 bg-white' key={uuidv4()}>
+                  <Table.Cell className='whitespace-nowrap dark:text-white font-medium text-gray-900'>
                     {index + 1}
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex items-center gap-2">
-                      <img className="w-10 h-10 rounded-full" src={item.user?.avatar} alt="" />
-                      <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
-                        <div className="dark:text-white text-base font-semibold text-gray-900">
+                    <div className='flex items-center gap-2'>
+                      <img className='w-10 h-10 rounded-full' src={item.user?.avatar} alt='' />
+                      <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
+                        <div className='dark:text-white text-base font-semibold text-gray-900'>
                           {item.inforOrderShipping.name}
                         </div>
-                        <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
+                        <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
                           {item.inforOrderShipping.phone}
                         </div>{' '}
                       </div>
@@ -111,31 +108,28 @@ const AllOrdersPending = ({ dataOrderPending, isLoading, hanleUpdateOrderCancel 
                     </span>
                   </Table.Cell> */}
                   <Table.Cell>
-                    <div className="gap-x-3 whitespace-nowrap flex items-center">
-                      <Tooltip title="Chi tiết đơn hàng">
-                        <Button color="primary">
-                          <Link
-                            to={`/admin/orders/${item._id}`}
-                            className="gap-x-3 flex items-center"
-                          >
-                            <LuClipboardEdit className="text-xl" />
+                    <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                      <Tooltip title='Chi tiết đơn hàng'>
+                        <Button color='primary'>
+                          <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
+                            <LuClipboardEdit className='text-xl' />
                           </Link>
                         </Button>
                       </Tooltip>
-                      <Tooltip title="Hủy Đơn Hàng">
-                        <Button color="failure" onClick={() => hanleUpdateOrderCancel(item._id)}>
+                      <Tooltip title='Hủy Đơn Hàng'>
+                        <Button color='failure' onClick={() => hanleUpdateOrderCancel(item._id)}>
                           {/* <div className="flex items-center gap-x-2">Cancel</div> */}
-                          <TbMapPinCancel className="text-xl" />
+                          <TbMapPinCancel className='text-xl' />
                         </Button>
                       </Tooltip>
                     </div>
                   </Table.Cell>
                 </Table.Row>
-              );
+              )
           })}
       </Table.Body>
     </Table>
-  );
-};
+  )
+}
 
-export default AllOrdersPending;
+export default AllOrdersPending

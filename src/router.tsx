@@ -1,5 +1,5 @@
-import { GuardExistUser, GuardNotUser } from './guardRoute';
-import { MyInfor, MyOrder, MyVoucher } from './components';
+import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
+import { MyInfor, MyOrder, MyVoucher } from './components'
 
 import AccountLayout from './layouts/AccountLayout/accountLayout';
 import AdminLayout from './layouts/admin';
@@ -20,19 +20,21 @@ import Topping from './pages/admin/Toppings/Topping';
 import UserList from './pages/admin/Users/Users';
 import Voucher from './pages/admin/Voucher/Voucher';
 import { createBrowserRouter } from 'react-router-dom';
+import StaffLayout from './layouts/Staff/StaffLayout';
+import List from './components/Staff/CrudProducts/List';
 
 const routes = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <HomePage />
   },
   {
     path: '/signin',
-    element: <GuardNotUser JSX={Signin} />,
+    element: <GuardSign JSX={Signin} />
   },
   {
     path: '/signup',
-    element: <GuardNotUser JSX={Signup} />,
+    element: <GuardSign JSX={Signup} />
   },
   {
     path: '/products',
@@ -40,43 +42,85 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ProductsPage />,
+        element: <ProductsPage />
       },
       {
         path: 'checkout',
-        element: <Checkout />,
-      },
-    ],
+        element: <Checkout />
+      }
+    ]
   },
   {
     path: '/account-layout',
-    element: <GuardExistUser JSX={AccountLayout} />,
+    element: <GuardAccount JSX={AccountLayout} />,
     children: [
       {
         index: true,
-        element: <MyInfor />,
+        element: <MyInfor />
       },
       {
         path: 'my-order',
-        element: <MyOrder />,
+        element: <MyOrder />
       },
       {
         path: 'my-voucher',
-        element: <MyVoucher />,
-      },
-    ],
+        element: <MyVoucher />
+      }
+    ]
   },
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: <GuardAuth />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: 'users',
+            element: <UserList />
+          },
+          {
+            path: 'categories',
+            element: <Categories />
+          },
+          {
+            path: 'products',
+            element: <ProductsList />
+          },
+          {
+            path: 'orders',
+            element: <Orders />
+          },
+          {
+            path: 'orders/:id',
+            element: <OrderDetail />
+          },
+          {
+            path: 'toppings',
+            element: <Topping />
+          },
+          {
+            path: 'role',
+            element: <Role />
+          },
+          {
+            path: 'voucher',
+            element: <Voucher />
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/staff', element: <StaffLayout />,
     children: [
       {
         index: true,
         element: <Dashboard />,
-      },
-      {
-        path: 'users',
-        element: <UserList />,
       },
       {
         path: 'categories',
@@ -84,7 +128,7 @@ const routes = createBrowserRouter([
       },
       {
         path: 'products',
-        element: <ProductsList />,
+        element: <List />,
       },
       {
         path: 'orders',
@@ -99,10 +143,6 @@ const routes = createBrowserRouter([
         element: <Topping />,
       },
       {
-        path: 'role',
-        element: <Role />,
-      },
-      {
         path: 'voucher',
         element: <Voucher />,
       },
@@ -110,8 +150,8 @@ const routes = createBrowserRouter([
   },
   {
     path: '*',
-    element: <NotFound />,
-  },
-]);
+    element: <NotFound />
+  }
+])
 
-export default routes;
+export default routes
