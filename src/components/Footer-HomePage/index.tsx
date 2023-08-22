@@ -10,12 +10,10 @@ import {
 } from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
-import React from 'react';
+
 import styles from './Footer-HomePage.module.scss';
 
-type Props = {};
-
-const FooterHomePage = (props: Props) => {
+const FooterHomePage = () => {
   return (
     <footer className={`${styles.bg_footer} `}>
       <div className="max-w-[1140px] w-full mx-auto pt-[55px] relative z-10">

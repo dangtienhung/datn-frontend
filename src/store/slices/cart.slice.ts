@@ -1,5 +1,5 @@
 import { CartItem, CartLists } from './types/cart.type';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface CartState {
   items: CartLists[];
@@ -170,6 +170,9 @@ const cartSlice = createSlice({
       }
     },
     resetAllCart: (state) => {
+      state.items = [];
+    },
+    saveAddCartDB: (state) => {
       state.items = [];
     },
     /* optimize code */
