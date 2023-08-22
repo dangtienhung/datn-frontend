@@ -420,7 +420,7 @@ type EditUserModalProps = {
 const EditUserModal = function ({ user }: EditUserModalProps) {
   const [isOpen, setOpen] = useState(false)
   const { data: roles } = useGetAllRolesQuery()
-  const [updateUser, { isLoading, isError }] = useUpdateUserMutation()
+  const [updateUser, { isLoading }] = useUpdateUserMutation()
   const [upLoadAvartaUser, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
   const [urlAvatar, setUrlAvatar] = useState({} as IImage)
@@ -442,8 +442,8 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
         toast.success('Update user success')
         setOpen(false)
       })
-      .catch((err: any) => {
-        toast.error('Update user failed')
+      .catch(() => {
+        toast.error('Update user failed.')
       })
   }
   useEffect(() => {

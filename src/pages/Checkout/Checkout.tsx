@@ -1,5 +1,5 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
+import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
