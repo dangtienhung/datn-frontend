@@ -27,6 +27,7 @@ import formatDate from '../../../utils/formatDate'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import isExpiredVoucher from '../../../utils/isExpiredVoucher'
 
 const Voucher = () => {
   const { data: vouchers } = useGetAllVouchersQuery()
@@ -177,6 +178,7 @@ const VouchersTable = () => {
           <Table.HeadCell>Sale</Table.HeadCell>
           <Table.HeadCell>Start Date</Table.HeadCell>
           <Table.HeadCell>End Date</Table.HeadCell>
+          <Table.HeadCell>Expried</Table.HeadCell>
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
@@ -207,21 +209,36 @@ const VouchersTable = () => {
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {formatDate(item.endDate!)}
                 </Table.Cell>
+                <Table.Cell
+                  className={`
+                      whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900`}
+                >
+                  <span
+                    className={`${
+                      isExpiredVoucher(item.endDate!) === true ? 'bg-red-400 ' : 'bg-green-400 '
+                    } rounded inline-block px-2 text-white`}
+                  >
+                    {isExpiredVoucher(item.endDate!) ? 'Expired' : 'Unexpired'}
+                  </span>
+                </Table.Cell>
 
                 <Table.Cell>
                   <div className='gap-x-3 whitespace-nowrap flex items-center'>
                     {item && <EditVoucherModal voucher={item} />}
-
-                    <Button color='failure' onClick={() => handleDelete(item._id!)}>
-                      <div className='gap-x-2 flex items-center'>
-                        {isDelteLoading ? (
-                          <AiOutlineLoading3Quarters className='rotate text-lg' />
-                        ) : (
-                          <HiTrash className='text-lg' />
-                        )}
-                        Delete Voucher
-                      </div>
-                    </Button>
+                    {isExpiredVoucher(item.endDate!) ? (
+                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
+                        <div className='gap-x-2 flex items-center'>
+                          {isDelteLoading ? (
+                            <AiOutlineLoading3Quarters className='rotate text-lg' />
+                          ) : (
+                            <HiTrash className='text-lg' />
+                          )}
+                          Delete Voucher
+                        </div>
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </Table.Cell>
               </Table.Row>
@@ -246,7 +263,7 @@ const AddVoucherModal = function () {
   })
 
   const onhandleSubmit = async (data: any) => {
-    await addVoucher({ code: data.code, discount: data.discount, sale: data.sale })
+    await addVoucher({ code: data.code.toUpperCase(), discount: data.discount, sale: data.sale })
     if (!isSuccess) {
       toast.success(`Added voucher ${data.code}`)
       reset()
@@ -329,7 +346,7 @@ const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
   })
 
   const onhaneleSubmit = async (data: any) => {
-    await updateVoucher(data)
+    await updateVoucher({ ...data, code: data.code.toUpperCase() })
     if (!isError) {
       toast.success('Updated')
       setOpen(false)

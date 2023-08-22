@@ -4,13 +4,27 @@ import { GrLogout } from 'react-icons/gr'
 import { MdShoppingCart } from 'react-icons/md'
 import { Header } from '../../components'
 import { useLogoutMutation } from '../../api/Auth'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const AccountLayout = () => {
   const [logout] = useLogoutMutation()
   const navigate = useNavigate()
   const onLogout = () => {
-    logout().then(() => {
-      navigate('/', { replace: true, relative: 'path' })
+    Swal.fire({
+      icon: 'question',
+      title: 'Bạn thực sự muốn đăng xuất?',
+      showCancelButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+          .unwrap()
+          .then(() => {
+            navigate('/', { replace: true, relative: 'path' })
+            toast.success('Đăng xuất thành công')
+          })
+          .catch(() => toast.error('Đăng xuất thất bại'))
+      }
     })
   }
   return (

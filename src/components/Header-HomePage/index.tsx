@@ -20,10 +20,11 @@ const HeaderHomePage = () => {
     <header className='w-full absolute z-[99] py-3 px-5 md:px-10 lg:px-0 '>
       <div className='container my-0 mx-auto flex items-center justify-between '>
         <div className='left flex items-center '>
-          <Link to='/'>
+          <Link to='/' className='self-start'>
             <img className='w-[56px] max-w-[56px] md:w-[56px] md:max-w-[56px]' src='/logo_removebg.png' alt='' />
           </Link>
-
+        </div>
+        <div className='middle'>
           <nav ref={menuRef} className='menu md:hidden md:static lg:block ml-[30px] text-white '>
             <div
               className='btn-close flex items-center justify-end mt-4 mb-6 pr-8 md:hidden uppercase text-sm font-semibold cursor-pointer'
