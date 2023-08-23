@@ -24,3 +24,11 @@ export interface CartLists {
   name: string
   items: CartItemState[]
 }
+
+export interface CartItemDB {
+  productId: string;
+  quantity: string;
+  price: string;
+  orderToppingId: string[];
+  totalPrice: string;
+}
