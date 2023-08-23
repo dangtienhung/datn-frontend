@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 
 import { Auth } from '../../api/Auth'
 import { Link } from 'react-router-dom'
+import { AiOutlineArrowDown } from 'react-icons/ai'
 
 const HeaderHomePage = () => {
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery()
@@ -40,9 +41,26 @@ const HeaderHomePage = () => {
                 </Link>
               </li>
               <li className='font-[700] py-2 text-sm '>
-                <Link to='/' onClick={toggleMenu}>
-                  Giới thiệu
-                </Link>
+                <div className='menu_item relative group'>
+                  <a href='/about' onClick={toggleMenu} className='flex'>
+                    <p className='mr-1 hover:underline'>Giới thiệu</p> <AiOutlineArrowDown />
+                  </a>
+                  <ul className='sub-menu absolute w-0 hidden bg-gray-800 text-white py-2 px-4 transition duration-300 group-hover:block group-hover:w-[200px] '>
+                    <li>
+                      <Link to='/about/' className='block py-1 max-w-[500px] hover:text-[#d3b673] hover:underline'>
+                        LỊCH SỬ VÀ SỨ MỆNH
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to='/achievement/'
+                        className='block py-1 max-w-[500px] hover:text-[#d3b673] hover:underline'
+                      >
+                        THÀNH TỰU ĐẠT ĐƯỢC
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li className='font-[700] py-2 text-sm '>
                 <Link to='/products' onClick={toggleMenu}>

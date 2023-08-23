@@ -22,6 +22,8 @@ import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
 import StaffLayout from './layouts/Staff/StaffLayout'
 import List from './components/Staff/CrudProducts/List'
+import Introduce from './components/Introduce/Introduce'
+import Achievement from './components/Achievement/Achievement'
 
 const routes = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ const routes = createBrowserRouter([
         element: <Checkout />
       }
     ]
+  },
+  {
+    path: 'about',
+    element: <Introduce />
+  },
+  {
+    path: 'achievement',
+    element: <Achievement />
   },
   {
     path: '/account-layout',
