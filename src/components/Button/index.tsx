@@ -7,11 +7,13 @@ type Props = {
   style?: string
   children: React.ReactNode
   onClick?: () => void
+  disabled?: boolean
 }
 
-const Button = ({ children, type, size, shape, style, onClick }: Props) => {
+const Button = ({ children, type, size, shape, style, onClick, disabled }: Props) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={`bg-[#d8b979] mb-1 text-sm  uppercase
       ${type === 'auth' || type === 'checkout' || type === 'paying' || !type ? 'text-white' : ''}

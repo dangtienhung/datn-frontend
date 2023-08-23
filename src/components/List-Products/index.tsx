@@ -95,7 +95,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               >
                 <FaArrowDown className='' />
               </div>
-              <div className='cart-title-left uppercase'> Giỏ hàng của tôi </div>
+              <div className='cart-title-left uppercase'>Giỏ hàng của tôi </div>
               <div className='cart-title-right text-[12px]'>Xóa tất cả</div>
             </div>
 
