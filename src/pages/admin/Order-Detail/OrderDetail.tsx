@@ -147,6 +147,7 @@ const OrderDetail = () => {
                 disabled={
                   orderDetail?.order.status === 'canceled' ||
                   orderDetail?.order.status === 'pending' ||
+                  orderDetail?.order.status === 'delivered' ||
                   orderDetail?.order.status === 'done'
                 }
                 onClick={handleSetDeliveredStatus}
@@ -165,7 +166,11 @@ const OrderDetail = () => {
                 {isCanceling ? <AiOutlineLoading3Quarters className='rotate text-lg' /> : 'Canceled'}
               </Button>
               <Button
-                disabled={orderDetail?.order.status === 'canceled' || orderDetail?.order.status === 'pending'}
+                disabled={
+                  orderDetail?.order.status === 'canceled' ||
+                  orderDetail?.order.status === 'pending' ||
+                  orderDetail?.order.status === 'confirmed'
+                }
                 color='success'
                 onClick={handleSetDoneStatus}
               >

@@ -128,12 +128,15 @@ const UserList: FC = () => {
           </div>
         </div>
       </div>
-      <Pagination
-        nextPage={handleNextPage}
-        prevPage={handlePrevPage}
-        hasPrev={users?.hasPrevPage!}
-        hasNext={users?.hasNextPage!}
-      />
+      {users && (
+        <Pagination
+          nextPage={handleNextPage}
+          prevPage={handlePrevPage}
+          hasPrev={users?.hasPrevPage}
+          hasNext={users?.hasNextPage}
+          totalDocs={users?.totalDocs}
+        />
+      )}
     </>
   )
 }
