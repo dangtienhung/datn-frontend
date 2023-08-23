@@ -1,8 +1,8 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
+import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
@@ -16,10 +16,20 @@ import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
+import ModalListVouchers from '../../components/ModalListVouchers'
+import { IVoucher } from '../../interfaces/voucher.type'
+
 //
 const Checkout = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
+
   const [orderAPIFn] = useCreateOrderMutation()
   const dispatch = useAppDispatch()
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen)
+  }
   const {
     register,
     formState: { errors },
@@ -45,8 +55,8 @@ const Checkout = () => {
     (getData: string) => {
       const arrTotal: Omit<CartItemState, 'total'>[] = []
       const arrTotalNumbers: number[] = []
-      dataCartCheckout.items.map((item) =>
-        item.items.map((data) => {
+      dataCartCheckout.items.map((item: any) =>
+        item.items.map((data: any) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, ...rest } = data
@@ -245,7 +255,7 @@ const Checkout = () => {
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
-            <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
+            {/* <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
               <h3 className='text-sm'>Chọn cửa hàng</h3>
               <div className=' flex items-center justify-between cursor-pointer'>
                 <div className='gap-x-2 flex items-center'>
@@ -257,19 +267,21 @@ const Checkout = () => {
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className='list'>
               {dataCartCheckout.items &&
                 dataCartCheckout.items.map((item) => <CheckoutItem key={uuidv4()} dataCartCheckout={item} />)}
               {/* <CheckoutItem /> */}
             </div>
             <div className='pt-[10px] pb-[15px] flex items-center justify-between border-transparent border border-b-[#f1f1f1]'>
-              <div className='gap-x-4 flex items-center'>
+              <div className='gap-x-4 flex items-center max-w-[50%]'>
                 <img className='w-[24px] max-w-[24px]' src='/icon-promotion.png' alt='' />
-                <span className='text-sm'>Mã khuyến mại</span>
+                <span className='text-sm line-clamp-1'>
+                  {Object.keys(voucherChecked).length > 0 ? voucherChecked.code : 'Mã khuyến mại'}
+                </span>
               </div>
               <div className=''>
-                <Button size='medium' shape='circle'>
+                <Button size='medium' shape='circle' onClick={toggleModal}>
                   Thêm khuyến mại
                 </Button>
               </div>
@@ -317,7 +329,7 @@ const Checkout = () => {
                 </span>
               </Button>
 
-              <Link to='/'>
+              <Link to='/products'>
                 <Button type='keep-buying' size='large' shape='circle'>
                   Tiếp tục mua hàng
                 </Button>
@@ -326,6 +338,13 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+
+      <ModalListVouchers
+        isOpen={isModalOpen}
+        voucherChecked={voucherChecked}
+        setVoucherChecked={setVoucherChecked}
+        toggleModal={toggleModal}
+      />
     </div>
   )
 }

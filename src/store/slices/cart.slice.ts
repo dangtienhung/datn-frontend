@@ -1,6 +1,8 @@
 import { CartItem, CartLists } from './types/cart.type'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
+import _ from 'lodash'
+
 interface CartState {
   items: CartLists[]
 }
@@ -50,17 +52,35 @@ const cartSlice = createSlice({
         } else {
           /* nếu mà trùng size & trùng tên => không có topping => thêm mới sản phẩm */
           if (product.toppings.length === 0 && product.quantity === 1) {
+            console.log('th1')
             /* tăng số lượng lên */
             state.items[productIndex].items[productSizeIndex].quantity += product.quantity
             state.items[productIndex].items[productSizeIndex].total += product.total
           }
           if (product.toppings.length === 0 && product.quantity > 1) {
+            console.log('th2')
             /* tăng số lượng lên */
             state.items[productIndex].items[productSizeIndex].quantity += product.quantity
             state.items[productIndex].items[productSizeIndex].total += product.total
           }
           /* nếu mà trùng size & trùng tên => có topping => thêm mới sản phẩm */
-          if (product.toppings.length > 0 && state.items[productIndex].items[productSizeIndex].quantity === 1) {
+          if (product.toppings.length > 0) {
+            // && state.items[productIndex].items[productSizeIndex].quantity === 1
+            console.log('th3')
+            console.log(product)
+            /* kiểm tra xem topping có trùng nhau hay không */
+            /* nếu mà có trùng nhau hết thì tăng số lượng lên không thì tạo mới sản phẩn */
+            for (let i = 0; i < state.items[productIndex].items.length; i++) {
+              const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
+              if (isEqual === true) {
+                console.log(3.1)
+                state.items[productIndex].items[i].quantity += product.quantity
+                state.items[productIndex].items[i].total += product.total
+                return
+              }
+            }
+            /* nếu mà không có topping nào trùng nhau thì sẽ thêm sản phẩm mới */
+            console.log(3.2)
             const newProduct = {
               image: product.image,
               price: product.price,
@@ -70,22 +90,53 @@ const cartSlice = createSlice({
               total: product.total,
               product: product.product
             }
-            console.log('test1')
             state.items[productIndex].items.push(newProduct)
+
+            // if (isEqual) {
+            //   console.log(3.1)
+            //   state.items[productIndex].items[productSizeIndex].quantity += product.quantity
+            //   state.items[productIndex].items[productSizeIndex].total += product.total
+            // } else {
+            //   console.log(3.2)
+            // const newProduct = {
+            //   image: product.image,
+            //   price: product.price,
+            //   quantity: product.quantity,
+            //   size: product.size,
+            //   toppings: product.toppings,
+            //   total: product.total,
+            //   product: product.product
+            // }
+            // state.items[productIndex].items.push(newProduct)
+            // }
           }
           /* nếu mà trùng size & trùng tên => có topping => tăng số lượng lên */
-          if (product.toppings.length > 0 && state.items[productIndex].items[productSizeIndex].quantity > 1) {
-            const newProduct = {
-              image: product.image,
-              price: product.price,
-              quantity: product.quantity,
-              size: product.size,
-              toppings: product.toppings,
-              total: product.total,
-              product: product.product
-            }
-            state.items[productIndex].items.push(newProduct)
-          }
+          // if (product.toppings.length > 0 && state.items[productIndex].items[productSizeIndex].quantity > 1) {
+          //   console.log(
+          //     '🚀 ~ file: cart.slice.ts:80 ~ state.items[productIndex].items[productSizeIndex].quantity:',
+          //     state.items[productIndex].items[productSizeIndex].quantity
+          //   )
+          //   console.log('th4')
+          //   const newProduct = {
+          //     image: product.image,
+          //     price: product.price,
+          //     quantity: product.quantity,
+          //     size: product.size,
+          //     toppings: product.toppings,
+          //     total: product.total,
+          //     product: product.product
+          //   }
+          /* nếu mà trùng size & trùng topping mà chưa có sản phẩm đố thì tăng số lượng */
+          // console.log(product)
+          // if (productToppingIndex >= 0) {
+          //   console.log('th5')
+          //   state.items[productIndex].items[productToppingIndex].quantity += product.quantity
+          //   state.items[productIndex].items[productToppingIndex].total += product.total
+          // } else {
+          //   console.log('th6')
+          //   state.items[productIndex].items.push(newProduct)
+          // }
+          // }
         }
       }
     },
@@ -164,38 +215,6 @@ const cartSlice = createSlice({
     resetAllCart: (state) => {
       state.items = []
     }
-    /* optimize code */
-    // updateCartItem: (state, action) => {
-    //   const { index, quantityChange, priceChange } = action.payload;
-    //   const item = state.items[index];
-    //   item.quantity += quantityChange;
-    //   item.total += priceChange * quantityChange;
-    // },
-    // removeCartItem: (state, action) => {
-    //   const { productIndex, itemIndex } = action.payload;
-    //   state.items[productIndex].items.splice(itemIndex, 1);
-    //   if (state.items[productIndex].items.length === 0) {
-    //     state.items.splice(productIndex, 1);
-    //   }
-    // },
-    // updateQuantity: (state, action) => {
-    //   const { index, name, quantity, size, toppings } = action.payload;
-    //   const products = [...state.items];
-    //   const productIndex = products.findIndex((item) => item.name === name);
-    //   if (productIndex >= 0) {
-    //     const currentItem = state.items[productIndex].items[index];
-    //     const totalTopping = toppings.reduce((total, item) => total + item.price, 0);
-    //     const totalPriceChange = totalTopping + size.price;
-    //     if (quantity > 0) {
-    //       state.updateCartItem({ index, quantityChange: quantity, priceChange: totalPriceChange });
-    //     } else {
-    //       state.updateCartItem({ index, quantityChange: -1, priceChange: -totalPriceChange });
-    //       if (currentItem.quantity === 0) {
-    //         state.removeCartItem({ productIndex, itemIndex: index });
-    //       }
-    //     }
-    //   }
-    // },
   }
 })
 

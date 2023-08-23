@@ -14,11 +14,19 @@ const Header = () => {
   const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate)
   const dispatch = useAppDispatch()
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
-  const debouncedSearchValue = useDeBounce(value, 1000)
+  const { page, valueSearch } = useSelector((state: RootState) => state.persistedReducer.products)
+  const debouncedSearchValue = useDeBounce(value, 1000, valueSearch)
 
   useEffect(() => {
-    dispatch(getAllProducts({ page: 1, limit: 20, query: debouncedSearchValue, category: iDcategory }))
-  }, [debouncedSearchValue, iDcategory])
+    dispatch(
+      getAllProducts({
+        page: page,
+        limit: 10,
+        query: debouncedSearchValue || valueSearch,
+        category: iDcategory
+      })
+    )
+  }, [debouncedSearchValue, iDcategory, page])
 
   return (
     <div className='header flex items-center justify-between gap-2 px-4 py-2'>
@@ -33,7 +41,7 @@ const Header = () => {
           type='search'
           placeholder='Tìm kiếm sản phẩm...'
           setText={setValue}
-          searchValue={value}
+          searchValue={value || valueSearch}
         />
       </div>
       {user?.avatar ? (

@@ -20,7 +20,6 @@ type PopupDetailProductProps = {
 }
 
 const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProductProps) => {
-  console.log('🚀 ~ file: index.tsx:23 ~ PopupDetailProduct ~ product:', product)
   const dispatch = useAppDispatch()
   /* set state trạng thái */
   const [price, setPrice] = useState<number>(0)

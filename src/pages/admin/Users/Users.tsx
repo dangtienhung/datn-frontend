@@ -275,7 +275,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
 const AddUserModal: FC = function () {
   const [isOpen, setOpen] = useState(false)
   const [urlAvatar, setUrlAvatar] = useState({} as IImage)
-  const [addUser, { isLoading, isError }] = useAddUserMutation()
+  const [addUser, { isLoading }] = useAddUserMutation()
   const [upLoadAvartaUser, { isLoading: isUpLoading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
   const { data: roles } = useGetAllRolesQuery()
@@ -288,18 +288,19 @@ const AddUserModal: FC = function () {
     mode: 'onChange',
     resolver: yupResolver(AddUserSchema)
   })
-  const onHandleSubmit = async (data: any) => {
-    console.log(urlAvatar.url)
-
+  const onHandleSubmit = (data: any) => {
     if (data) {
-      await addUser({ ...data, avatar: urlAvatar.url })
-      if (!isError) {
-        toast.success('Created user success')
-        setOpen(false)
-        setUrlAvatar({} as IImage)
-      } else {
-        toast.error('Create user failed.')
-      }
+      addUser({ ...data, avatar: urlAvatar.url })
+        .unwrap()
+        .then(() => {
+          toast.success('Created user success')
+          setOpen(false)
+          setUrlAvatar({} as IImage)
+          reset()
+        })
+        .catch((err: any) => {
+          toast.error(`Create user failed. ${err.data.message}`)
+        })
     }
   }
   // const handleChangeUpload = (event: any) => {
@@ -419,7 +420,7 @@ type EditUserModalProps = {
 const EditUserModal = function ({ user }: EditUserModalProps) {
   const [isOpen, setOpen] = useState(false)
   const { data: roles } = useGetAllRolesQuery()
-  const [updateUser, { isLoading, isError }] = useUpdateUserMutation()
+  const [updateUser, { isLoading }] = useUpdateUserMutation()
   const [upLoadAvartaUser, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
   const [urlAvatar, setUrlAvatar] = useState({} as IImage)
@@ -434,16 +435,16 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
     defaultValues: { ...user, role: user.role?._id, address: user.address || '' } as any
   })
 
-  const onHandleSubmit = async (data: any) => {
-    console.log(urlAvatar.url)
-
-    await updateUser({ ...data, avatar: urlAvatar.url })
-    if (!isError) {
-      toast.success('Update user success')
-      setOpen(false)
-    } else {
-      toast.error('Update user failed')
-    }
+  const onHandleSubmit = (data: any) => {
+    updateUser({ ...data, avatar: urlAvatar.url })
+      .unwrap()
+      .then(() => {
+        toast.success('Update user success')
+        setOpen(false)
+      })
+      .catch(() => {
+        toast.error('Update user failed.')
+      })
   }
   useEffect(() => {
     setUrlAvatar({ ...urlAvatar, url: user.avatar })

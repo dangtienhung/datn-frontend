@@ -1,12 +1,32 @@
 import { type FC } from 'react'
-import { Button, DarkThemeToggle, Navbar } from 'flowbite-react'
+import { Button, DarkThemeToggle, Navbar, Avatar } from 'flowbite-react'
 import { BiLogOut } from 'react-icons/bi'
 import { useLogoutMutation } from '../../../api/Auth'
-
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
+// import { useSelector } from 'react-redux'
+import { RootState } from '../../../store/store'
+import { useAppSelector } from '../../../store/hooks'
 const AdminNavbar: FC = function () {
   const [logout] = useLogoutMutation()
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  console.log(user)
+
   const onLogout = () => {
-    logout()
+    Swal.fire({
+      icon: 'question',
+      title: 'Bạn thực sự muốn đăng xuất?',
+      showCancelButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+          .unwrap()
+          .then(() => {
+            toast.success('Đăng xuất thành công')
+          })
+          .catch(() => toast.error('Đăng xuất thất bại'))
+      }
+    })
   }
   return (
     <Navbar fluid>
@@ -22,6 +42,7 @@ const AdminNavbar: FC = function () {
               <BiLogOut />
             </Button>
             <DarkThemeToggle />
+            <Avatar img={user.avatar} rounded status='online' bordered color={'success'} statusPosition='top-right' />
           </div>
         </div>
       </div>

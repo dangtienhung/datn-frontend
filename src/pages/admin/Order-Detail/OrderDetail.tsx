@@ -1,6 +1,7 @@
 import { AiFillMail, AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { Button, Checkbox, Label, Table, TextInput } from 'flowbite-react'
+import { Button, Checkbox, Label, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiCog, HiDocumentDownload, HiDotsVertical, HiExclamationCircle, HiPhone, HiTrash } from 'react-icons/hi'
+import { FaArrowLeftLong } from 'react-icons/fa6'
 import {
   useCanceledOrderMutation,
   useConfirmOrderMutation,
@@ -13,11 +14,12 @@ import { IOrderDetailResponse } from '../../../interfaces/order.type'
 import Loading from '../../../components/Loading'
 import { formatCurrency } from '../../../utils/formatCurrency'
 import { toast } from 'react-toastify'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ITopping } from '../../../interfaces/topping.type'
 
 const OrderDetail = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { data: orderDetail, isLoading } = useGetOrderByidQuery(id!)
   const [confirmOrder, { isError: isConfirmErr, isLoading: isConfirming }] = useConfirmOrderMutation()
   const [doneOrder, { isError: isDoneErr, isLoading: isDoning }] = useDoneOrderMutation()
@@ -75,8 +77,16 @@ const OrderDetail = () => {
     <>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
-          <div className='mb-4'>
-            <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>Order Detail</h1>
+          <div className='mb-4 flex items-center gap-x-4'>
+            <div className='cursor-pointer p-3 dark:text-white' onClick={() => navigate(-1)}>
+              <Tooltip content='Back'>
+                <FaArrowLeftLong />
+              </Tooltip>
+            </div>
+
+            <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900 select-none'>
+              Order Detail
+            </h1>
           </div>
           <div className='sm:flex'>
             <div className='dark:divide-gray-700 sm:mb-0 sm:flex sm:divide-x sm:divide-gray-100 items-center hidden mb-3'>
@@ -316,7 +326,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                   {order.product.name}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {order.quantity}
+                  {order.quantitsy}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
                   {formatCurrency(order.price)}

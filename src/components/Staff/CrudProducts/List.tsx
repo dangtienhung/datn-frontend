@@ -18,11 +18,11 @@ interface DataType extends IProduct {
 type DataIndex = keyof DataType
 
 const List = () => {
-  const { data: productData, error, isLoading } = useFetchProductsQuery()
-  const [removeProduct, { isLoading: isRemoveLoading, isSuccess: isRemoveSuccess }] = useDeleteFakeProductMutation()
+  const { data: productData, isLoading } = useFetchProductsQuery()
+  const [removeProduct] = useDeleteFakeProductMutation()
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  console.log(productData)
+  // console.log(productData);
   const start = () => {
     setLoading(true)
     // ajax request after empty completing
@@ -203,12 +203,12 @@ const List = () => {
         <Space size='middle'>
           <Button style={{ backgroundColor: '#d46b08', height: '40px' }}>
             <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
-              <AiFillEye className='text-lg mr-1' />
+              <AiFillEye className='mr-1 text-lg' />
             </Link>
           </Button>
           <Button style={{ backgroundColor: '#0958d9', height: '40px' }}>
             <Link style={{ color: 'white', margin: 'auto' }} to={`${record.key}/update`}>
-              <AiOutlineEdit className='text-lg mr-1' />
+              <AiOutlineEdit className='mr-1 text-lg' />
             </Link>
           </Button>
           <Popconfirm
