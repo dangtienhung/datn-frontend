@@ -2,6 +2,7 @@ import { CartItem, CartLists } from './types/cart.type'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import _ from 'lodash'
+import { CartDBAPI } from '../../api/cartDB'
 
 interface CartState {
   items: CartLists[]
@@ -214,10 +215,8 @@ const cartSlice = createSlice({
     },
     resetAllCart: (state) => {
       state.items = []
-    },
-    saveAddCartDB: (state) => {
-      state.items = []
     }
+
     /* optimize code */
     // updateCartItem: (state, action) => {
     //   const { index, quantityChange, priceChange } = action.payload;
@@ -250,6 +249,21 @@ const cartSlice = createSlice({
     //     }
     //   }
     // },
+  },
+
+  extraReducers: (builder) => {
+    builder.addMatcher(CartDBAPI.endpoints.createCartDB.matchFulfilled, (state, { payload }) => {
+      if (payload) {
+        console.log('payload', payload)
+        console.log('payload, state', state)
+        // state.user = payload.user
+      }
+    })
+
+    // builder.addMatcher(CartDBAPI.endpoints.getAllCartDB.matchFulfilled, (state, { payload }) => {
+    //   // state.items = payload
+    //   console.log(' padfdfd', state, payload)
+    // })
   }
 })
 

@@ -5,7 +5,8 @@ import { IProduct } from '../../interfaces/products.type'
 import { addToCart } from '../../store/slices/cart.slice'
 import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useCreateCartDBMutation } from '../../api/cartDB'
 
 // interface TypeSize {
 //   name: string
@@ -25,16 +26,20 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [price, setPrice] = useState<number>(0)
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
+  const [addCartDbFn, addCartDbRes] = useCreateCartDBMutation()
+
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<any>(product.sizes[0])
-  const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number }[]>([])
+  const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number; _id: string }[]>([])
 
+  const { user } = useAppSelector((state) => state.persistedReducer.auth)
   /* xử lý sự kiện check box phân topping */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const toppingPrice = Number(event.target.value)
     const toppingName = event.target.name
-    const data = { name: toppingName, price: toppingPrice }
+    const _idTopping = event.target.getAttribute('data-items') as string
 
+    const data = { name: toppingName, price: toppingPrice, _id: _idTopping }
     if (event.target.checked) {
       setTotalToppingPrice((prev) => prev + toppingPrice)
       setPrice((prev) => prev + toppingPrice)
@@ -62,8 +67,38 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     // checkboxes.forEach((item: any) => (item.checked = false));
-  }, [showPopup])
+  }, [product.sizes, showPopup])
 
+  const handleAddToCart = () => {
+    togglePopup()
+    const data = {
+      name: product.name,
+      size: nameRadioInput,
+      toppings: checkedToppings,
+      quantity,
+      image: product.images[0]?.url ?? '',
+      price: nameRadioInput.price - product.sale!,
+      total: (price - product.sale!) * quantity,
+      product: product._id!
+    }
+
+    if (user._id != '' && user.accessToken != '') {
+      const { name, ...rest } = data
+      addCartDbFn({
+        name: name,
+        items: [
+          {
+            ...rest,
+            image: rest.image,
+            size: data.size?._id,
+            toppings: data.toppings.map((item) => item?._id as string)
+          }
+        ]
+      })
+    } else {
+      dispatch(addToCart(data))
+    }
+  }
   return (
     <div className={showPopup ? '' : 'hidden'}>
       <div className='popup w-[90vw] h-[100vw] md:w-[650px] md:h-[500px] fixed top-[20%] left-[5vw] md:top-[calc(50%-250px)] md:left-[calc(50%-325px)] shadow-[0px_2px_10px_0px_rgba(0,0,0,0.06)] rounded-[3px] pt-[10px] pb-[10px] flex justify-center z-[5] bg-[#fbfbfb]'>
@@ -109,20 +144,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   </div>
                   <button
                     onClick={() => {
-                      togglePopup()
-                      dispatch(
-                        addToCart({
-                          name: product.name,
-                          size: nameRadioInput,
-                          toppings: checkedToppings,
-                          quantity,
-                          image: product.images[0].url!,
-                          // price: price - product.sale,
-                          price: nameRadioInput.price - product.sale!,
-                          total: (price - product.sale!) * quantity,
-                          product: product._id!
-                        })
-                      )
+                      handleAddToCart()
                     }}
                     className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
                   >
@@ -236,6 +258,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                               type='checkbox'
                               name={item.name}
                               value={item.price}
+                              data-items={item._id}
                               checked={checkedToppings.find((topping) => topping.name === item.name) ? true : false}
                             />
                             <span className={`${styles.checkmark_checkbox} group-hover:bg-[#ccc]`}></span>
