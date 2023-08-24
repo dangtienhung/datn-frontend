@@ -214,7 +214,42 @@ const cartSlice = createSlice({
     },
     resetAllCart: (state) => {
       state.items = []
+    },
+    saveAddCartDB: (state) => {
+      state.items = []
     }
+    /* optimize code */
+    // updateCartItem: (state, action) => {
+    //   const { index, quantityChange, priceChange } = action.payload;
+    //   const item = state.items[index];
+    //   item.quantity += quantityChange;
+    //   item.total += priceChange * quantityChange;
+    // },
+    // removeCartItem: (state, action) => {
+    //   const { productIndex, itemIndex } = action.payload;
+    //   state.items[productIndex].items.splice(itemIndex, 1);
+    //   if (state.items[productIndex].items.length === 0) {
+    //     state.items.splice(productIndex, 1);
+    //   }
+    // },
+    // updateQuantity: (state, action) => {
+    //   const { index, name, quantity, size, toppings } = action.payload;
+    //   const products = [...state.items];
+    //   const productIndex = products.findIndex((item) => item.name === name);
+    //   if (productIndex >= 0) {
+    //     const currentItem = state.items[productIndex].items[index];
+    //     const totalTopping = toppings.reduce((total, item) => total + item.price, 0);
+    //     const totalPriceChange = totalTopping + size.price;
+    //     if (quantity > 0) {
+    //       state.updateCartItem({ index, quantityChange: quantity, priceChange: totalPriceChange });
+    //     } else {
+    //       state.updateCartItem({ index, quantityChange: -1, priceChange: -totalPriceChange });
+    //       if (currentItem.quantity === 0) {
+    //         state.removeCartItem({ productIndex, itemIndex: index });
+    //       }
+    //     }
+    //   }
+    // },
   }
 })
 
