@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from 'react'
 
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { IVoucher } from '../../../interfaces/voucher.type'
+import { IVoucher, IVoucherDocs } from '../../../interfaces/voucher.type'
 import Loading from '../../../components/Loading'
 import Swal from 'sweetalert2'
 import { exportToExcel } from '../../../utils/excelExport'
@@ -27,10 +27,20 @@ import formatDate from '../../../utils/formatDate'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import isExpiredVoucher from '../../../utils/isExpiredVoucher'
+import Pagination from '../../../components/admin/Pagination'
 
 const Voucher = () => {
-  const { data: vouchers } = useGetAllVouchersQuery()
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
   const [data, _] = useState<any>([])
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1)
+  }
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => prev - 1)
+  }
   useEffect(() => {
     const rows = vouchers?.data?.docs?.map((item: IVoucher) => [
       item.code,
@@ -109,18 +119,30 @@ const Voucher = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <VouchersTable />
+              <VouchersTable vouchers={vouchers!} isLoading={isLoading} />
             </div>
           </div>
         </div>
       </div>
-      {/* <Pagination /> */}
+      {vouchers && vouchers.data.totalPages > 1 && (
+        <Pagination
+          nextPage={handleNextPage}
+          prevPage={handlePrevPage}
+          hasNext={vouchers.data.hasNextPage!}
+          hasPrev={vouchers.data.hasPrevPage!}
+          totalDocs={vouchers.data.totalDocs}
+        />
+      )}
     </>
   )
 }
 
-const VouchersTable = () => {
-  const { data: vouchers, isLoading } = useGetAllVouchersQuery()
+type VouchersTableProps = {
+  vouchers: IVoucherDocs
+  isLoading: boolean
+}
+const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
+  // const { data: vouchers, isLoading } = useGetAllVouchersQuery()
   const [_, setData] = useState<any>([])
   const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] = useDeleteVoucherMutation()
   useEffect(() => {
@@ -177,6 +199,7 @@ const VouchersTable = () => {
           <Table.HeadCell>Sale</Table.HeadCell>
           <Table.HeadCell>Start Date</Table.HeadCell>
           <Table.HeadCell>End Date</Table.HeadCell>
+          <Table.HeadCell>Expried</Table.HeadCell>
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
@@ -207,21 +230,36 @@ const VouchersTable = () => {
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {formatDate(item.endDate!)}
                 </Table.Cell>
+                <Table.Cell
+                  className={`
+                      whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900`}
+                >
+                  <span
+                    className={`${
+                      isExpiredVoucher(item.endDate!) === true ? 'bg-red-400 ' : 'bg-green-400 '
+                    } rounded inline-block px-2 text-white`}
+                  >
+                    {isExpiredVoucher(item.endDate!) ? 'Expired' : 'Unexpired'}
+                  </span>
+                </Table.Cell>
 
                 <Table.Cell>
                   <div className='gap-x-3 whitespace-nowrap flex items-center'>
                     {item && <EditVoucherModal voucher={item} />}
-
-                    <Button color='failure' onClick={() => handleDelete(item._id!)}>
-                      <div className='gap-x-2 flex items-center'>
-                        {isDelteLoading ? (
-                          <AiOutlineLoading3Quarters className='rotate text-lg' />
-                        ) : (
-                          <HiTrash className='text-lg' />
-                        )}
-                        Delete Voucher
-                      </div>
-                    </Button>
+                    {isExpiredVoucher(item.endDate!) ? (
+                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
+                        <div className='gap-x-2 flex items-center'>
+                          {isDelteLoading ? (
+                            <AiOutlineLoading3Quarters className='rotate text-lg' />
+                          ) : (
+                            <HiTrash className='text-lg' />
+                          )}
+                          Delete Voucher
+                        </div>
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </Table.Cell>
               </Table.Row>
@@ -234,7 +272,7 @@ const VouchersTable = () => {
 
 const AddVoucherModal = function () {
   const [isOpen, setOpen] = useState<boolean>(false)
-  const [addVoucher, { isLoading, isSuccess }] = useAddVoucherMutation()
+  const [addVoucher, { isLoading }] = useAddVoucherMutation()
   const {
     register,
     reset,
@@ -246,14 +284,16 @@ const AddVoucherModal = function () {
   })
 
   const onhandleSubmit = async (data: any) => {
-    await addVoucher({ code: data.code, discount: data.discount, sale: data.sale })
-    if (!isSuccess) {
-      toast.success(`Added voucher ${data.code}`)
-      reset()
-    } else {
-      toast.error(`Added failed`)
-    }
-    setOpen(false)
+    await addVoucher({ code: data.code.toUpperCase(), discount: data.discount, sale: data.sale })
+      .unwrap()
+      .then(() => {
+        toast.success(`Added voucher ${data.code}`)
+        reset()
+        setOpen(false)
+      })
+      .catch(() => {
+        toast.error(`Added failed. Please try again.`)
+      })
   }
   return (
     <>
@@ -315,7 +355,7 @@ type EditVoucherModalProps = {
 }
 const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
   const [isOpen, setOpen] = useState<boolean>(false)
-  const [updateVoucher, { isLoading, isError }] = useUpdateVoucherMutation()
+  const [updateVoucher, { isLoading }] = useUpdateVoucherMutation()
   const {
     register,
     handleSubmit,
@@ -329,13 +369,15 @@ const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
   })
 
   const onhaneleSubmit = async (data: any) => {
-    await updateVoucher(data)
-    if (!isError) {
-      toast.success('Updated')
-      setOpen(false)
-    } else {
-      toast.error('Update failed')
-    }
+    await updateVoucher({ ...data, code: data.code.toUpperCase() })
+      .unwrap()
+      .then(() => {
+        toast.success('Updated')
+        setOpen(false)
+      })
+      .catch(() => {
+        toast.error('Update failed')
+      })
   }
   return (
     <>

@@ -44,7 +44,7 @@ const UserList: FC = () => {
     setCurrentPage((prev) => prev - 1)
   }
   return (
-    <>
+    <section>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
@@ -128,13 +128,16 @@ const UserList: FC = () => {
           </div>
         </div>
       </div>
-      <Pagination
-        nextPage={handleNextPage}
-        prevPage={handlePrevPage}
-        hasPrev={users?.hasPrevPage!}
-        hasNext={users?.hasNextPage!}
-      />
-    </>
+      {users && (
+        <Pagination
+          nextPage={handleNextPage}
+          prevPage={handlePrevPage}
+          hasPrev={users?.hasPrevPage}
+          hasNext={users?.hasNextPage}
+          totalDocs={users?.totalDocs}
+        />
+      )}
+    </section>
   )
 }
 
@@ -244,10 +247,10 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                 <div className='flex items-center capitalize'>
                   <div
                     className={`mr-2 h-2.5 w-2.5 rounded-full  ${
-                      user?.status === 'active' ? 'bg-green-400' : 'bg-red-400'
+                      user?.role?.status === 'active' ? 'bg-green-400' : 'bg-red-400'
                     }`}
                   ></div>
-                  {user?.status || 'Not Active'}
+                  {user?.role?.status || 'Not Active'}
                 </div>
               </Table.Cell>
               <Table.Cell>
@@ -275,7 +278,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
 const AddUserModal: FC = function () {
   const [isOpen, setOpen] = useState(false)
   const [urlAvatar, setUrlAvatar] = useState({} as IImage)
-  const [addUser, { isLoading, isError }] = useAddUserMutation()
+  const [addUser, { isLoading }] = useAddUserMutation()
   const [upLoadAvartaUser, { isLoading: isUpLoading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
   const { data: roles } = useGetAllRolesQuery()
@@ -288,18 +291,19 @@ const AddUserModal: FC = function () {
     mode: 'onChange',
     resolver: yupResolver(AddUserSchema)
   })
-  const onHandleSubmit = async (data: any) => {
-    console.log(urlAvatar.url)
-
+  const onHandleSubmit = (data: any) => {
     if (data) {
-      await addUser({ ...data, avatar: urlAvatar.url })
-      if (!isError) {
-        toast.success('Created user success')
-        setOpen(false)
-        setUrlAvatar({} as IImage)
-      } else {
-        toast.error('Create user failed.')
-      }
+      addUser({ ...data, avatar: urlAvatar.url })
+        .unwrap()
+        .then(() => {
+          toast.success('Created user success')
+          setOpen(false)
+          setUrlAvatar({} as IImage)
+          reset()
+        })
+        .catch((err: any) => {
+          toast.error(`Create user failed. ${err.data.message}`)
+        })
     }
   }
   // const handleChangeUpload = (event: any) => {
@@ -419,7 +423,7 @@ type EditUserModalProps = {
 const EditUserModal = function ({ user }: EditUserModalProps) {
   const [isOpen, setOpen] = useState(false)
   const { data: roles } = useGetAllRolesQuery()
-  const [updateUser, { isLoading, isError }] = useUpdateUserMutation()
+  const [updateUser, { isLoading }] = useUpdateUserMutation()
   const [upLoadAvartaUser, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
   const [urlAvatar, setUrlAvatar] = useState({} as IImage)
@@ -434,16 +438,16 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
     defaultValues: { ...user, role: user.role?._id, address: user.address || '' } as any
   })
 
-  const onHandleSubmit = async (data: any) => {
-    console.log(urlAvatar.url)
-
-    await updateUser({ ...data, avatar: urlAvatar.url })
-    if (!isError) {
-      toast.success('Update user success')
-      setOpen(false)
-    } else {
-      toast.error('Update user failed')
-    }
+  const onHandleSubmit = (data: any) => {
+    updateUser({ ...data, avatar: urlAvatar.url })
+      .unwrap()
+      .then(() => {
+        toast.success('Update user success')
+        setOpen(false)
+      })
+      .catch(() => {
+        toast.error('Update user failed.')
+      })
   }
   useEffect(() => {
     setUrlAvatar({ ...urlAvatar, url: user.avatar })
@@ -486,7 +490,7 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
               <div>
                 <Label htmlFor='account'>Account</Label>
                 <div className='mt-1'>
-                  <TextInput id='account' {...register('account')} placeholder='Your email or phone number' />
+                  <TextInput readOnly id='account' {...register('account')} placeholder='Your email or phone number' />
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.account && errors.account.message}</span>
               </div>

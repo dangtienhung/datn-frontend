@@ -6,9 +6,10 @@ type PaginationProps = {
   prevPage: () => void
   hasPrev: boolean
   hasNext: boolean
+  totalDocs?: number
 }
 
-const Pagination = ({ nextPage, prevPage, hasNext, hasPrev }: PaginationProps) => {
+const Pagination = ({ nextPage, prevPage, hasNext, hasPrev, totalDocs }: PaginationProps) => {
   return (
     <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200'>
       <div className='sm:mb-0 flex items-center mb-4'>
@@ -30,9 +31,9 @@ const Pagination = ({ nextPage, prevPage, hasNext, hasPrev }: PaginationProps) =
         </Button>
         <span className='dark:text-gray-400 text-sm font-normal text-gray-500'>
           Showing&nbsp;
-          <span className='dark:text-white font-semibold text-gray-900'>1-20</span>
+          <span className='dark:text-white font-semibold text-gray-900'>10</span>
           &nbsp;of&nbsp;
-          <span className='dark:text-white font-semibold text-gray-900'>2290</span>
+          <span className='dark:text-white font-semibold text-gray-900'>{totalDocs}</span>
         </span>
       </div>
       <div className='flex items-center space-x-3'>

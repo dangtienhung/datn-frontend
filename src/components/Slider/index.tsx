@@ -49,8 +49,8 @@ const Sliders = () => {
                 Đặt hàng ngay
               </Link>
             </div>
-            <div className={`${styles.cursor}`}></div>
-            <div className='text-sm text-white'>Cuộn xuống</div>
+            <div className={`${styles.cursor} hidden md:block`}></div>
+            <div className='text-sm text-white hidden md:block'>Cuộn xuống</div>
           </div>
         </div>
         <div className='item relative'>
@@ -69,8 +69,8 @@ const Sliders = () => {
                 Đặt hàng ngay
               </Link>
             </div>
-            <div className={`${styles.cursor}`}></div>
-            <div className='text-sm text-white'>Cuộn xuống</div>
+            <div className={`${styles.cursor} hidden md:block`}></div>
+            <div className='text-sm text-white hidden md:block'>Cuộn xuống</div>
           </div>
         </div>
         <div className='item relative'>
@@ -89,8 +89,8 @@ const Sliders = () => {
                 Đặt hàng ngay
               </Link>
             </div>
-            <div className={`${styles.cursor}`}></div>
-            <div className='text-sm text-white'>Cuộn xuống</div>
+            <div className={`${styles.cursor} hidden md:block`}></div>
+            <div className='text-sm text-white hidden md:block'>Cuộn xuống</div>
           </div>
         </div>
       </Slider>

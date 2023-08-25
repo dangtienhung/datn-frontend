@@ -1,8 +1,8 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
+import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
@@ -16,10 +16,21 @@ import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
+import ModalListVouchers from '../../components/ModalListVouchers'
+import { IVoucher } from '../../interfaces/voucher.type'
+import { AiOutlinePlusCircle } from 'react-icons/ai'
 //
 const Checkout = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
+
   const [orderAPIFn] = useCreateOrderMutation()
+  const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
   const dispatch = useAppDispatch()
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen)
+  }
   const {
     register,
     formState: { errors },
@@ -45,8 +56,8 @@ const Checkout = () => {
     (getData: string) => {
       const arrTotal: Omit<CartItemState, 'total'>[] = []
       const arrTotalNumbers: number[] = []
-      dataCartCheckout.items.map((item) =>
-        item.items.map((data) => {
+      dataCartCheckout.items.map((item: any) =>
+        item.items.map((data: any) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, ...rest } = data
@@ -96,8 +107,7 @@ const Checkout = () => {
     if (!(dataInfoUser.user.accessToken && dataInfoUser.user._id)) {
       return navigate('/sign')
     } else {
-      const productOrder = getData('list')
-      console.log('🚀 ~ file: Checkout.tsx:100 ~ handleFormInfoCheckout ~ productOrder:', productOrder)
+      // const productOrder = getData('list')
       console.log(data)
       const dataForm = {
         user: dataInfoUser.user && dataInfoUser.user._id,
@@ -107,14 +117,14 @@ const Checkout = () => {
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         paymentMethodId: 'cod',
         inforOrderShipping: {
-          name: data.name,
-          phone: data.phone,
-          address: data.shippingLocation,
-          noteShipping: data.shippingNote
+          name: data.nameOther != '' ? data.nameOther : data.name,
+          phone: data.phoneOther != '' ? data.phoneOther : data.phone,
+          address: data.shippingLocationOther != '' ? data.shippingLocationOther : data.shippingLocation,
+          noteShipping: data.shippingNoteOther != '' ? data.shippingNoteOther : data.shippingNote
         }
       }
       console.log(dataForm)
-      orderAPIFn(dataForm).then((res: any) => {
+      orderAPIFn(dataForm as never).then((res: any) => {
         if (res.error) {
           return toast.error('Đặt hàng thất bại' + res.error.data.error)
         } else {
@@ -122,7 +132,6 @@ const Checkout = () => {
           dispatch(resetAllCart())
           toast.success('Bạn đặt hàng thành công')
           // alert(data.shippingNote)
-
           // reset();
           // dispatch(resetAllCart());
           // navigate('http://localhost:4000/vnpay');
@@ -199,9 +208,74 @@ const Checkout = () => {
               />
             </div>
           </div>
+          <div className='title mb-[7px] px-5'>
+            <button type='button' className='py-[10px]   my-2   ' onClick={() => setBtnShipOrder(!btnShipOrder)}>
+              <label className='flex items-center gap-2' htmlFor='askRefer'>
+                <AiOutlinePlusCircle />
+                <span> {!btnShipOrder ? 'Thêm' : 'Xóa'} người nhận</span>
+              </label>
+            </button>
+            <input type='checkbox' id='askRefer' className='hidden' {...register('askRefer')} />
+          </div>
+          <div className='mt-8'>
+            {/* info order shipping other */}
+            {btnShipOrder && (
+              <>
+                <div className='title mb-[7px] px-5'>
+                  <h2 className='font-semibold text-sm'>Thông tin người nhận mới</h2>
+                </div>
+                <div className=' shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] bg-white p-5'>
+                  <div className='py-[10px]'>
+                    <Input
+                      name='nameOther'
+                      register={register}
+                      error={errors.nameOther?.message}
+                      prefix={<BiSolidUser />}
+                      placeholder='Tên người nhận'
+                    />
+                  </div>
+                  <div className='py-[10px]'>
+                    <Input
+                      prefix={<FaPhoneAlt />}
+                      placeholder='Số điện thoại người nhận'
+                      name='phoneOther'
+                      register={register}
+                      error={errors.phoneOther?.message}
+                    />
+                  </div>
+
+                  <div className='location'>
+                    <div className='title pt-[10px] text-sm'>
+                      <h2>Giao đến</h2>
+                    </div>
+                    <div className='py-[10px]'>
+                      <Input
+                        prefix={<FaMapMarkerAlt />}
+                        placeholder='Địa chỉ người nhận'
+                        name='shippingLocationOther'
+                        error={errors.shippingLocationOther?.message}
+                        register={register}
+                      />
+                    </div>
+                  </div>
+                  <div className='py-[10px]'>
+                    <Input
+                      prefix={<FaStickyNote />}
+                      placeholder='Ghi chú địa chỉ...'
+                      name='shippingNoteOther'
+                      error={errors.shippingNoteOther?.message}
+                      register={register}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/*  */}
+          </div>
           <div className=' mt-8'>
             <div className='title mb-[7px] px-5'>
-              <h2 className='text-sm font-semibold'>Phương thức thanh toán</h2>
+              <h2 className='font-semibold text-sm'>Phương thức thanh toán</h2>
             </div>
             <div className='shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] bg-white p-5'>
               <label className={` ${styles.container_radio} cod-payment block group`}>
@@ -226,11 +300,11 @@ const Checkout = () => {
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
-              <label className={` ${styles.container_radio} momo-payment block group`}>
+              {/* <label className={` ${styles.container_radio} momo-payment block group`}>
                 <span className='text-sm'>Thanh toán qua Ví MoMo</span>
-                <input className='absolute opacity-0' type='radio' value='momo' {...register('paymentMethod')} />
+                <input className='opacity-0 absolute' type='radio' value='momo' {...register('paymentMethod')} />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label>
+              </label> */}
               {errors.paymentMethod && <span className='text-red-500 text-[13px]'>{errors.paymentMethod.message}</span>}
             </div>
           </div>
@@ -245,7 +319,7 @@ const Checkout = () => {
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
-            <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
+            {/* <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
               <h3 className='text-sm'>Chọn cửa hàng</h3>
               <div className=' flex items-center justify-between cursor-pointer'>
                 <div className='gap-x-2 flex items-center'>
@@ -257,19 +331,21 @@ const Checkout = () => {
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className='list'>
               {dataCartCheckout.items &&
                 dataCartCheckout.items.map((item) => <CheckoutItem key={uuidv4()} dataCartCheckout={item} />)}
               {/* <CheckoutItem /> */}
             </div>
             <div className='pt-[10px] pb-[15px] flex items-center justify-between border-transparent border border-b-[#f1f1f1]'>
-              <div className='gap-x-4 flex items-center'>
+              <div className='gap-x-4 flex items-center max-w-[50%]'>
                 <img className='w-[24px] max-w-[24px]' src='/icon-promotion.png' alt='' />
-                <span className='text-sm'>Mã khuyến mại</span>
+                <span className='text-sm line-clamp-1'>
+                  {Object.keys(voucherChecked).length > 0 ? voucherChecked.code : 'Mã khuyến mại'}
+                </span>
               </div>
               <div className=''>
-                <Button size='medium' shape='circle'>
+                <Button size='medium' shape='circle' onClick={toggleModal}>
                   Thêm khuyến mại
                 </Button>
               </div>
@@ -317,7 +393,7 @@ const Checkout = () => {
                 </span>
               </Button>
 
-              <Link to='/'>
+              <Link to='/products'>
                 <Button type='keep-buying' size='large' shape='circle'>
                   Tiếp tục mua hàng
                 </Button>
@@ -326,6 +402,13 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+
+      <ModalListVouchers
+        isOpen={isModalOpen}
+        voucherChecked={voucherChecked}
+        setVoucherChecked={setVoucherChecked}
+        toggleModal={toggleModal}
+      />
     </div>
   )
 }

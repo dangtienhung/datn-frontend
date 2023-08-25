@@ -1,14 +1,5 @@
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-  persistReducer,
-  persistStore,
-} from 'redux-persist';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 // import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
 import { ApiProducts } from '../api/Product'
@@ -24,19 +15,20 @@ import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
 import CategoryApi from '../api/category'
 import { OrderAPI } from './slices/order'
+import { CartDBAPI } from '../api/cartDB'
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart', 'auth', 'category'],
-};
+  whitelist: ['cart', 'auth', 'category']
+}
 
 const productsPersistConfig = {
   key: 'products',
   storage,
-  blacklist: ['products'],
-};
+  blacklist: ['products']
+}
 
 const rootReducer = combineReducers({
   products: persistReducer(productsPersistConfig, productReducer),
@@ -57,6 +49,7 @@ export const store = configureStore({
     [RoleApi.reducerPath]: RoleApi.reducer,
     [CategoryApi.reducerPath]: CategoryApi.reducer,
     [Auth.reducerPath]: Auth.reducer,
+    [CartDBAPI.reducerPath]: CartDBAPI.reducer,
     [OrderAPI.reducerPath]: OrderAPI.reducer
   },
   middleware: (getDefaultMiddleware) =>
@@ -68,6 +61,7 @@ export const store = configureStore({
       ApiUser.middleware,
       ApiProducts.middleware,
       ToppingAPI.middleware,
+      CartDBAPI.middleware,
       ApiVoucher.middleware,
       RoleApi.middleware,
       CategoryApi.middleware,
