@@ -10,7 +10,6 @@ import { formatCurrency } from '../../utils/formatCurrency'
 const ProductsTable = function () {
   // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
   const { data, isLoading } = useFetchProductsQuery()
-  const dataSource = data?.docs.map((product) => ({ ...product, key: product._id }))
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   if (isLoading) return <Loading />
 

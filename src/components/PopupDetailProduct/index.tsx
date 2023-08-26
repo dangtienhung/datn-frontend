@@ -1,12 +1,13 @@
 import { FaAngleDown, FaTimes } from 'react-icons/fa'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+
 import { IProduct } from '../../interfaces/products.type'
 import { addToCart } from '../../store/slices/cart.slice'
 import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCreateCartDBMutation } from '../../api/cartDB'
+import { v4 as uuidv4 } from 'uuid'
 
 // interface TypeSize {
 //   name: string
@@ -26,7 +27,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [price, setPrice] = useState<number>(0)
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
-  const [addCartDbFn, addCartDbRes] = useCreateCartDBMutation()
+  const [addCartDbFn, _] = useCreateCartDBMutation()
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<any>(product.sizes[0])
