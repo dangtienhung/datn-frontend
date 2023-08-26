@@ -1,13 +1,15 @@
+import { BiLogoFacebookSquare, BiLogoGoogle, BiLogoTwitter } from 'react-icons/bi'
+import { Button, Input } from '../../components'
+import { Login, LoginSchema } from '../../validate/Form'
+
+import CardSigin from '../../components/CardSignin'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useLoginMutation } from '../../api/Auth'
-import { Button, Input } from '../../components'
-import { Link } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Login, LoginSchema } from '../../validate/Form'
-import { IUser } from '../../interfaces/user.type'
-import { toast } from 'react-toastify'
-import CardSigin from '../../components/CardSignin'
-import { BiLogoGoogle, BiLogoFacebookSquare, BiLogoTwitter } from 'react-icons/bi'
+
+// import { IUser } from '../../interfaces/user.type'
 
 // type Login = {
 //   account: string;
@@ -25,7 +27,7 @@ const Signin = () => {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema)
   })
-  const onLogin = (loginData: IUser) => {
+  const onLogin = (loginData: any) => {
     loginUser(loginData).then((data: any) => {
       if (data.error) {
         return toast.error(data.error.data.message, {

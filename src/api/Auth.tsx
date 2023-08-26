@@ -1,15 +1,15 @@
+import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { IUser, responseUser } from '../interfaces/user.type'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { RootState } from '../store/store'
-import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { refreshUser } from '../store/slices/Auth.slice'
+
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
-    console.log(accessToken)
 
     if (accessToken) {
       headers.set('authorization', `Bearer ${accessToken}`)
