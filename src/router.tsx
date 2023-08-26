@@ -24,6 +24,10 @@ import StaffLayout from './layouts/Staff/StaffLayout'
 import List from './components/Staff/CrudProducts/List'
 import Introduce from './components/Introduce/Introduce'
 import Achievement from './components/Achievement/Achievement'
+import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
+import News from './components/Blogs/News/News'
+import BrandStory from './components/Blogs/BrandStory/BrandStory'
+import Events from './components/Blogs/Events/Events'
 
 const routes = createBrowserRouter([
   {
@@ -59,6 +63,25 @@ const routes = createBrowserRouter([
   {
     path: 'achievement',
     element: <Achievement />
+  },
+  {
+    path: 'blogs',
+    element: <LayoutBlog />,
+    children: [
+      {
+        index: true,
+        path: 'tin-tuc-khuyen-mai',
+        element: <News />
+      },
+      {
+        path: 'cau-chuyen-thuong-hieu',
+        element: <BrandStory />
+      },
+      {
+        path:'su-kien',
+        element:<Events/>
+      }
+    ]
   },
   {
     path: '/account-layout',
