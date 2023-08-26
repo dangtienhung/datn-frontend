@@ -10,7 +10,6 @@ import { useAppSelector } from '../../../store/hooks'
 const AdminNavbar: FC = function () {
   const [logout] = useLogoutMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  console.log(user)
 
   const onLogout = () => {
     Swal.fire({

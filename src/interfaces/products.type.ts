@@ -4,12 +4,12 @@ import { ISize } from './size.type'
 import { ITopping } from './topping.type'
 
 export interface IProduct {
-  _id?: string
+  _id: string
   name: string
   images: IImage[]
   description: string
   price: number
-  sale?: number
+  sale: number
   category: ICategory
   sizes: { name: string; price: number }[]
   toppings: ITopping[]

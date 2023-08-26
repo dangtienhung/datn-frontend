@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
-import { useAppSelector } from './store/hooks'
-import { RootState } from './store/store'
 import { Navigate, Outlet, useNavigate } from 'react-router-dom'
+
+import { RootState } from './store/store'
+import { useAppSelector } from './store/hooks'
+import { useEffect } from 'react'
 
 interface Props {
   JSX: () => JSX.Element
@@ -39,8 +40,6 @@ const GuardAuth = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const navigate = useNavigate()
   useEffect(() => {
-    console.log(user)
-
     if (!user.role?.name) {
       navigate('/signin')
     }
