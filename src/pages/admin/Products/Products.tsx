@@ -1,10 +1,11 @@
 import { Breadcrumb, Button, Label, TextInput } from 'flowbite-react'
-import type { FC } from 'react'
-import { useState } from 'react'
-import { FaPlus } from 'react-icons/fa'
 import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'react-icons/hi'
+
 import AddProductModal from '../../../components/CrudProduct/addProduct'
+import type { FC } from 'react'
+import { FaPlus } from 'react-icons/fa'
 import ProductsTable from '../../../components/CrudProduct/listProduct'
+import { useState } from 'react'
 
 const ProductsList = () => {
   const [isOpenModalAdd, setOpenModalAdd] = useState(false)
@@ -24,7 +25,7 @@ const ProductsList = () => {
               <Breadcrumb.Item href='/e-commerce/products'>E-commerce</Breadcrumb.Item>
               <Breadcrumb.Item>Products</Breadcrumb.Item>
             </Breadcrumb>
-            <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl'>All products</h1>
+            <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl'>Danh sách sản phẩm</h1>
           </div>
           <div className='block items-center sm:flex'>
             <SearchForProducts />
@@ -61,7 +62,7 @@ const ProductsList = () => {
             <div className='flex w-full items-center sm:justify-end'>
               <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
                 <FaPlus className='mr-3 text-sm' />
-                Add product
+                Thêm sản phẩm
               </Button>
               {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
             </div>
