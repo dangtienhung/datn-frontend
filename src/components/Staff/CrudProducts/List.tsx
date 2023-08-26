@@ -212,7 +212,8 @@ const List = () => {
             </Link>
           </Button>
           <Popconfirm
-            title='Are you fucking sure?'
+            title='Delete the product'
+            description='Are you sure to delete this product?'
             onConfirm={async () => {
               // await pause(1000)
               await removeProduct(record.key)
