@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', 'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
+  ],
   theme: {
     colors: {
       primary: {
@@ -13,8 +17,8 @@ export default {
         600: '#2563eb',
         700: '#1d4ed8',
         800: '#1e40af',
-        900: '#1e3a8a'
-      }
+        900: '#1e3a8a',
+      },
     },
     fontFamily: {
       sans: [
@@ -32,7 +36,7 @@ export default {
         'Apple Color Emoji',
         'Segoe UI Emoji',
         'Segoe UI Symbol',
-        'Noto Color Emoji'
+        'Noto Color Emoji',
       ],
       body: [
         'Inter',
@@ -49,7 +53,7 @@ export default {
         'Apple Color Emoji',
         'Segoe UI Emoji',
         'Segoe UI Symbol',
-        'Noto Color Emoji'
+        'Noto Color Emoji',
       ],
       mono: [
         'ui-monospace',
@@ -59,10 +63,10 @@ export default {
         'Consolas',
         'Liberation Mono',
         'Courier New',
-        'monospace'
-      ]
+        'monospace',
+      ],
     },
-    extend: {}
+    extend: {},
   },
-  plugins: [require('flowbite/plugin')]
-}
+  plugins: [require('flowbite/plugin')],
+};
