@@ -246,20 +246,21 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
                 <Table.Cell>
                   <div className='gap-x-3 whitespace-nowrap flex items-center'>
                     {item && <EditVoucherModal voucher={item} />}
-                    {isExpiredVoucher(item.endDate!) ? (
-                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
-                        <div className='gap-x-2 flex items-center'>
-                          {isDelteLoading ? (
-                            <AiOutlineLoading3Quarters className='rotate text-lg' />
-                          ) : (
-                            <HiTrash className='text-lg' />
-                          )}
-                          Delete Voucher
-                        </div>
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
+
+                    <Button
+                      disabled={!isExpiredVoucher(item.endDate!)}
+                      color='failure'
+                      onClick={() => handleDelete(item._id!)}
+                    >
+                      <div className='gap-x-2 flex items-center'>
+                        {isDelteLoading ? (
+                          <AiOutlineLoading3Quarters className='rotate text-lg' />
+                        ) : (
+                          <HiTrash className='text-lg' />
+                        )}
+                        Delete Voucher
+                      </div>
+                    </Button>
                   </div>
                 </Table.Cell>
               </Table.Row>

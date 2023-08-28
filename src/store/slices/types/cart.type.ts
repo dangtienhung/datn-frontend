@@ -26,9 +26,9 @@ export interface CartLists {
 }
 
 export interface CartItemDB {
-  productId: string;
-  quantity: string;
-  price: string;
-  orderToppingId: string[];
-  totalPrice: string;
+  productId: string
+  quantity: string
+  price: string
+  orderToppingId: string[]
+  totalPrice: string
 }
