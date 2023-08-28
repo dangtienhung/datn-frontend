@@ -2,12 +2,17 @@ import { Button } from '..'
 import { IProduct } from '../../interfaces/products.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { saleCaculator } from '../../utils/saleCaculator'
-
+import { useNavigate } from 'react-router-dom'
 interface NewProductItemProps {
   product: IProduct
 }
 
 const NewProductItem = ({ product }: NewProductItemProps) => {
+  const navigate = useNavigate()
+  const redirectToDetailPage = (dataProduct: IProduct) => {
+    navigate(`/products`, { state: dataProduct })
+  }
+
   return (
     <div className='item-product mx-[15px] w-[calc(100%-30px)] sm:w-[calc(50%-30px)] md:w-[calc(33.33333%-30px)] lg:w-[calc(25%-30px)] mb-8 relative overflow-hidden shadow-[0_2px_1.5px_0_#ccc] transition-all group'>
       <div className='absolute top-0 z-10 flex items-center justify-between w-full p-4 tags'>
@@ -44,6 +49,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         </div>
         <div className='btn-order py-[2px] px-4 mt-4 mb-3 '>
           <Button
+            onClick={() => redirectToDetailPage(product)}
             size='small'
             shape='square'
             style='hover:bg-white hover:text-[#d3b673] hover:border hover:border-[#d3b673]'

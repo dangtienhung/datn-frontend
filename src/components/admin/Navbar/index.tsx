@@ -10,7 +10,6 @@ import { useAppSelector } from '../../../store/hooks'
 const AdminNavbar: FC = function () {
   const [logout] = useLogoutMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  console.log(user)
 
   const onLogout = () => {
     Swal.fire({
@@ -41,7 +40,7 @@ const AdminNavbar: FC = function () {
             <Button className='bg-green-400 text-xl font-bold' onClick={onLogout}>
               <BiLogOut />
             </Button>
-            <DarkThemeToggle />
+            <DarkThemeToggle accessKey='' about='' />
             <Avatar img={user.avatar} rounded status='online' bordered color={'success'} statusPosition='top-right' />
           </div>
         </div>

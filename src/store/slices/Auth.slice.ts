@@ -47,7 +47,7 @@ const AuthSlice = createSlice({
       }
     )
     builder.addMatcher(Auth.endpoints.logout.matchFulfilled, (state) => {
-      state.user = {}
+      state.user = initialState.user
     })
   }
 })

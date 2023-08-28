@@ -19,7 +19,7 @@ const NewProducts = () => {
     <section className='pt-[50px] pb-[60px] mx-auto sm:w-full  max-w-[1140px]'>
       <div className='title flex flex-col items-center'>
         <div className='sub-title'>
-          <h4 className='text-[#d3b673] text-[22px] mb-[5px] font-bold'>MilkTea Menu</h4>
+          <h4 className='text-[#d3b673] text-[22px] mb-[5px] font-bold dark:text-red-600'>MilkTea Menu</h4>
         </div>
         <div className='main-title'>
           <h2 className='text-3xl md:text-4xl text-center text-black px-[50px] uppercase font-bold mb-2'>

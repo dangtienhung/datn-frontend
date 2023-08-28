@@ -76,7 +76,11 @@ const MyCart = () => {
           </div>
           <div className='cart-ss3'>
             {/* <Link to="checkout"> */}
-            <button onClick={handleCheckUser} className='bg-[#d8b979] text-white text-center rounded-xl py-1 w-full'>
+            <button
+              disabled={items.length > 0 ? false : true}
+              onClick={handleCheckUser}
+              className='bg-[#d8b979] text-white text-center rounded-xl py-1 w-full'
+            >
               Thanh toán
             </button>
             {/* </Link> */}

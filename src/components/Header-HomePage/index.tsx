@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 import { Auth } from '../../api/Auth'
 import { Link } from 'react-router-dom'
-import { AiOutlineArrowDown } from 'react-icons/ai'
+import { MdKeyboardArrowDown } from 'react-icons/md'
 
 const HeaderHomePage = () => {
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery()
@@ -43,35 +43,58 @@ const HeaderHomePage = () => {
               <li className='font-[700] py-2 text-sm '>
                 <div className='menu_item relative group'>
                   <a href='/about' onClick={toggleMenu} className='flex'>
-                    <p className='mr-1 hover:underline'>Giới thiệu</p> <AiOutlineArrowDown />
+                    <p className='mr-1 hover:underline'>Giới thiệu</p> <MdKeyboardArrowDown className='text-[20px]'/>
                   </a>
                   <ul className='sub-menu absolute w-0 hidden bg-gray-800 text-white py-2 px-4 transition duration-300 group-hover:block group-hover:w-[200px] '>
                     <li>
-                      <Link to='/about/' className='block py-1 max-w-[500px] hover:text-[#d3b673] hover:underline'>
+                      <Link to='/about/' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
                         LỊCH SỬ VÀ SỨ MỆNH
                       </Link>
                     </li>
+                    <hr className='bg-current mt-[5px] mb-[5px]' />
                     <li>
-                      <Link
-                        to='/achievement/'
-                        className='block py-1 max-w-[500px] hover:text-[#d3b673] hover:underline'
-                      >
+                      <Link to='/achievement/' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
                         THÀNH TỰU ĐẠT ĐƯỢC
                       </Link>
                     </li>
                   </ul>
                 </div>
               </li>
+
               <li className='font-[700] py-2 text-sm '>
                 <Link to='/products' onClick={toggleMenu}>
                   Sản phẩm
                 </Link>
               </li>
+
               <li className='font-[700] py-2 text-sm '>
-                <Link to='/' onClick={toggleMenu}>
-                  Tin tức
-                </Link>
+                <div className='menu_item relative group'>
+                  <a href='/blogs/tin-tuc-khuyen-mai' onClick={toggleMenu} className='flex'>
+                    <p className='mr-1 hover:underline'>Tin tức</p>
+                    <MdKeyboardArrowDown className='text-[20px]'/>
+                  </a>
+                  <ul className='sub-menu absolute w-0 hidden bg-gray-800 text-white py-2 px-4 transition duration-300 group-hover:block group-hover:w-[200px] '>
+                    <li>
+                      <Link to='/blogs/tin-tuc-khuyen-mai' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
+                        TIN TỨC KHUYẾN MÃI
+                      </Link>
+                    </li>
+                    <hr className='bg-current mt-[5px] mb-[5px]' />
+                    <li>
+                      <Link to='/blogs/cau-chuyen-thuong-hieu' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
+                        CÂU CHUYỆN THƯƠNG HIỆU
+                      </Link>
+                    </li>
+                    <hr className='bg-current mt-[5px] mb-[5px]' />
+                    <li>
+                      <Link to='/blogs/su-kien' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
+                        SỰ KIỆN
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </li>
+
               <li className='font-[700] py-2 text-sm '>
                 <Link to='/' onClick={toggleMenu}>
                   Cửa hàng
