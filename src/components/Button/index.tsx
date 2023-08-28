@@ -1,5 +1,5 @@
 import React from 'react';
-
+//
 type Props = {
   type?: 'auth' | 'checkout' | 'keep-buying' | 'paying';
   size: 'small' | 'medium' | 'large';
