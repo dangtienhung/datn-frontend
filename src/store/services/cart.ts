@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import http from '../../api/instance'
-import { CartItemDB } from '../slices/types/cart.type'
+import { CartLists } from '../slices/types/cart.type'
 
-export const addToCartDB = createAsyncThunk('cartDb/add', async (dataCart: CartItemDB) => {
+export const addToCartDB = createAsyncThunk('cartDb/add', async (dataCart: CartLists) => {
   try {
     const { data } = await http.post(`/cart`, dataCart)
     return data.data

@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
 import CardOrder from '../Card-Order'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../store/store'
 import Swal from 'sweetalert2'
 import { formatCurrency } from '../../utils/formatCurrency'
@@ -13,6 +13,9 @@ const MyCart = () => {
   const dispatch = useAppDispatch()
   const { items } = useAppSelector((state: RootState) => state.persistedReducer.cart)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
+  // const getAllCart = useGetAllCartDBQuery()
+
   /* Tính tổng tiền và tổng số lượng quantity */
   const { total, quantity } = items.reduce(
     (accumulator, item) => {

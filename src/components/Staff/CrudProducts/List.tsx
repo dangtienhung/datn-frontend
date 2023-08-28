@@ -1,14 +1,15 @@
-import { RiDeleteBin6Fill } from 'react-icons/ri'
-import { AiOutlineEdit, AiOutlineSearch, AiFillEye } from 'react-icons/ai'
-import { useRef, useState } from 'react'
-import Highlighter from 'react-highlight-words'
-import type { InputRef } from 'antd'
+import { AiFillEye, AiOutlineEdit, AiOutlineSearch } from 'react-icons/ai'
 import { Button, Input, Popconfirm, Space, Table, message } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
-import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../../api/Product'
+import { useRef, useState } from 'react'
+
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import Highlighter from 'react-highlight-words'
 import { IProduct } from '../../../interfaces/products.type'
+import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
+import { RiDeleteBin6Fill } from 'react-icons/ri'
 import Skeleton from 'react-loading-skeleton'
 
 interface DataType extends IProduct {
@@ -41,9 +42,9 @@ const List = () => {
     onChange: onSelectChange
   }
   const hasSelected = selectedRowKeys.length > 0
-  let data: IProduct[] = []
+  let data: any[] = []
   if (productData && productData.docs) {
-    data = productData.docs.map((item: any) => ({
+    data = productData.docs.map((item: IProduct) => ({
       key: item._id,
       name: item.name,
       images: item.images?.[0]?.url || '',
@@ -212,7 +213,8 @@ const List = () => {
             </Link>
           </Button>
           <Popconfirm
-            title='Are you fucking sure?'
+            title='Delete the product'
+            description='Are you sure to delete this product?'
             onConfirm={async () => {
               // await pause(1000)
               await removeProduct(record.key)
