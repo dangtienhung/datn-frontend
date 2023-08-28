@@ -21,7 +21,6 @@ import UserList from './pages/admin/Users/Users';
 import Voucher from './pages/admin/Voucher/Voucher';
 import { createBrowserRouter } from 'react-router-dom';
 
-
 const routes = createBrowserRouter([
   {
     path: '/',
