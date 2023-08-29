@@ -15,7 +15,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
   return (
     <div className='card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight '>
       <div className='py-3'>
-        <div className='name '>{product?.name}</div>
+        <div className='name font-semibold'>{product?.name}</div>
         {product?.items?.length > 0 &&
           product?.items?.map((item, index) => (
             <div className='flex items-center gap-1' key={uuidv4()}>

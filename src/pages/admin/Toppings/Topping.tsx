@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Loading from '../../../components/Loading'
+import { formatCurrency } from '../../../utils/formatCurrency'
 
 const Topping = () => {
   return (
@@ -142,7 +143,7 @@ const ToppingTable = () => {
                 {item.name}
               </Table.Cell>
               <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {item.price}
+                {formatCurrency(item.price)}
               </Table.Cell>
 
               <Table.Cell>

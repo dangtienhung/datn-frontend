@@ -23,7 +23,6 @@ import Loading from '../../../components/Loading'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { IUser, IUserDocs } from '../../../interfaces/user.type'
-import Pagination from '../../../components/admin/Pagination'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useForm } from 'react-hook-form'
 import { AddUserForm, AddUserSchema, UpdateUserForm, UpdateUserSchema } from '../../../validate/Form'
@@ -32,17 +31,12 @@ import { useGetAllRolesQuery } from '../../../api/role'
 import { useAppSelector } from '../../../store/hooks'
 import UserUpload from '../../../components/Upload/UserUpload'
 import { IImage } from '../../../interfaces/image.type'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 const UserList: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: users, isLoading, isError } = useGetAllUsersQuery(currentPage)
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
   return (
     <section>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
@@ -128,14 +122,8 @@ const UserList: FC = () => {
           </div>
         </div>
       </div>
-      {users && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasPrev={users?.hasPrevPage}
-          hasNext={users?.hasNextPage}
-          totalDocs={users?.totalDocs}
-        />
+      {users && users.docs.length > 0 && (
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={users.totalPages} />
       )}
     </section>
   )
@@ -183,7 +171,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
   if (isLoading) return <Loading />
   if (isError) return <div>Loi roi</div>
   return (
-    <Table className='min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600'>
+    <Table className='min-w-full  divide-y divide-gray-200 dark:divide-gray-600'>
       <Table.Head className='dark:bg-gray-700 bg-gray-100'>
         <Table.HeadCell>
           <Label htmlFor='select-all' className='sr-only'>
@@ -288,7 +276,7 @@ const AddUserModal: FC = function () {
     formState: { errors },
     reset
   } = useForm<AddUserForm>({
-    mode: 'onChange',
+    // mode: 'onChange',
     resolver: yupResolver(AddUserSchema)
   })
   const onHandleSubmit = (data: any) => {

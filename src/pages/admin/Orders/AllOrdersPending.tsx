@@ -10,7 +10,7 @@ import { Tooltip } from '@mui/material'
 import formatDate from '../../../utils/formatDate'
 import { v4 as uuidv4 } from 'uuid'
 import { useGetAllOrdersPendingQuery } from '../../../store/slices/order'
-import Pagination from '../../../components/admin/Pagination'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 interface IProps {
   // dataOrderPending: dataDocsOrderRes[]
@@ -21,13 +21,6 @@ interface IProps {
 const AllOrdersPending = ({ hanleUpdateOrderCancel }: IProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: orderPending, isLoading } = useGetAllOrdersPendingQuery(currentPage)
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
 
   if (isLoading) return <Loading />
   return (
@@ -134,13 +127,14 @@ const AllOrdersPending = ({ hanleUpdateOrderCancel }: IProps) => {
         </Table.Body>
       </Table>
       {orderPending && orderPending.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={orderPending.hasNextPage}
-          hasPrev={orderPending.hasPrevPage}
-          totalDocs={orderPending.totalDocs}
-        />
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={orderPending.totalPages} />
+        // <Pagination
+        //   nextPage={handleNextPage}
+        //   prevPage={handlePrevPage}
+        //   hasNext={orderPending.hasNextPage}
+        //   hasPrev={orderPending.hasPrevPage}
+        //   totalDocs={orderPending.totalDocs}
+        // />
       )}
     </>
   )

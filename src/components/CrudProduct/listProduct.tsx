@@ -6,10 +6,14 @@ import { HiTrash } from 'react-icons/hi'
 import Loading from '../Loading'
 import ShowProduct from './showProduct'
 import { formatCurrency } from '../../utils/formatCurrency'
+import PaginateNumber from '../admin/PaginationWithNumber'
+import { useState } from 'react'
 
 const ProductsTable = function () {
+  const [currentPage, setCurrentPage] = useState<number>(1)
+
   // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
-  const { data, isLoading } = useFetchProductsQuery()
+  const { data, isLoading } = useFetchProductsQuery(currentPage)
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   if (isLoading) return <Loading />
 
@@ -72,6 +76,9 @@ const ProductsTable = function () {
           ))}
         </Table.Body>
       </Table>
+      {data && data.totalPages > 1 && (
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={data.totalPages} />
+      )}
     </div>
   )
 }

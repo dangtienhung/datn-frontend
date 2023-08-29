@@ -15,6 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 const Categories = () => {
   const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
+
   const [data, setData] = useState<any>([])
   useEffect(() => {
     const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
@@ -100,7 +101,6 @@ const Categories = () => {
           </div>
         </div>
       </div>
-      {/* <Pagination /> */}
     </>
   )
 }
