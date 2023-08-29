@@ -1,8 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'flatpickr/dist/flatpickr.css';
-@import 'flatpickr/dist/themes/material_green.css';
 
 @layer {
   //signin, signup
@@ -12,8 +10,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background:
-      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
       url(/north_background_login_desktop.png) no-repeat center;
     background-size: cover;
   }

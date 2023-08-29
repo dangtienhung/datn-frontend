@@ -1,25 +1,24 @@
-import { UseFormRegister } from 'react-hook-form'
-import { useAppDispatch } from '../../store/hooks'
-import { savePage, saveValueSearch } from '../../store/slices/product.slice'
+import { UseFormRegister } from 'react-hook-form';
+import style from './clearOutline.module.css';
 
-type NameInput = 'password' | 'account' | 'username' | 'confirmpassword' | any
+type NameInput = 'password' | 'account' | 'username' | 'confirmpassword' | any;
 
 type Props = {
-  placeholder?: string
-  prefix?: React.ReactNode
-  type?: string
-  name?: NameInput
-  typeInput?: string
-  register?: UseFormRegister<any>
-  error?: string
-  setText?: React.Dispatch<React.SetStateAction<any>>
-  searchValue?: string
-}
+  placeholder?: string;
+  prefix?: React.ReactNode;
+  type?: string;
+  name?: NameInput;
+  typeInput?: string;
+  register?: UseFormRegister<any>;
+  error?: string;
+  setText?: React.Dispatch<React.SetStateAction<any>>;
+};
 
-const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText, searchValue }: Props) => {
-  const dispatch = useAppDispatch()
+const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText }: Props) => {
   return (
-    <div className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}>
+    <div
+      className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}
+    >
       {prefix && prefix}
       <input
         className={`p-0 outline-none px-2 block ${
@@ -30,24 +29,16 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
           type === 'search' &&
           'w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem]'
         }`}
-        autoComplete='off'
-        autoFocus
+        autoComplete="off"
         placeholder={placeholder && placeholder}
         type={typeInput}
         {...register?.(name)}
-        value={searchValue}
-        onChange={(e) => {
-          if (setText) {
-            setText(e.target.value)
-            dispatch(saveValueSearch(e.target.value))
-            dispatch(savePage(1))
-          }
-        }}
+        onChange={(e) => setText && setText(e.target.value)}
         name={name}
       />
-      {error && <span className='text-red-500 text-[13px] self-start'>{error}</span>}
+      {error && <span className="text-red-500 text-[13px]">{error}</span>}
     </div>
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

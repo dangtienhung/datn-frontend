@@ -1,10 +1,8 @@
-import { IUser, IUserDocs, responseUser } from '../interfaces/user.type'
-
-import { IResImage } from '../interfaces/image.type'
-import { baseQueryWithReauth } from './Auth'
-import { createApi } from '@reduxjs/toolkit/query/react'
-
+import { createApi } from '@reduxjs/toolkit/query/react';
 // import baseQueryWithReAuth from './requestRefresh';
+import { IUser, IUserDocs, responseUser } from '../interfaces/user.type';
+import { baseQueryWithReauth } from './Auth';
+import { IImage, IResImage } from '../interfaces/image.type';
 
 export const ApiUser = createApi({
   reducerPath: 'ApiUser',
@@ -15,23 +13,23 @@ export const ApiUser = createApi({
     fetchUser: builder.query<responseUser, void>({
       query: () => ({
         url: '/auth/getUser',
-        credentials: 'include'
-      })
+        credentials: 'include',
+      }),
     }),
 
     //get all user
     getAllUsers: builder.query<IUserDocs, number>({
       query: (page = 5) => `/api/users?_page=${page}`,
-      providesTags: ['user']
+      providesTags: ['user'],
     }),
 
     //delete user
     deleteUser: builder.mutation<void, string>({
       query: (id) => ({
         url: `/api/users/${id}`,
-        method: 'DELETE'
+        method: 'DELETE',
       }),
-      invalidatesTags: ['user']
+      invalidatesTags: ['user'],
     }),
 
     //add new user
@@ -39,9 +37,9 @@ export const ApiUser = createApi({
       query: (user) => ({
         url: '/api/users',
         method: 'POST',
-        body: user
+        body: user,
       }),
-      invalidatesTags: ['user']
+      invalidatesTags: ['user'],
     }),
 
     //update user
@@ -55,10 +53,10 @@ export const ApiUser = createApi({
           account: user.account,
           role: user.role,
           address: user.address,
-          avatar: user.avatar
-        }
+          avatar: user.avatar,
+        },
       }),
-      invalidatesTags: ['user']
+      invalidatesTags: ['user'],
     }),
 
     //Upload image user
@@ -66,8 +64,8 @@ export const ApiUser = createApi({
       query: (file) => ({
         url: '/api/uploadImages',
         method: 'POST',
-        body: file
-      })
+        body: file,
+      }),
     }),
 
     //Delete avarta
@@ -75,11 +73,11 @@ export const ApiUser = createApi({
       query: (id) => ({
         url: `/api/deleteImages/${id}`,
         method: 'DELETE',
-        body: id
-      })
-    })
-  })
-})
+        body: id,
+      }),
+    }),
+  }),
+});
 
 export const {
   useFetchUserQuery,
@@ -88,6 +86,6 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useUpLoadAvartaUserMutation,
-  useDeleteImageUserMutation
-} = ApiUser
-export const SizeReducer = ApiUser.reducer
+  useDeleteImageUserMutation,
+} = ApiUser;
+export const SizeReducer = ApiUser.reducer;
