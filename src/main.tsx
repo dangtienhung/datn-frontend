@@ -1,14 +1,13 @@
-import './index.scss';
-import 'react-toastify/dist/ReactToastify.css';
-import 'sweetalert2/src/sweetalert2.scss';
+import './index.scss'
+import 'react-toastify/dist/ReactToastify.css'
+import 'sweetalert2/src/sweetalert2.scss'
 
-import { persistor, store } from './store/store.ts';
+import { persistor, store } from './store/store.ts'
 
-import App from './App.tsx';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
-import ReactDOM from 'react-dom/client';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import App from './App.tsx'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from 'react-redux'
+import ReactDOM from 'react-dom/client'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
@@ -16,4 +15,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <App />
     </PersistGate>
   </Provider>
-);
+)
