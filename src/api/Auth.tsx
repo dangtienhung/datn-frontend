@@ -4,6 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { RootState } from '../store/store'
 import { refreshUser } from '../store/slices/Auth.slice'
+import { Login } from '../validate/Form'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000',
@@ -48,7 +49,7 @@ export const Auth = createApi({
         credentials: 'include'
       })
     }),
-    login: builder.mutation<responseUser, IUser>({
+    login: builder.mutation<responseUser, Login>({
       query: ({ ...rest }) => ({
         url: '/api/login',
         body: rest,
@@ -56,7 +57,7 @@ export const Auth = createApi({
         credentials: 'include'
       })
     }),
-    logout: builder.mutation<any, void>({
+    logout: builder.mutation<unknown, void>({
       query: () => ({
         url: '/auth/logout',
         method: 'POST',

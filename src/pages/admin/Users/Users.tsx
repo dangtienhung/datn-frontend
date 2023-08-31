@@ -123,7 +123,7 @@ const UserList: FC = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <AllUsersTable users={users!} isLoading={isLoading} isError={isError} />
+              {users && <AllUsersTable users={users} isLoading={isLoading} isError={isError} />}
             </div>
           </div>
         </div>
@@ -256,7 +256,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
               <Table.Cell>
                 <div className='gap-x-3 whitespace-nowrap flex items-center'>
                   <EditUserModal user={user} />
-                  <Button color='failure' onClick={() => handleDelete(user._id!)}>
+                  <Button color='failure' onClick={() => handleDelete(user._id as string)}>
                     <div className='gap-x-2 flex items-center'>
                       {isDeleting ? (
                         <AiOutlineLoading3Quarters className='rotate text-lg' />
