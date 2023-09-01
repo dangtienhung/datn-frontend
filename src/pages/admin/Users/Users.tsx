@@ -259,7 +259,6 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                       </div>
                     </Button>
                   </Tooltip>
-
                 </div>
               </Table.Cell>
             </Table.Row>

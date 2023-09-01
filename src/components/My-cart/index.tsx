@@ -66,8 +66,9 @@ const MyCart = () => {
       <div className='border border-transparent border-b-[#f1f1f1]  px-4 py-2 flex justify-between items-center'>
         <div className='uppercase font-semibold'>Giỏ hàng của tôi</div>
         <div
-          className={`${items.length > 0 ? 'block' : 'hidden'} text-[11px] cursor-pointer ${deleteCartDBRes.isLoading && 'cursor-no-drop'}`}
-
+          className={`${items.length > 0 ? 'block' : 'hidden'} text-[11px] cursor-pointer ${
+            deleteCartDBRes.isLoading && 'cursor-no-drop'
+          }`}
           onClick={() => handleDeleteAll()}
         >
           Xoá tất cả
