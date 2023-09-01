@@ -64,9 +64,10 @@ const MyCart = () => {
   return (
     <div className='sidebar shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
       <div className='border border-transparent border-b-[#f1f1f1]  px-4 py-2 flex justify-between items-center'>
-        <div className='uppercase'>Giỏ hàng của tôi</div>
+        <div className='uppercase font-semibold'>Giỏ hàng của tôi</div>
         <div
-          className={`text-[11px] cursor-pointer ${deleteCartDBRes.isLoading && 'cursor-no-drop'}`}
+          className={`${items.length > 0 ? 'block' : 'hidden'} text-[11px] cursor-pointer ${deleteCartDBRes.isLoading && 'cursor-no-drop'}`}
+
           onClick={() => handleDeleteAll()}
         >
           Xoá tất cả
@@ -74,7 +75,9 @@ const MyCart = () => {
       </div>
 
       <div className='mx-[16px]'>
-        {items.length > 0 && items.map((item) => <CardOrder key={uuidv4()} product={item} />)}
+        <div className='max-h-[450px] overflow-y-scroll hidden-scroll-bar'>
+          {items.length > 0 && items.map((item) => <CardOrder key={uuidv4()} product={item} />)}
+        </div>
         <div className='cart '>
           <div className='flex items-center justify-start my-5 cart-ss2'>
             <img className='img-toco h-[40px] pr-2' src='/icon-glass-tea.png' />

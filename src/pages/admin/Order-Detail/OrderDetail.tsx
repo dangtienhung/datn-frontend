@@ -325,7 +325,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                 </Table.Cell>
                 <Table.Cell>{index + 1}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  <img src={order.product.images[0].url} className='w-32' alt='' />
+                  <img src={order?.product.images[0].url} className='w-32' alt='' />
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
                   {order.product.name}

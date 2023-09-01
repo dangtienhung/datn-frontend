@@ -127,7 +127,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   </span>
                   {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''}
                 </div>
-                <div className='quantity flex items-start gap-y-2 flex-col md:flex-row mt-5'>
+                <div className='quantity flex items-start md:items-center gap-y-2 flex-col md:flex-row mt-5'>
                   <div className='change-quantity flex'>
                     <div
                       onClick={() => (quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1))}
