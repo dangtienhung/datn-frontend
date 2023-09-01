@@ -56,8 +56,8 @@ const Checkout = () => {
     (getData: string) => {
       const arrTotal: Omit<CartItemState, 'total'>[] = []
       const arrTotalNumbers: number[] = []
-      dataCartCheckout.items.map((item: any) =>
-        item.items.map((data: any) => {
+      dataCartCheckout.items.map((item) =>
+        item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, ...rest } = data

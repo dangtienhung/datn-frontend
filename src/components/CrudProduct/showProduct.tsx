@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ShowProduct = ({ product }: Props) => {
-  var settings = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 500,

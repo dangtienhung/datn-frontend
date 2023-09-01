@@ -27,7 +27,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [price, setPrice] = useState<number>(0)
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
-  const [addCartDbFn, _] = useCreateCartDBMutation()
+  const [addCartDbFn] = useCreateCartDBMutation()
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<any>(product.sizes[0])

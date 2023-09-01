@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { resetAllCart } from '../../store/slices/cart.slice'
 import { v4 as uuidv4 } from 'uuid'
+import { useDeleteCartDBMutation, useGetAllCartDBQuery } from '../../api/cartDB'
 
 const MyCart = () => {
   const navigate = useNavigate()
@@ -14,7 +15,10 @@ const MyCart = () => {
   const { items } = useAppSelector((state: RootState) => state.persistedReducer.cart)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
-  // const getAllCart = useGetAllCartDBQuery()
+  const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const getAllCart = useGetAllCartDBQuery()
 
   /* Tính tổng tiền và tổng số lượng quantity */
   const { total, quantity } = items.reduce(
@@ -40,7 +44,9 @@ const MyCart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Xóa!', 'Đã xóa xong.', 'success')
-        dispatch(resetAllCart())
+        user.accessToken === '' && user._id === ''
+          ? dispatch(resetAllCart())
+          : items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
       }
     })
   }
@@ -48,7 +54,7 @@ const MyCart = () => {
   // check user login when click
   // console.log('auth ', user)
   const handleCheckUser = () => {
-    if (user.accessToken == '') {
+    if (!user.accessToken && !user._id) {
       navigate('/signin')
       return
     } else {

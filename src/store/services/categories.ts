@@ -35,6 +35,7 @@ export const updateCate = createAsyncThunk('cate/updateCate', async (cate: Pick<
     const { data } = await http.put(`/category/${cate._id}`, { name: cate.name })
     console.log(data)
     return data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return error.message
   }

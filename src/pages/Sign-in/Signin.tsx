@@ -8,6 +8,8 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useLoginMutation } from '../../api/Auth'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useCreateCartDBMutation } from '../../api/cartDB'
+import { useAppSelector } from '../../store/hooks'
 
 // import { IUser } from '../../interfaces/user.type'
 
@@ -18,7 +20,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 const Signin = () => {
   const [loginUser] = useLoginMutation()
-  // const { user } = useSelector((state: RootState) => state.persistedReducer.auth);
+  const [addCartDbFn] = useCreateCartDBMutation()
+  const { items } = useAppSelector((state) => state.persistedReducer.cart)
   const {
     register,
     handleSubmit,
@@ -27,16 +30,32 @@ const Signin = () => {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema)
   })
-  const onLogin = (loginData: any) => {
-    loginUser(loginData).then((data: any) => {
+  const onLogin = async (loginData: Login) => {
+    await loginUser(loginData).then((data: any) => {
       if (data.error) {
         return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT
         })
       } else {
-        return toast.success('Login Success', {
-          position: toast.POSITION.TOP_RIGHT
-        })
+        if (items.length > 0) {
+          items.map(async (cart) => {
+            cart.items.map(async (item) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { _id, ...rest } = item
+              await addCartDbFn({
+                name: cart.name,
+                items: [
+                  {
+                    ...rest,
+                    image: rest.image,
+                    size: rest.size?._id,
+                    toppings: rest.toppings.map((topping) => topping?._id as string)
+                  }
+                ]
+              })
+            })
+          })
+        }
       }
     })
   }

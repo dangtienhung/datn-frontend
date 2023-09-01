@@ -78,8 +78,8 @@ const routes = createBrowserRouter([
         element: <BrandStory />
       },
       {
-        path:'su-kien',
-        element:<Events/>
+        path: 'su-kien',
+        element: <Events />
       }
     ]
   },

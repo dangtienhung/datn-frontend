@@ -33,7 +33,7 @@ import Pagination from '../../../components/admin/Pagination'
 const Voucher = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
-  const [data, _] = useState<any>([])
+  const [data] = useState<any>([])
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1)
