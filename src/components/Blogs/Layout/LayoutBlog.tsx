@@ -41,7 +41,9 @@ const LayoutBlog = () => {
       <div className='max-w-[1211px] grid  m-auto px-4 sm:px-6 sm:grid-cols-1 lg:px-8 lg:grid-cols-[2fr,5fr] lg:gap-[30px]'>
         <SiderbarBlog />
         <div>
-          <p className={`${styles.page_title} text-center sm:mt-[20px] sm:text-center mb-[25px] lg:text-xl lg:text-left lg:mt-[40px]`}>
+          <p
+            className={`${styles.page_title} text-center sm:mt-[20px] sm:text-center mb-[25px] lg:text-xl lg:text-left lg:mt-[40px]`}
+          >
             {getContentByUrl()}
           </p>
           <Outlet />

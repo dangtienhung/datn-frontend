@@ -119,7 +119,7 @@ const UserList: FC = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <AllUsersTable users={users!} isLoading={isLoading} isError={isError} />
+              {users && <AllUsersTable users={users} isLoading={isLoading} isError={isError} />}
             </div>
           </div>
         </div>
@@ -259,6 +259,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                       </div>
                     </Button>
                   </Tooltip>
+
                 </div>
               </Table.Cell>
             </Table.Row>

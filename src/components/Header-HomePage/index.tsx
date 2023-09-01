@@ -43,7 +43,7 @@ const HeaderHomePage = () => {
               <li className='font-[700] py-2 text-sm '>
                 <div className='menu_item relative group'>
                   <a href='/about' onClick={toggleMenu} className='flex'>
-                    <p className='mr-1 hover:underline'>Giới thiệu</p> <MdKeyboardArrowDown className='text-[20px]'/>
+                    <p className='mr-1 hover:underline'>Giới thiệu</p> <MdKeyboardArrowDown className='text-[20px]' />
                   </a>
                   <ul className='sub-menu absolute w-0 hidden bg-gray-800 text-white py-2 px-4 transition duration-300 group-hover:block group-hover:w-[200px] '>
                     <li>
@@ -71,7 +71,7 @@ const HeaderHomePage = () => {
                 <div className='menu_item relative group'>
                   <a href='/blogs/tin-tuc-khuyen-mai' onClick={toggleMenu} className='flex'>
                     <p className='mr-1 hover:underline'>Tin tức</p>
-                    <MdKeyboardArrowDown className='text-[20px]'/>
+                    <MdKeyboardArrowDown className='text-[20px]' />
                   </a>
                   <ul className='sub-menu absolute w-0 hidden bg-gray-800 text-white py-2 px-4 transition duration-300 group-hover:block group-hover:w-[200px] '>
                     <li>
@@ -81,7 +81,10 @@ const HeaderHomePage = () => {
                     </li>
                     <hr className='bg-current mt-[5px] mb-[5px]' />
                     <li>
-                      <Link to='/blogs/cau-chuyen-thuong-hieu' className='block py-1 max-w-[500px] hover:text-[#d3b673]'>
+                      <Link
+                        to='/blogs/cau-chuyen-thuong-hieu'
+                        className='block py-1 max-w-[500px] hover:text-[#d3b673]'
+                      >
                         CÂU CHUYỆN THƯƠNG HIỆU
                       </Link>
                     </li>
