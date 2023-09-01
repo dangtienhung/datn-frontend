@@ -116,16 +116,6 @@ const AllOrdersTable = ({ hanleUpdateOrderCancel }: AllOrdersTableProps) => {
       {orders && orders.totalPages > 1 && (
         <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={orders?.totalPages} />
       )}
-
-      {/* {orders && orders.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={orders?.hasNextPage}
-          hasPrev={orders?.hasPrevPage}
-          totalDocs={orders?.totalDocs}
-        />
-      )} */}
     </>
   )
 }

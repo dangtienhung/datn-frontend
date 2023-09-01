@@ -128,13 +128,6 @@ const AllOrdersPending = ({ hanleUpdateOrderCancel }: IProps) => {
       </Table>
       {orderPending && orderPending.totalPages > 1 && (
         <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={orderPending.totalPages} />
-        // <Pagination
-        //   nextPage={handleNextPage}
-        //   prevPage={handlePrevPage}
-        //   hasNext={orderPending.hasNextPage}
-        //   hasPrev={orderPending.hasPrevPage}
-        //   totalDocs={orderPending.totalDocs}
-        // />
       )}
     </>
   )

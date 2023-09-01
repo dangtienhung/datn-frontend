@@ -1,4 +1,4 @@
-import { Button, Checkbox, Table } from 'flowbite-react'
+import { Button, Checkbox, Table, Tooltip } from 'flowbite-react'
 import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../api/Product'
 
 import EditProductModal from './editProduct'
@@ -8,6 +8,8 @@ import ShowProduct from './showProduct'
 import { formatCurrency } from '../../utils/formatCurrency'
 import PaginateNumber from '../admin/PaginationWithNumber'
 import { useState } from 'react'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const ProductsTable = function () {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -15,6 +17,21 @@ const ProductsTable = function () {
   // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
   const { data, isLoading } = useFetchProductsQuery(currentPage)
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
+
+  const onHandleDeleteFake = (id: string) => {
+    Swal.fire({
+      icon: 'question',
+      title: 'Do you want to delete this product. You can restore this product in trash can page.',
+      showCancelButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteFakeProduct(id)
+          .unwrap()
+          .then(() => toast.success('Xóa thành công'))
+          .catch(() => toast.error('Xóa thất bại'))
+      }
+    })
+  }
   if (isLoading) return <Loading />
 
   return (
@@ -62,10 +79,13 @@ const ProductsTable = function () {
                       Edit product
                     </Button> */}
                   <ShowProduct product={product} />
+
                   <EditProductModal DataEdit={product} />
-                  <Button color='failure' onClick={() => deleteFakeProduct(product._id!)}>
-                    <HiTrash className='text-center' />
-                  </Button>
+                  <Tooltip content='Xoá sản phẩm'>
+                    <Button color='failure' onClick={() => onHandleDeleteFake(product._id)}>
+                      <HiTrash className='text-center' />
+                    </Button>
+                  </Tooltip>
                   {/* {isOpenModalEdit ? ( */}
                   {/* ) : (
                       ''

@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Checkbox, Label, Modal, Select, Table, TextInput } from 'flowbite-react'
+import { Breadcrumb, Button, Checkbox, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import {
@@ -96,7 +96,9 @@ const UserList: FC = () => {
               </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <AddUserModal />
+              <Tooltip content='Thêm người dùng'>
+                <AddUserModal />
+              </Tooltip>
               {/* <Button color="primary">
                 <div className="gap-x-3 flex items-center">
                   <HiPlus className="text-xl" />
@@ -243,17 +245,20 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
               </Table.Cell>
               <Table.Cell>
                 <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <EditUserModal user={user} />
-                  <Button color='failure' onClick={() => handleDelete(user._id!)}>
-                    <div className='gap-x-2 flex items-center'>
-                      {isDeleting ? (
-                        <AiOutlineLoading3Quarters className='rotate text-lg' />
-                      ) : (
-                        <HiTrash className='text-lg' />
-                      )}
-                      Delete user
-                    </div>
-                  </Button>
+                  <Tooltip content='Chỉnh sửa người dùng'>
+                    <EditUserModal user={user} />
+                  </Tooltip>
+                  <Tooltip content='Xóa người dùng'>
+                    <Button color='failure' onClick={() => handleDelete(user._id!)}>
+                      <div className='gap-x-2 flex items-center'>
+                        {isDeleting ? (
+                          <AiOutlineLoading3Quarters className='rotate text-lg' />
+                        ) : (
+                          <HiTrash className='text-lg' />
+                        )}
+                      </div>
+                    </Button>
+                  </Tooltip>
                 </div>
               </Table.Cell>
             </Table.Row>
@@ -445,7 +450,6 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-2 flex items-center'>
           <HiOutlinePencilAlt className='text-lg' />
-          Edit user
         </div>
       </Button>
       <Modal

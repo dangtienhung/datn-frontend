@@ -59,7 +59,6 @@ const AllOrdersCanceled = () => {
                   <Button color='primary'>
                     <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
                       <LuClipboardEdit className='text-xl' />
-                      Detail
                     </Link>
                   </Button>
                 </Table.Cell>
@@ -76,13 +75,6 @@ const AllOrdersCanceled = () => {
       </Table>
       {data && data.totalPages > 1 && (
         <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={data.totalPages} />
-        // <Pagination
-        //   nextPage={handleNextPage}
-        //   prevPage={handlePrevPage}
-        //   totalDocs={data.totalDocs}
-        //   hasNext={data.hasNextPage}
-        //   hasPrev={data.hasPrevPage}
-        // />
       )}
     </>
   )

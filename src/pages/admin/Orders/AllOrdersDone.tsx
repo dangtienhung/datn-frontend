@@ -56,7 +56,6 @@ const AllOrdersDone = () => {
                   <Button color='primary'>
                     <Link to={`/admin/orders/${order._id}`} className='gap-x-3 flex items-center'>
                       <LuClipboardEdit className='text-xl' />
-                      Detail
                     </Link>
                   </Button>
                 </Table.Cell>

@@ -1,5 +1,13 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react'
-import { HiCog, HiDocumentDownload, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import {
+  HiCog,
+  HiDocumentDownload,
+  HiDotsVertical,
+  HiExclamationCircle,
+  HiPencil,
+  HiPlus,
+  HiTrash
+} from 'react-icons/hi'
 import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { useEffect, useState } from 'react'
@@ -80,7 +88,9 @@ const Categories = () => {
               </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <AddCategoryModal error={error} />
+              <Tooltip content='Thêm danh mục'>
+                <AddCategoryModal error={error} />
+              </Tooltip>
 
               <Button color='gray' onClick={() => exportToExcel(data, 'categories')}>
                 <div className='gap-x-3 flex items-center'>
@@ -171,16 +181,20 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
 
               <Table.Cell>
                 <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <EditCategoryModal dataCate11={item} error={error} />
-                  <Button color='failure'>
-                    <div
-                      onClick={() => handleDeleteCate((item?._id as string) && (item._id as string))}
-                      className='gap-x-2 flex items-center'
-                    >
-                      <HiTrash className='text-lg' />
-                      Delete Topping
-                    </div>
-                  </Button>
+                  <Tooltip content='Chỉnh sửa danh mục'>
+                    <EditCategoryModal dataCate11={item} error={error} />
+                  </Tooltip>
+
+                  <Tooltip content='Xóa danh mục'>
+                    <Button color='failure'>
+                      <div
+                        onClick={() => handleDeleteCate((item?._id as string) && (item._id as string))}
+                        className='gap-x-2 flex items-center'
+                      >
+                        <HiTrash className='text-lg' />
+                      </div>
+                    </Button>
+                  </Tooltip>
                 </div>
               </Table.Cell>
             </Table.Row>
@@ -291,8 +305,7 @@ const EditCategoryModal = function ({ dataCate11, error }: IPropCate) {
     <>
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-3 flex items-center'>
-          <HiPlus className='text-xl' />
-          Edit Category
+          <HiPencil className='text-xl' />
         </div>
       </Button>
       <Modal onClose={() => setOpen(false)} show={isOpen}>
