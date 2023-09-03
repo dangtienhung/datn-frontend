@@ -29,7 +29,7 @@ type DataIndex = keyof DataType
 
 const List = () => {
   const { data: productData, isLoading } = useFetchProductsQuery(0)
-  const [datas, setData] = useState<any>(productData);
+  const [datas, setData] = useState<any>(productData)
   const [removeProduct] = useDeleteFakeProductMutation()
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -42,8 +42,8 @@ const List = () => {
   const getRandomuserParams = (params: TableParams) => ({
     results: params.pagination?.pageSize,
     page: params.pagination?.current,
-    ...params,
-  });
+    ...params
+  })
   const fetchData = () => {
     setLoading(true)
     fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
@@ -63,25 +63,25 @@ const List = () => {
       })
   }
   useEffect(() => {
-    fetchData();
-  }, [JSON.stringify(tableParams)]);
+    fetchData()
+  }, [JSON.stringify(tableParams)])
   // console.log(productData);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
-    sorter: SorterResult<DataType>,
+    sorter: SorterResult<DataType>
   ) => {
     setTableParams({
       pagination,
       filters,
-      ...sorter,
-    });
+      ...sorter
+    })
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
+      setData([])
     }
-  };
+  }
   const start = () => {
     setLoading(true)
     // ajax request after empty completing

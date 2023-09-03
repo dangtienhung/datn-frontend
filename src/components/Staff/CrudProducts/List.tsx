@@ -34,7 +34,7 @@ const List = () => {
       current: 1,
       pageSize: productData?.limit
     }
-  })  
+  })
   const getRandomuserParams = (params: TableParams) => ({
     results: params.pagination?.pageSize,
     page: params.pagination?.current,
@@ -50,7 +50,7 @@ const List = () => {
         setTableParams({
           ...tableParams,
           pagination: {
-            ...tableParams.pagination,
+            ...tableParams.pagination
           }
         })
       })

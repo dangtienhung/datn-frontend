@@ -18,7 +18,7 @@ const NavbarStaff = () => {
   return (
     <>
       <Row>
-        <Col flex="50%">
+        <Col flex='50%'>
           {/* <Search
                                 className='bg-blue-500 mt-[10px] ml=[-50px]'
                                 placeholder="input search text"
@@ -28,11 +28,13 @@ const NavbarStaff = () => {
                                 onSearch={onSearch}
                             /> */}
         </Col>
-        <Col flex="30%" className='text-right mt-[-3px]'>
+        <Col flex='30%' className='text-right mt-[-3px]'>
           <Avatar style={{ backgroundColor: '#f56a00', marginRight: '10px' }}>DH</Avatar>
-          <Link to={'#'} className='mr-[20px] hidden sm:hidden lg:inline-block'>Dang Quang Huy</Link>
+          <Link to={'#'} className='mr-[20px] hidden sm:hidden lg:inline-block'>
+            Dang Quang Huy
+          </Link>
         </Col>
-        <Col flex="20%">
+        <Col flex='20%'>
           <Button className='font-bold text-right hidden sm:inline-block lg:inline-block' onClick={toggleDarkMode}>
             {isDarkMode ? <BiSolidSun /> : <FaMoon />}
           </Button>
