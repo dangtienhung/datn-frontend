@@ -1,6 +1,6 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { useState } from 'react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi'
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { IRole } from '../../../interfaces/role.type'
 
@@ -67,7 +67,9 @@ const Role = () => {
               </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <AddRoleModal />
+              <Tooltip content='Thêm vai trò'>
+                <AddRoleModal />
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -150,17 +152,20 @@ const RoleTable = () => {
 
                 <Table.Cell>
                   <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                    <EditRoleModal role={item} />
-                    <Button color='failure' onClick={() => handleDelete(item._id!)}>
-                      <div className='gap-x-2 flex items-center'>
-                        {isDeleting ? (
-                          <AiOutlineLoading3Quarters className='rotate text-lg' />
-                        ) : (
-                          <HiTrash className='text-lg' />
-                        )}
-                        Delete Role
-                      </div>
-                    </Button>
+                    <Tooltip content='Chỉnh sửa vai trò'>
+                      <EditRoleModal role={item} />
+                    </Tooltip>
+                    <Tooltip content='Xóa vai trò'>
+                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
+                        <div className='gap-x-2 flex items-center'>
+                          {isDeleting ? (
+                            <AiOutlineLoading3Quarters className='rotate text-lg' />
+                          ) : (
+                            <HiTrash className='text-lg' />
+                          )}
+                        </div>
+                      </Button>
+                    </Tooltip>
                   </div>
                 </Table.Cell>
               </Table.Row>
@@ -275,8 +280,7 @@ const EditRoleModal = function ({ role }: EditRoleModalProps) {
     <>
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-3 flex items-center'>
-          <HiPlus className='text-xl' />
-          Edit Role
+          <HiPencil className='text-xl' />
         </div>
       </Button>
       <Modal onClose={() => setOpen(false)} show={isOpen}>

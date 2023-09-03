@@ -63,7 +63,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
               <div className='text-lg capitalize select-none'>{categoryName || 'Tất cả sản phẩm'}</div>
               <div className='right'>
-                <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />
+                <FaAngleDown />
               </div>
             </div>
             {ListProduct.docs && ListProduct.docs.length <= 0 ? (

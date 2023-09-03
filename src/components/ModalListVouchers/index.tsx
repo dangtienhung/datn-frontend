@@ -25,7 +25,9 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
   const onCancel = () => {
     toggleModal()
     setVoucherChecked({} as IVoucher)
-    message.error('Đã bỏ chọn mã khuyến mại', 2)
+    if (Object.keys(voucherChecked).length > 0) {
+      message.error('Đã bỏ chọn mã khuyến mại', 1)
+    }
   }
 
   return (

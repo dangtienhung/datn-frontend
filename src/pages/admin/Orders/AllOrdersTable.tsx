@@ -9,7 +9,7 @@ import { TbMapPinCancel } from 'react-icons/tb'
 import Tooltip from '@mui/material/Tooltip'
 import formatDate from '../../../utils/formatDate'
 import { useEffect, useState } from 'react'
-import Pagination from '../../../components/admin/Pagination'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 interface AllOrdersTableProps {
   hanleUpdateOrderCancel: (id: string) => void
@@ -19,12 +19,6 @@ const AllOrdersTable = ({ hanleUpdateOrderCancel }: AllOrdersTableProps) => {
   const [trigger, { data: orders, isLoading }] = useLazyGetAllOrderQuery()
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
   useEffect(() => {
     trigger(currentPage)
   }, [trigger, currentPage])
@@ -120,13 +114,7 @@ const AllOrdersTable = ({ hanleUpdateOrderCancel }: AllOrdersTableProps) => {
         </Table.Body>
       </Table>
       {orders && orders.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={orders?.hasNextPage}
-          hasPrev={orders?.hasPrevPage}
-          totalDocs={orders?.totalDocs}
-        />
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={orders?.totalPages} />
       )}
     </>
   )

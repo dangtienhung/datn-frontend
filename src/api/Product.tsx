@@ -10,8 +10,8 @@ export const ApiProducts = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['product'],
   endpoints: (builder) => ({
-    fetchProducts: builder.query<IProductDocs, void>({
-      query: () => '/api/products',
+    fetchProducts: builder.query<IProductDocs, number | string>({
+      query: (page) => `/api/products?_page=${page}`,
       providesTags: (result) =>
         result?.docs
           ? [...result.docs.map(({ _id }) => ({ type: 'product' as const, _id })), { type: 'product', id: 'List' }]

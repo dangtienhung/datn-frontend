@@ -7,7 +7,9 @@ const SiderbarBlog = () => {
       <div className={`${styles.category_menu_title} sm:text-[25px] text-center lg:text-[28px]`}>Danh mục tin tức</div>
       <div className='w-full max-w-[260px] mx-auto mb-[70px]'>
         <ul>
-          <li className={`${styles.menu_category}`}> {/* sm:text-center lg:text-left */}
+          <li className={`${styles.menu_category}`}>
+            {' '}
+            {/* sm:text-center lg:text-left */}
             <Link to='cau-chuyen-thuong-hieu'>Câu chuyện thương hiệu</Link>
           </li>
           <li className={`${styles.menu_category}`}>

@@ -10,7 +10,7 @@ const ProductsPage = () => {
   const { category, products } = useAppSelector((state: RootState) => state.persistedReducer)
   useEffect(() => {
     dispatch(getAllCates())
-  }, [])
+  }, [dispatch])
 
   return (
     <div>

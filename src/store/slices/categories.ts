@@ -69,10 +69,10 @@ export const categoriesSlice = createSlice({
       const size = action.payload.data
       state.categories = state.categories.map((item) => (item._id === size._id ? size : item))
     })
-    builder.addCase(updateCate.rejected, (state, action: any) => {
+    builder.addCase(updateCate.rejected, (state, action) => {
       console.log(action.payload)
 
-      state.error = action.payload
+      state.error = action.payload as string
     })
 
     //get one size

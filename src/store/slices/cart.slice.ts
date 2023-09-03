@@ -253,18 +253,9 @@ const cartSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addMatcher(CartDBAPI.endpoints.createCartDB.matchFulfilled, (state, { payload }) => {
-      if (payload) {
-        console.log('payload', payload)
-        console.log('payload, state', state)
-        // state.user = payload.user
-      }
+    builder.addMatcher(CartDBAPI.endpoints.getAllCartDB.matchFulfilled, (state, { payload }) => {
+      state.items = payload.data
     })
-
-    // builder.addMatcher(CartDBAPI.endpoints.getAllCartDB.matchFulfilled, (state, { payload }) => {
-    //   // state.items = payload
-    //   console.log(' padfdfd', state, payload)
-    // })
   }
 })
 

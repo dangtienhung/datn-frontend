@@ -10,7 +10,7 @@ import { Tooltip } from '@mui/material'
 import formatDate from '../../../utils/formatDate'
 import { v4 as uuid } from 'uuid'
 import { useGetAllOrderComfirmedQuery } from '../../../store/slices/order'
-import Pagination from '../../../components/admin/Pagination'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 interface IProps {
   // dataOrderCofirmed: dataDocsOrderRes[]
@@ -22,12 +22,6 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: orderConfirmed, isLoading } = useGetAllOrderComfirmedQuery(currentPage)
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
   if (isLoading) return <Loading />
 
   return (
@@ -112,12 +106,10 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
         </Table.Body>
       </Table>
       {orderConfirmed && orderConfirmed.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={orderConfirmed.hasNextPage}
-          hasPrev={orderConfirmed.hasPrevPage}
-          totalDocs={orderConfirmed.totalDocs}
+        <PaginateNumber
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPage={orderConfirmed.totalPages}
         />
       )}
     </>

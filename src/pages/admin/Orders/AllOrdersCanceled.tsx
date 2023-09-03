@@ -5,20 +5,14 @@ import { LuClipboardEdit } from 'react-icons/lu'
 import formatDate from '../../../utils/formatDate'
 import { useGetAllOrderCancelQuery } from '../../../store/slices/order'
 import { v4 as uuid } from 'uuid'
-import Pagination from '../../../components/admin/Pagination'
 import { useState } from 'react'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 // import { type } from 'os'
 
 const AllOrdersCanceled = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data } = useGetAllOrderCancelQuery(currentPage)
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
   return (
     <>
       <Table hoverable className='min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600'>
@@ -65,7 +59,6 @@ const AllOrdersCanceled = () => {
                   <Button color='primary'>
                     <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
                       <LuClipboardEdit className='text-xl' />
-                      Detail
                     </Link>
                   </Button>
                 </Table.Cell>
@@ -80,14 +73,8 @@ const AllOrdersCanceled = () => {
           )}
         </Table.Body>
       </Table>
-      {data && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          totalDocs={data.totalDocs}
-          hasNext={data.hasNextPage}
-          hasPrev={data.hasPrevPage}
-        />
+      {data && data.totalPages > 1 && (
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={data.totalPages} />
       )}
     </>
   )

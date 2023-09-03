@@ -20,7 +20,7 @@ const AdminChart = () => {
       fontFamily: 'Inter, sans-serif',
       foreColor: labelColor,
       toolbar: {
-        show: false
+        show: true
       }
     },
     fill: {
@@ -38,7 +38,8 @@ const AdminChart = () => {
       style: {
         fontSize: '14px',
         fontFamily: 'Inter, sans-serif'
-      }
+      },
+      followCursor: true
     },
     grid: {
       show: true,

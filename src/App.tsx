@@ -12,12 +12,10 @@ import theme from './flowbite-theme'
 
 const App = () => {
   return (
-    <ConfigProvider theme={antdTheme}>
-      <Flowbite theme={{ theme }}>
-        <RouterProvider router={routes} />
-        <ToastContainer theme='colored' />
-      </Flowbite>
-    </ConfigProvider>
+    <Flowbite theme={{ theme }}>
+      <RouterProvider router={routes} />
+      <ToastContainer theme='colored' />
+    </Flowbite>
   )
 }
 

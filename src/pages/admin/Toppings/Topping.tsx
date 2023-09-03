@@ -1,5 +1,5 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Loading from '../../../components/Loading'
+import { formatCurrency } from '../../../utils/formatCurrency'
 
 const Topping = () => {
   return (
@@ -67,7 +68,9 @@ const Topping = () => {
               </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <AddToppingModal />
+              <Tooltip content='Thêm topping'>
+                <AddToppingModal />
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -142,18 +145,21 @@ const ToppingTable = () => {
                 {item.name}
               </Table.Cell>
               <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {item.price}
+                {formatCurrency(item.price)}
               </Table.Cell>
 
               <Table.Cell>
                 <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <EditToppingModal dataTopping={item} />
-                  <Button color='failure'>
-                    <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
-                      <HiTrash className='text-lg' />
-                      Delete Topping
-                    </div>
-                  </Button>
+                  <Tooltip content='Chỉnh sửa topping'>
+                    <EditToppingModal dataTopping={item} />
+                  </Tooltip>
+                  <Tooltip content='Xóa topping'>
+                    <Button color='failure'>
+                      <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
+                        <HiTrash className='text-lg' />
+                      </div>
+                    </Button>
+                  </Tooltip>
                 </div>
               </Table.Cell>
             </Table.Row>
@@ -270,8 +276,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     <>
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-3 flex items-center'>
-          <HiPlus className='text-xl' />
-          Edit Topping
+          <HiPencil className='text-xl' />
         </div>
       </Button>
       <Modal onClose={() => setOpen(false)} show={isOpen}>
