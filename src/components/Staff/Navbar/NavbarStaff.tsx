@@ -17,8 +17,8 @@ const NavbarStaff = () => {
   }
   return (
     <>
-      <Row justify='space-around' align='middle'>
-        <Col span={15}>
+      <Row>
+        <Col flex="50%">
           {/* <Search
                                 className='bg-blue-500 mt-[10px] ml=[-50px]'
                                 placeholder="input search text"
@@ -28,16 +28,18 @@ const NavbarStaff = () => {
                                 onSearch={onSearch}
                             /> */}
         </Col>
-        <div>
+        <Col flex="30%" className='text-right mt-[-3px]'>
           <Avatar style={{ backgroundColor: '#f56a00', marginRight: '10px' }}>DH</Avatar>
-          <Link to={'#'}>Dang Quang Huy</Link>
-        </div>
-        <Button className='font-bold' onClick={toggleDarkMode}>
-          {isDarkMode ? <BiSolidSun /> : <FaMoon />}
-        </Button>
-        <Button className='bg-green-400 text-xl font-bold  ml-[-80px]' onClick={onLogout}>
-          <BiLogOut style={{ transform: 'rotate(180deg)' }} />
-        </Button>
+          <Link to={'#'} className='mr-[20px] hidden sm:hidden lg:inline-block'>Dang Quang Huy</Link>
+        </Col>
+        <Col flex="20%">
+          <Button className='font-bold text-right hidden sm:inline-block lg:inline-block' onClick={toggleDarkMode}>
+            {isDarkMode ? <BiSolidSun /> : <FaMoon />}
+          </Button>
+          <Button className='bg-green-400 ml-[10px] font-bold text-[#ffffff]' onClick={onLogout}>
+            <BiLogOut style={{ transform: 'rotate(180deg)' }} />
+          </Button>
+        </Col>
       </Row>
     </>
   )

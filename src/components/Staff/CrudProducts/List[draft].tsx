@@ -1,8 +1,8 @@
 import { AiFillEye, AiOutlineEdit, AiOutlineSearch } from 'react-icons/ai'
 import { Button, Input, Popconfirm, Space, Table, message } from 'antd'
-import type { ColumnType, ColumnsType } from 'antd/es/table'
+import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../../api/Product'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
@@ -11,20 +11,77 @@ import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import Skeleton from 'react-loading-skeleton'
-import { GiHamburgerMenu } from 'react-icons/gi'
+import type { FilterValue, SorterResult } from 'antd/es/table/interface'
+import qs from 'qs'
 
 interface DataType extends IProduct {
   key: string | React.Key | undefined
+}
+
+interface TableParams {
+  pagination?: TablePaginationConfig
+  sortField?: string
+  sortOrder?: string
+  filters?: Record<string, FilterValue>
 }
 
 type DataIndex = keyof DataType
 
 const List = () => {
   const { data: productData, isLoading } = useFetchProductsQuery()
+  const [datas, setData] = useState<any>(productData);
   const [removeProduct] = useDeleteFakeProductMutation()
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 2
+    }
+  })
+  const getRandomuserParams = (params: TableParams) => ({
+    results: params.pagination?.pageSize,
+    page: params.pagination?.current,
+    ...params,
+  });
+  const fetchData = () => {
+    setLoading(true)
+    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
+      .then((res) => res.json())
+      .then(({ results }) => {
+        setData(results)
+        setLoading(false)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: 200
+            // 200 is mock data, you should read it from server
+            // total: data.totalCount,
+          }
+        })
+      })
+  }
+  useEffect(() => {
+    fetchData();
+  }, [JSON.stringify(tableParams)]);
   // console.log(productData);
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue>,
+    sorter: SorterResult<DataType>,
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
   const start = () => {
     setLoading(true)
     // ajax request after empty completing
@@ -159,84 +216,79 @@ const List = () => {
     {
       title: 'INDEX',
       dataIndex: 'stt',
-      // width: '5%',
-      render: (_, __, index) => index + 1,
-      className: 'hidden md:table-cell'
+      width: '3%',
+      render: (_, __, index) => index + 1
     },
     {
       title: 'PRODUCT NAME',
       dataIndex: 'name',
       key: 'name',
-      // width: '27%',
+      width: '20%',
       ...getColumnSearchProps('name')
     },
     {
       title: 'IMAGES',
       dataIndex: 'images',
       key: 'images',
-      // width: '20%',
+      width: '20%',
       render: (image) => <img className='w-[40px]' src={image} alt='product image' />
     },
     {
       title: 'CATEGORY',
       dataIndex: 'category',
       key: 'category',
-      // width: '25%',
+      width: '12%',
       ...getColumnSearchProps('category')
     },
-    // {
-    //   title: 'price',
-    //   dataIndex: 'sale',
-    //   key: 'sale',
-    //   width: '20%',
-    //   ...getColumnSearchProps('images'),
-    //   sorter: (a, b) => {
-    //     const saleA = a.sale || 0
-    //     const saleB = b.sale || 0
-    //     return saleA - saleB
-    //   },
-    //   sortDirections: ['descend', 'ascend']
-    // },
+
+    {
+      title: 'price',
+      dataIndex: 'sale',
+      key: 'sale',
+      width: '20%',
+      ...getColumnSearchProps('images'),
+      sorter: (a, b) => {
+        const saleA = a.sale || 0
+        const saleB = b.sale || 0
+        return saleA - saleB
+      },
+      sortDirections: ['descend', 'ascend']
+    },
     {
       title: 'ACTION',
       key: 'action',
-      // width: '20%',
+      width: '20%',
       render: (record) => (
-        <>
-          <Space size='middle' className='hidden md:flex'>
-            <Button className='bg-[#d46b08] sm:h-[35px] lg:h-[40px] '>
-              <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
-                <AiFillEye className='md:text-[13px]  lg:text-lg' />
-              </Link>
+        <Space size='middle'>
+          <Button style={{ backgroundColor: '#d46b08', height: '40px' }}>
+            <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
+              <AiFillEye className='mr-1 text-lg' />
+            </Link>
+          </Button>
+          <Button style={{ backgroundColor: '#0958d9', height: '40px' }}>
+            <Link style={{ color: 'white', margin: 'auto' }} to={`${record.key}/update`}>
+              <AiOutlineEdit className='mr-1 text-lg' />
+            </Link>
+          </Button>
+          <Popconfirm
+            title='Delete the product'
+            description='Are you sure to delete this product?'
+            onConfirm={async () => {
+              // await pause(1000)
+              await removeProduct(record.key)
+              message.success('Xóa sản phẩm thành công')
+            }}
+            okText='Yes'
+            okButtonProps={{
+              style: { backgroundColor: 'blue' }
+            }}
+            cancelText='No'
+          >
+            <Button style={{ backgroundColor: '#f5222d', color: 'white', height: '40px' }}>
+              <RiDeleteBin6Fill className='text-lg' />
             </Button>
-            <Button className='bg-[#1d39c4] sm:h-[35px] lg:h-[40px] '>
-              <Link style={{ color: 'white', margin: 'auto' }} to={`${record.key}/update`}>
-                <AiOutlineEdit className='md:text-[13px] lg:text-lg' />
-              </Link>
-            </Button>
-            <Popconfirm
-              title='Delete the product'
-              description='Are you sure to delete this product?'
-              onConfirm={async () => {
-                // await pause(1000)
-                await removeProduct(record.key)
-                message.success('Xóa sản phẩm thành công')
-              }}
-              okText='Yes'
-              okButtonProps={{
-                style: { backgroundColor: 'blue' }
-              }}
-              cancelText='No'
-            >
-              <Button className='bg-[#f5222d] sm:h-[35px] lg:h-[40px]'>
-                <RiDeleteBin6Fill className='text-[#ffffff] md:text-[13px] lg:text-lg ' />
-              </Button>
-            </Popconfirm>
-          </Space>
-          <div className='text-right inline-block md:hidden lg:hidden'>
-            <GiHamburgerMenu />
-          </div>
-        </>
+          </Popconfirm>
+        </Space>
       )
     }
   ]
@@ -258,16 +310,19 @@ const List = () => {
             <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}</span>
             <Table
               columns={columns}
+              // rowKey={(record) => record.login.uuid}
               dataSource={data}
               rowSelection={rowSelection}
+              // pagination={tableParams.pagination}
+              onChange={handleTableChange}
               pagination={{
                 pageSize: productData?.limit,
                 showSizeChanger: true,
                 pageSizeOptions: [10, 20, 50, 100],
                 showTotal: (total, range) => `${range[0]} - ${range[1]} of ${total} items`,
-                showQuickJumper: true
+                showQuickJumper: true,
+                ...tableParams.pagination
               }}
-              className='sm:table-auto md:table-auto lg:table-fixed xl:table-fixed'
             />
             <Button onClick={start} disabled={!hasSelected} loading={loading}>
               Reload

@@ -154,6 +154,7 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
+        path:'dashboard',
         element: <Dashboard />
       },
       {
