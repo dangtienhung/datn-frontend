@@ -31,9 +31,9 @@ export const CartDBAPI = createApi({
       invalidatesTags: () => [{ type: 'CartDB', id: 'LIST' }]
     }),
     updateCartDB: builder.mutation({
-      query: (body: any) => ({
+      query: (body: { total: number; quantity: number; _id: string; id: string }) => ({
         url: `/api/cart/${body._id}`,
-        body: { name: body.name, price: body.price },
+        body: { quantity: body.quantity, id: body.id, total: body.total },
         method: 'PUT'
       }),
       invalidatesTags: () => [{ type: 'CartDB', id: 'LIST' }]

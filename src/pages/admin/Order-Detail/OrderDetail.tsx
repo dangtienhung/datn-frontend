@@ -254,7 +254,7 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                 <p className='dark:text-white md:text-left text-base font-semibold leading-4 text-center text-gray-800'>
                   Payment
                 </p>
-                <p className='lg:w-full dark:text-gray-300 md:text-left text-sm leading-5 text-center text-gray-600'>
+                <p className='lg:w-full dark:text-gray-300 md:text-left text-sm leading-5 text-center text-gray-600 uppercase'>
                   {orderDetail?.order && orderDetail.order.paymentMethodId}
                 </p>
               </div>
@@ -325,13 +325,13 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
                 </Table.Cell>
                 <Table.Cell>{index + 1}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  <img src={order.product.images[0].url} className='w-32' alt='' />
+                  <img src={order?.product.images[0].url} className='w-32' alt='' />
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
                   {order.product.name}
                 </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {order.quantitsy}
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize text-center'>
+                  {order.quantity}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
                   {formatCurrency(order.price)}

@@ -5,6 +5,7 @@ import { IVoucher } from '../../interfaces/voucher.type'
 import isExpiredVoucher from '../../utils/isExpiredVoucher'
 import { GiTicket } from 'react-icons/gi'
 import { formatCurrency } from '../../utils/formatCurrency'
+// import { useState } from 'react'
 
 type ModalListVouchersProps = {
   isOpen: boolean
@@ -24,7 +25,9 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
   const onCancel = () => {
     toggleModal()
     setVoucherChecked({} as IVoucher)
-    message.error('Đã bỏ chọn mã giảm giá', 2)
+    if (Object.keys(voucherChecked).length > 0) {
+      message.error('Đã bỏ chọn mã khuyến mại', 1)
+    }
   }
 
   return (

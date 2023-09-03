@@ -3,7 +3,7 @@ import { ToppingAPI } from '../../api/topping'
 import { ProductForm, ProductSchema } from '../../validate/Form'
 import { useForm } from 'react-hook-form'
 import { memo, useEffect, useMemo, useState } from 'react'
-import { Button, Label, TextInput, Textarea } from 'flowbite-react'
+import { Button, Label, TextInput, Textarea, Tooltip } from 'flowbite-react'
 import { IImage } from '../../interfaces/image.type'
 import SelectMui, { SelectChangeEvent } from '@mui/material/Select'
 import { Box, Chip, MenuItem, OutlinedInput, Select, Theme, Typography, useTheme } from '@mui/material'
@@ -103,9 +103,11 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
 
   return (
     <div>
-      <Button color='primary' onClick={() => setIsOpen(true)}>
-        <BiEditAlt className='text-sm' />
-      </Button>
+      <Tooltip content='Chỉnh sửa sản phẩm'>
+        <Button color='primary' onClick={() => setIsOpen(true)}>
+          <BiEditAlt className='text-sm' />
+        </Button>
+      </Tooltip>
       <Modal
         open={isOpen}
         onClose={() => setIsOpen(false)}

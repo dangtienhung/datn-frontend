@@ -40,7 +40,7 @@ const AdminNavbar: FC = function () {
             <Button className='bg-green-400 text-xl font-bold' onClick={onLogout}>
               <BiLogOut />
             </Button>
-            <DarkThemeToggle />
+            <DarkThemeToggle accessKey='' about='' />
             <Avatar img={user.avatar} rounded status='online' bordered color={'success'} statusPosition='top-right' />
           </div>
         </div>

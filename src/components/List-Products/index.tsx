@@ -1,9 +1,9 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import ListProductItem from '../List-ProductItem'
 import PopupDetailProduct from '../PopupDetailProduct'
 import http from '../../api/instance'
@@ -25,6 +25,8 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
   const [product, setProduct] = useState<any>({})
   const { page } = useSelector((state: RootState) => state.persistedReducer.products)
   const dispatch = useAppDispatch()
+  const { state } = useLocation()
+
   const { products: ListProduct, isLoading } = useSelector((state: RootState) => state.persistedReducer.products)
 
   const handleTogglePopup = () => {
@@ -48,6 +50,11 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
     orderRef.current?.classList.toggle('show_order')
   }
 
+  useEffect(() => {
+    setProduct(state)
+    handleTogglePopup()
+  }, [])
+
   return (
     <>
       <div className='grow rounded-sm'>
@@ -56,7 +63,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
               <div className='text-lg capitalize select-none'>{categoryName || 'Tất cả sản phẩm'}</div>
               <div className='right'>
-                <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />
+                <FaAngleDown />
               </div>
             </div>
             {ListProduct.docs && ListProduct.docs.length <= 0 ? (
@@ -116,7 +123,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               <img className='h-[35px]' src='/icon-glass-tea.png' alt='' />
               <span className='cart-ss2-one px-1'>x</span>
               <span className='cart-ss2-two px-1'>0</span>
-              <span className='cart-ss2-three px-1'>=</span>
+              <span className='cart-ss2-three px-1'> = </span>
               <span className='cart-ss2-four px-1'>0đ</span>
             </div>
             <div className='cart-ss3'>

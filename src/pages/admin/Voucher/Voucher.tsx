@@ -1,4 +1,4 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import {
   HiCog,
   HiDocumentDownload,
@@ -33,7 +33,7 @@ import Pagination from '../../../components/admin/Pagination'
 const Voucher = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
-  const [data, _] = useState<any>([])
+  const [data] = useState<any>([])
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1)
@@ -103,7 +103,9 @@ const Voucher = () => {
               </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <AddVoucherModal />
+              <Tooltip content='Thêm voucher'>
+                <AddVoucherModal />
+              </Tooltip>
 
               <Button color='gray' onClick={() => exportToExcel(data, 'vouchers')}>
                 <div className='gap-x-3 flex items-center'>
@@ -245,21 +247,23 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
 
                 <Table.Cell>
                   <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                    {item && <EditVoucherModal voucher={item} />}
-                    {isExpiredVoucher(item.endDate!) ? (
-                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
+                    <Tooltip content='Chỉnh sửa voucher'>{item && <EditVoucherModal voucher={item} />}</Tooltip>
+
+                    <Tooltip content='Xóa voucher'>
+                      <Button
+                        disabled={!isExpiredVoucher(item.endDate!)}
+                        color='failure'
+                        onClick={() => handleDelete(item._id!)}
+                      >
                         <div className='gap-x-2 flex items-center'>
                           {isDelteLoading ? (
                             <AiOutlineLoading3Quarters className='rotate text-lg' />
                           ) : (
                             <HiTrash className='text-lg' />
                           )}
-                          Delete Voucher
                         </div>
                       </Button>
-                    ) : (
-                      <></>
-                    )}
+                    </Tooltip>
                   </div>
                 </Table.Cell>
               </Table.Row>
@@ -384,7 +388,6 @@ const EditVoucherModal = ({ voucher }: EditVoucherModalProps) => {
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-3 flex items-center'>
           <HiPencil className='text-xl' />
-          Edit Voucher
         </div>
       </Button>
       <Modal

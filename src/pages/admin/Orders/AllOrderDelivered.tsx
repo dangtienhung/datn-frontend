@@ -8,18 +8,11 @@ import { LuClipboardEdit } from 'react-icons/lu'
 import formatDate from '../../../utils/formatDate'
 import { v4 as uuidv4 } from 'uuid'
 import { useGetAllOrderDeliveryQuery } from '../../../store/slices/order'
-import Pagination from '../../../components/admin/Pagination'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 const AllOrderDelivered = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: orderDelivery, isLoading } = useGetAllOrderDeliveryQuery(currentPage)
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
 
   // const [orderDelivery, setorderDelivery] = useState<dataDocsOrderRes[] | []>([])
   // useEffect(() => {
@@ -96,7 +89,6 @@ const AllOrderDelivered = () => {
                       <Button color='primary'>
                         <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
                           <LuClipboardEdit className='text-xl' />
-                          Detail
                         </Link>
                       </Button>
                     </Table.Cell>
@@ -107,13 +99,18 @@ const AllOrderDelivered = () => {
         </Table.Body>
       </Table>
       {orderDelivery && orderDelivery.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={orderDelivery.hasNextPage}
-          hasPrev={orderDelivery.hasPrevPage}
-          totalDocs={orderDelivery.totalDocs}
+        <PaginateNumber
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPage={orderDelivery.totalPages}
         />
+        // <Pagination
+        //   nextPage={handleNextPage}
+        //   prevPage={handlePrevPage}
+        //   hasNext={orderDelivery.hasNextPage}
+        //   hasPrev={orderDelivery.hasPrevPage}
+        //   totalDocs={orderDelivery.totalDocs}
+        // />
       )}
     </>
   )

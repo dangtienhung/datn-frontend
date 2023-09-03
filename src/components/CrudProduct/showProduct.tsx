@@ -2,7 +2,7 @@ import { memo, useState } from 'react'
 
 import { AiFillEye } from 'react-icons/ai'
 import { BiSolidDiscount } from 'react-icons/bi'
-import { Button } from 'flowbite-react'
+import { Button, Tooltip } from 'flowbite-react'
 import { IProduct } from '../../interfaces/products.type'
 import { Modal } from 'antd'
 import Slider from 'react-slick'
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ShowProduct = ({ product }: Props) => {
-  var settings = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 500,
@@ -47,9 +47,11 @@ const ShowProduct = ({ product }: Props) => {
 
   return (
     <div>
-      <Button className='bg-yellow-500' onClick={() => setIsOpen(true)}>
-        <AiFillEye />
-      </Button>
+      <Tooltip content='Xem trước sản phẩm'>
+        <Button className='bg-yellow-500' onClick={() => setIsOpen(true)}>
+          <AiFillEye />
+        </Button>
+      </Tooltip>
       <Modal
         footer={null}
         title='Sản phẩm chi tiết'

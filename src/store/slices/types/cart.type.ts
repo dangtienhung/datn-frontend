@@ -18,6 +18,7 @@ export interface CartItemState {
   toppings: { name: string; price: number; _id?: string }[]
   total: number
   product: string
+  _id?: string
 }
 
 export interface CartLists {
