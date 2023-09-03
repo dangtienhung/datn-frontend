@@ -13,7 +13,7 @@ const StaffLayout = () => {
   const breadcrumbItem = location.pathname.split('/').filter(Boolean)
   // breadcrumbItem.unshift('Staff')
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       <StaffSidebar />
       <Layout>
         <Header style={{ padding: 2, background: colorBgContainer }}>

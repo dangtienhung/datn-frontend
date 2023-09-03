@@ -28,7 +28,7 @@ interface TableParams {
 type DataIndex = keyof DataType
 
 const List = () => {
-  const { data: productData, isLoading } = useFetchProductsQuery()
+  const { data: productData, isLoading } = useFetchProductsQuery(0)
   const [datas, setData] = useState<any>(productData);
   const [removeProduct] = useDeleteFakeProductMutation()
   const [loading, setLoading] = useState(false)

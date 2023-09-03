@@ -1,10 +1,9 @@
 import { AiFillEye, AiOutlineEdit, AiOutlineSearch } from 'react-icons/ai'
 import { Button, Input, Popconfirm, Space, Table, message } from 'antd'
-import type { ColumnType, ColumnsType } from 'antd/es/table'
+import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../../api/Product'
-import { useRef, useState } from 'react'
-
-import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { useEffect, useRef, useState } from 'react'
+import type { FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
 import { IProduct } from '../../../interfaces/products.type'
 import type { InputRef } from 'antd'
@@ -12,22 +11,70 @@ import { Link } from 'react-router-dom'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import Skeleton from 'react-loading-skeleton'
 import { GiHamburgerMenu } from 'react-icons/gi'
+import qs from 'qs'
 
 interface DataType extends IProduct {
   key: string | React.Key | undefined
 }
-
 type DataIndex = keyof DataType
-
+interface TableParams {
+  pagination?: TablePaginationConfig
+  sortField?: string
+  sortOrder?: string
+  filters?: Record<string, FilterValue>
+}
 const List = () => {
-  const { data: productData, isLoading } = useFetchProductsQuery()
+  const { data: productData, isLoading } = useFetchProductsQuery(0)
+  const [_, setData] = useState<any>(productData)
   const [removeProduct] = useDeleteFakeProductMutation()
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: productData?.limit
+    }
+  })  
+  const getRandomuserParams = (params: TableParams) => ({
+    results: params.pagination?.pageSize,
+    page: params.pagination?.current,
+    ...params
+  })
+  const fetchData = () => {
+    setLoading(true)
+    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
+      .then((res) => res.json())
+      .then(({ results }) => {
+        setData(results)
+        setLoading(false)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+          }
+        })
+      })
+  }
+  useEffect(() => {
+    fetchData()
+  }, [JSON.stringify(tableParams)])
   // console.log(productData);
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue>,
+    sorter: SorterResult<DataType>
+  ) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter
+    })
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([])
+    }
+  }
   const start = () => {
     setLoading(true)
-    // ajax request after empty completing
     setTimeout(() => {
       setSelectedRowKeys([])
       setLoading(false)
@@ -37,7 +84,6 @@ const List = () => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
-
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange
@@ -260,12 +306,14 @@ const List = () => {
               columns={columns}
               dataSource={data}
               rowSelection={rowSelection}
+              onChange={handleTableChange}
               pagination={{
                 pageSize: productData?.limit,
                 showSizeChanger: true,
                 pageSizeOptions: [10, 20, 50, 100],
                 showTotal: (total, range) => `${range[0]} - ${range[1]} of ${total} items`,
-                showQuickJumper: true
+                showQuickJumper: true,
+                ...tableParams.pagination
               }}
               className='sm:table-auto md:table-auto lg:table-fixed xl:table-fixed'
             />
