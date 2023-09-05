@@ -1,9 +1,7 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { items, rootSubmenuKeys } from './components'
 
-import { GrLogout } from 'react-icons/gr'
 import { Header } from '../../components'
-import { MdShoppingCart } from 'react-icons/md'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import Swal from 'sweetalert2'

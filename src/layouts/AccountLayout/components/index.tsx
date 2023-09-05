@@ -1,10 +1,8 @@
 import { AiFillCreditCard, AiFillHome, AiOutlineUser } from 'react-icons/ai'
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
 
 import { GrLogout } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 import { MdShoppingCart } from 'react-icons/md'
-import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number]

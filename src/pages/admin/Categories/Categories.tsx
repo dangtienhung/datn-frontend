@@ -120,7 +120,7 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(getAllCates())
+    dispatch(getAllCates({ _page: 1, _limit: 10 }))
   }, [dispatch])
 
   const handleDeleteCate = (id: string) => {
