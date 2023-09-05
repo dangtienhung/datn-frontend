@@ -8,6 +8,7 @@ import { RootState } from '../../store/store'
 const ProductsPage = () => {
   const dispatch = useAppDispatch()
   const { category, products } = useAppSelector((state: RootState) => state.persistedReducer)
+
   useEffect(() => {
     dispatch(getAllCates())
   }, [dispatch])

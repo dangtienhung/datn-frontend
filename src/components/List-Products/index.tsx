@@ -142,7 +142,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
           </div>
         </div>
       </div>
-      {product && Object.keys(product).length !== 0 && (
+      {product && Object.keys(product).length > 0 && (
         <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
       )}
     </>

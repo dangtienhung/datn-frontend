@@ -5,6 +5,7 @@ import http from '../../api/instance'
 export const getAllCates = createAsyncThunk('cate/getAllCate', async () => {
   try {
     const { data } = await http.get('/categories?_page=1&_limit=10')
+
     return data.docs
   } catch (error: any) {
     return error.message
