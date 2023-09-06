@@ -8,17 +8,11 @@ import { useNavigate } from 'react-router-dom'
 
 const AdminSidebar: FC = function () {
   const [currentPage, setCurrentPage] = useState('')
-  // const { pathname } = useLocation()
   const navigate = useNavigate()
   const handleRedirect = (path: string) => {
     navigate(path)
     setCurrentPage(path)
   }
-  // useEffect(() => {
-  //   // const newPage = window.location.pathname;
-  //   // console.log(pathname);
-  //   setCurrentPage(pathname);
-  // }, [currentPage]);
 
   return (
     <Sidebar aria-label='Sidebar with multi-level dropdown example' className='hidden lg:block'>

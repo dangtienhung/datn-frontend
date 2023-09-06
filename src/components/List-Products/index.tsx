@@ -127,7 +127,6 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               <span className='cart-ss2-four px-1'>0đ</span>
             </div>
             <div className='cart-ss3'>
-              {/* <div className="button-cart">Thanh toán</div> */}
               <Link to='checkout'>
                 <Button size='medium' type='paying' style='mx-[20px]'>
                   Thanh toán
