@@ -9,12 +9,6 @@ import styles from './PopupDetailProduct.module.scss'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { v4 as uuidv4 } from 'uuid'
 
-// interface TypeSize {
-//   name: string
-//   price: number
-//   _id: string
-// }
-
 type PopupDetailProductProps = {
   showPopup: boolean
   togglePopup: () => void
