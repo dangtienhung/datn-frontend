@@ -7,12 +7,6 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
 import { useAppDispatch } from '../../store/hooks'
 
-// interface TypeSize {
-//   name: string
-//   price: number
-//   _id: string
-// }
-
 type PopupDetailProductProps = {
   showPopup: boolean
   togglePopup: () => void

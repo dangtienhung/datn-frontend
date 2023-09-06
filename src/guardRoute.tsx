@@ -9,6 +9,8 @@ interface Props {
 
 export const GuardSign = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  console.log(user);
+  
   const navigate = useNavigate()
   useEffect(() => {
     if (user.role?.name === 'admin' && user.role.status === 'active') {

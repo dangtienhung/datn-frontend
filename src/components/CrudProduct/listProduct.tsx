@@ -10,7 +10,6 @@ import ShowProduct from './showProduct'
 import Loading from '../Loading'
 
 const ProductsTable = function () {
-  // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
   const { data, isLoading } = useFetchProductsQuery()
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   if (isLoading) return <Loading />
@@ -28,9 +27,6 @@ const ProductsTable = function () {
         <Table.HeadCell>Category</Table.HeadCell>
         <Table.HeadCell colSpan={3}>Actions</Table.HeadCell>
       </Table.Head>
-      {/* {isLoading ? (
-        <h2>Loading</h2>
-      ) : ( */}
       <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
         {data?.docs.map((product, index: number) => (
           <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700 text-center'>
@@ -54,25 +50,16 @@ const ProductsTable = function () {
             </Table.Cell>
             <Table.Cell className='whitespace-nowrap p-4 space-x-2'>
               <div className='gap-x-3 flex items-center'>
-                {/* <Button color="primary" onClick={() => setOpenModalEdit(!isOpenModalEdit)}>
-                    <FaPlus className="mr-3 text-sm" />
-                    Edit product
-                  </Button> */}
                 <ShowProduct product={product} />
                 <EditProductModal DataEdit={product} />
                 <Button color='failure' onClick={() => deleteFakeProduct(product._id!)}>
                   <HiTrash className='text-center' />
                 </Button>
-                {/* {isOpenModalEdit ? ( */}
-                {/* ) : (
-                    ''
-                  )} */}
               </div>
             </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
-      {/* )} */}
     </Table>
   )
 }
