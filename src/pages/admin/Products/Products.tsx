@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Label, TextInput } from 'flowbite-react'
+import { Breadcrumb, Button, Label, TextInput, Tooltip } from 'flowbite-react'
 import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'react-icons/hi'
 
 import AddProductModal from '../../../components/CrudProduct/addProduct'
@@ -60,10 +60,13 @@ const ProductsList = () => {
               </a>
             </div>
             <div className='flex w-full items-center sm:justify-end'>
-              <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
-                <FaPlus className='mr-3 text-sm' />
-                Thêm sản phẩm
-              </Button>
+              <Tooltip content='Thêm sản phẩm'>
+                <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
+                  <FaPlus className='mr-3 text-sm' />
+                  Thêm sản phẩm
+                </Button>
+              </Tooltip>
+
               {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
             </div>
           </div>

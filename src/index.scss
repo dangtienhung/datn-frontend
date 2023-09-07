@@ -125,7 +125,9 @@
     width: 315px;
     height: 30px;
   }
-  body::-webkit-scrollbar {
+
+  body::-webkit-scrollbar,
+  .hidden-scroll-bar::-webkit-scrollbar {
     display: none !important;
   }
 

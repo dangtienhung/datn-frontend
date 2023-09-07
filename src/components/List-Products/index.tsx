@@ -63,7 +63,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
               <div className='text-lg capitalize select-none'>{categoryName || 'Tất cả sản phẩm'}</div>
               <div className='right'>
-                <FaAngleDown onClick={() => fetchProductById('64c13cb436e35e0a11545091')} />
+                <FaAngleDown />
               </div>
             </div>
             {ListProduct.docs && ListProduct.docs.length <= 0 ? (
@@ -127,7 +127,6 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               <span className='cart-ss2-four px-1'>0đ</span>
             </div>
             <div className='cart-ss3'>
-              {/* <div className="button-cart">Thanh toán</div> */}
               <Link to='checkout'>
                 <Button size='medium' type='paying' style='mx-[20px]'>
                   Thanh toán
@@ -142,7 +141,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
           </div>
         </div>
       </div>
-      {product && Object.keys(product).length !== 0 && (
+      {product && Object.keys(product).length > 0 && (
         <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
       )}
     </>
