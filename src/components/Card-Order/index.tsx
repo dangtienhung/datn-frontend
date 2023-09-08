@@ -1,11 +1,11 @@
 import { AiOutlineLine, AiOutlinePlus } from 'react-icons/ai'
-import { decreamentQuantity, increamentQuantity } from '../../store/slices/cart.slice'
-
 import { CartItemState, CartLists } from '../../store/slices/types/cart.type'
-import { formatCurrency } from '../../utils/formatCurrency'
+import { decreamentQuantity, increamentQuantity } from '../../store/slices/cart.slice'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { v4 as uuidv4 } from 'uuid'
 import { useDeleteCartDBMutation, useUpdateCartDBMutation } from '../../api/cartDB'
+
+import { formatCurrency } from '../../utils/formatCurrency'
+import { v4 as uuidv4 } from 'uuid'
 
 type CardOrderProps = {
   product: CartLists
@@ -15,7 +15,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
   const dispatch = useAppDispatch()
   const [updateCartDbFn, updateCartDbRes] = useUpdateCartDBMutation()
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
-  const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
+  const [_, deleteCartDBRes] = useDeleteCartDBMutation()
 
   const handleUpdateQuantity = async (action: string, item: CartItemState, index: number) => {
     console.log('vafo k')
