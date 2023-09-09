@@ -50,6 +50,15 @@ const AdminSidebar: FC = function () {
                 Categories
               </Sidebar.Item>
               <Sidebar.Item
+                onClick={() => handleRedirect('/admin/size')}
+                icon={BiSolidCategoryAlt}
+                className={`cursor-pointer ${
+                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                }`}
+              >
+                Sizes
+              </Sidebar.Item>
+              <Sidebar.Item
                 // href="/admin/users"
                 onClick={() => handleRedirect('/admin/users')}
                 icon={HiUsers}

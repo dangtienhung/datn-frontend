@@ -30,6 +30,7 @@ import UserList from './pages/admin/Users/Users'
 import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
 import TrashCan from './pages/admin/Trash-can/TrashCan'
+import SizeList from './pages/admin/Size/Size'
 
 const routes = createBrowserRouter([
   {
@@ -133,6 +134,10 @@ const routes = createBrowserRouter([
           {
             path: 'role',
             element: <Role />
+          },
+          {
+            path: 'size',
+            element: <SizeList />
           },
           {
             path: 'voucher',

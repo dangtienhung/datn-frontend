@@ -16,6 +16,7 @@ import storage from 'redux-persist/lib/storage'
 import CategoryApi from '../api/category'
 import { OrderAPI } from './slices/order'
 import { CartDBAPI } from '../api/cartDB'
+import SizeApi from './slices/size.slice'
 
 const persistConfig = {
   key: 'root',
@@ -50,7 +51,8 @@ export const store = configureStore({
     [CategoryApi.reducerPath]: CategoryApi.reducer,
     [Auth.reducerPath]: Auth.reducer,
     [CartDBAPI.reducerPath]: CartDBAPI.reducer,
-    [OrderAPI.reducerPath]: OrderAPI.reducer
+    [OrderAPI.reducerPath]: OrderAPI.reducer,
+    [SizeApi.reducerPath]: SizeApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -66,6 +68,7 @@ export const store = configureStore({
       RoleApi.middleware,
       CategoryApi.middleware,
       Auth.middleware,
+      SizeApi.middleware,
       OrderAPI.middleware
     )
 })
