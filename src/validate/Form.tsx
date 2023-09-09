@@ -70,7 +70,7 @@ export type AddUserForm = Yup.InferType<typeof AddUserSchema>
 
 export const UpdateUserSchema = Yup.object({
   username: Yup.string().required('Username is required'),
-  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  // account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
   role: Yup.string().required('Role is required'),
   address: Yup.string().required('Address is required')
 })

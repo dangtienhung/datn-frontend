@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiHome, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
