@@ -28,12 +28,16 @@ const flowbiteTheme: CustomFlowbiteTheme = {
     }
   },
   dropdown: {
+    arrowIcon: 'ml-2 h-4 w-5 text-black dark:text-white',
     floating: {
       base: 'z-10 w-fit rounded-xl divide-y divide-gray-100 shadow',
       content: 'rounded-xl text-sm text-gray-700 dark:text-gray-200',
-      target: 'w-fit dark:text-white'
+      target: 'w-fit dark:text-white',
+      item: {
+        icon: 'mr-2 h-5 w-5'
+      }
     },
-    content: ''
+    content: 'p-2'
   },
   modal: {
     content: {

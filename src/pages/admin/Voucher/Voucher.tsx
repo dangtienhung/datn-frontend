@@ -185,12 +185,7 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
       <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
         <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
           <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-            {/* <Table.HeadCell>
-              <Label htmlFor='select-all' className='sr-only'>
-                Select all
-              </Label>
-              <Checkbox id='select-all' name='select-all' />
-            </Table.HeadCell> */}
+            <Table.HeadCell>#</Table.HeadCell>
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell>Discount</Table.HeadCell>
             <Table.HeadCell>Sale</Table.HeadCell>
@@ -202,16 +197,9 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
           <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[490px] overflow-y-scroll'>
             {vouchers &&
               vouchers.data.docs.length > 0 &&
-              vouchers.data.docs.map((item: IVoucher) => (
+              vouchers.data.docs.map((item: IVoucher, index: number) => (
                 <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                  {/* <Table.Cell className='w-4 p-4'>
-                    <div className='flex items-center'>
-                      <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                      <label htmlFor='checkbox-1' className='sr-only'>
-                        checkbox
-                      </label>
-                    </div>
-                  </Table.Cell> */}
+                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
                   <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                     {item.code}
                   </Table.Cell>

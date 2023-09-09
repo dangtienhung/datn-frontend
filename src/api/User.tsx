@@ -18,7 +18,7 @@ export const ApiUser = createApi({
 
     //get all user
     getAllUsers: builder.query<IUserDocs, number>({
-      query: (page = 5) => `/api/users?_page=${page}`,
+      query: (page) => `/api/users?_page=${page}`,
       providesTags: ['user']
     }),
 

@@ -134,7 +134,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
   if (isError) return <div>Loi roi</div>
   return (
     <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
-      <Table className='min-w-full  min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
+      <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
           <Table.HeadCell>#</Table.HeadCell>
           <Table.HeadCell>User Name</Table.HeadCell>
@@ -147,16 +147,18 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
             users?.docs.map((user, index) => (
               <Table.Row key={user._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700`}>
                 <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
-                <Table.Cell className='whitespace-nowrap lg:mr-0 flex items-center p-4 mr-12 space-x-6'>
-                  <img
-                    className='w-10 h-10 rounded-full'
-                    src={user.avatar || `https://api.multiavatar.com/${user.username}.png`}
-                    alt={user.username}
-                  />
-                  <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                    <div className='dark:text-white text-base font-semibold text-gray-900'>{user.username}</div>
+                <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
+                  <div className='flex items-center gap-x-4'>
+                    <img
+                      className='w-10 h-10 rounded-full'
+                      src={user.avatar || `https://api.multiavatar.com/${user.username}.png`}
+                      alt={user.username}
+                    />
                     <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                      {user?.account || user?.email}
+                      <div className='dark:text-white text-base font-semibold text-gray-900'>{user.username}</div>
+                      <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
+                        {user?.account || user?.email}
+                      </div>
                     </div>
                   </div>
                 </Table.Cell>
@@ -408,13 +410,13 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.address && errors.address.message}</span>
               </div>
-              <div>
+              {/* <div>
                 <Label htmlFor='account'>Account</Label>
                 <div className='mt-1'>
                   <TextInput readOnly id='account' {...register('account')} placeholder='Your email or phone number' />
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.account && errors.account.message}</span>
-              </div>
+              </div> */}
               {/* <div>
                 <Label htmlFor="password">Password</Label>
                 <div className="mt-1">
