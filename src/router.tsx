@@ -2,12 +2,20 @@ import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
 import { MyInfor, MyOrder, MyVoucher } from './components'
 
 import AccountLayout from './layouts/AccountLayout/accountLayout'
+import Achievement from './components/Achievement/Achievement'
 import AdminLayout from './layouts/admin'
+import BrandStory from './components/Blogs/BrandStory/BrandStory'
 import Categories from './pages/admin/Categories/Categories'
 import Checkout from './pages/Checkout/Checkout'
 import ClientLayout from './layouts/client'
 import Dashboard from './pages/admin/Dashboard/Dashboard'
+import Events from './components/Blogs/Events/Events'
 import HomePage from './pages/Home/HomePage'
+import Introduce from './components/Introduce/Introduce'
+import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
+import List from './components/Staff/CrudProducts/List'
+import MyAddress from './components/My-address'
+import News from './components/Blogs/News/News'
 import NotFound from './pages/Not-Found/NotFound'
 import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
 import Orders from './pages/admin/Orders/Orders'
@@ -16,18 +24,12 @@ import ProductsPage from './pages/Products/Products'
 import Role from './pages/admin/Role/Role'
 import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
+import StaffLayout from './layouts/Staff/StaffLayout'
 import Topping from './pages/admin/Toppings/Topping'
 import UserList from './pages/admin/Users/Users'
 import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
-import StaffLayout from './layouts/Staff/StaffLayout'
-import List from './components/Staff/CrudProducts/List'
-import Introduce from './components/Introduce/Introduce'
-import Achievement from './components/Achievement/Achievement'
-import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
-import News from './components/Blogs/News/News'
-import BrandStory from './components/Blogs/BrandStory/BrandStory'
-import Events from './components/Blogs/Events/Events'
+import TrashCan from './pages/admin/Trash-can/TrashCan'
 
 const routes = createBrowserRouter([
   {
@@ -87,18 +89,10 @@ const routes = createBrowserRouter([
     path: '/account-layout',
     element: <GuardAccount JSX={AccountLayout} />,
     children: [
-      {
-        index: true,
-        element: <MyInfor />
-      },
-      {
-        path: 'my-order',
-        element: <MyOrder />
-      },
-      {
-        path: 'my-voucher',
-        element: <MyVoucher />
-      }
+      { index: true, element: <MyInfor /> },
+      { path: 'my-order', element: <MyOrder /> },
+      { path: 'my-voucher', element: <MyVoucher /> },
+      { path: 'my-address', element: <MyAddress /> }
     ]
   },
   {
@@ -143,6 +137,10 @@ const routes = createBrowserRouter([
           {
             path: 'voucher',
             element: <Voucher />
+          },
+          {
+            path: 'trash-can',
+            element: <TrashCan />
           }
         ]
       }

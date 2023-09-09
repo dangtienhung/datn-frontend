@@ -4,9 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
 import CheckoutItem from '../../components/Checkout-Item'
+import { IVoucher } from '../../interfaces/voucher.type'
+import ModalListVouchers from '../../components/ModalListVouchers'
 import { UserCheckoutSchema } from '../../validate/Form'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { resetAllCart } from '../../store/slices/cart.slice'
@@ -16,9 +19,7 @@ import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
-import ModalListVouchers from '../../components/ModalListVouchers'
-import { IVoucher } from '../../interfaces/voucher.type'
-import { AiOutlinePlusCircle } from 'react-icons/ai'
+
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -38,6 +39,7 @@ const Checkout = () => {
     setValue,
     reset
   } = useForm({
+    mode: 'onChange',
     resolver: yupResolver(UserCheckoutSchema)
   })
 

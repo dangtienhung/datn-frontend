@@ -5,6 +5,7 @@ import { HiChartPie, HiClipboardCheck, HiCollection, HiSearch, HiShoppingBag, Hi
 import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import { FaTrashArrowUp } from 'react-icons/fa6'
 
 const AdminSidebar: FC = function () {
   const [currentPage, setCurrentPage] = useState('')
@@ -107,6 +108,13 @@ const AdminSidebar: FC = function () {
               </Sidebar.Item>
             </Sidebar.ItemGroup> */}
             <Sidebar.ItemGroup>
+              <Sidebar.Item
+                onClick={() => handleRedirect('/admin/trash-can')}
+                icon={FaTrashArrowUp}
+                className={`cursor-pointer ${'/admin/trash-can' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+              >
+                Trash Can
+              </Sidebar.Item>
               <Sidebar.Item onClick={() => handleRedirect('/')} icon={MdOutlineWeb} className='cursor-pointer'>
                 View Website
               </Sidebar.Item>
