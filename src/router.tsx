@@ -29,6 +29,7 @@ import Topping from './pages/admin/Toppings/Topping'
 import UserList from './pages/admin/Users/Users'
 import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
+import TrashCan from './pages/admin/Trash-can/TrashCan'
 
 const routes = createBrowserRouter([
   {
@@ -136,6 +137,10 @@ const routes = createBrowserRouter([
           {
             path: 'voucher',
             element: <Voucher />
+          },
+          {
+            path: 'trash-can',
+            element: <TrashCan />
           }
         ]
       }
