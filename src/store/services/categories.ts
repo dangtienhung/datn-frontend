@@ -6,8 +6,10 @@ export const getAllCates = createAsyncThunk(
   'cate/getAllCate',
   async ({ _page = 1, _limit = 10 }: { _page?: number; _limit?: number }) => {
     try {
-      const { data } = await http.get(`/categories?_page=${_page}&_limit=${_limit}`)
-      return data.docs
+      const response = await http.get(`/categories?_page=${_page}&_limit=${_limit}`)
+      if (response && response.status === 201) {
+        return response.data.docs
+      }
     } catch (error: any) {
       return error.message
     }
