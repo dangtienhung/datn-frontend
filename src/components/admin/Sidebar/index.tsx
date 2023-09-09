@@ -5,20 +5,15 @@ import { HiChartPie, HiClipboardCheck, HiCollection, HiSearch, HiShoppingBag, Hi
 import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import { FaTrashArrowUp } from 'react-icons/fa6'
 
 const AdminSidebar: FC = function () {
   const [currentPage, setCurrentPage] = useState('')
-  // const { pathname } = useLocation()
   const navigate = useNavigate()
   const handleRedirect = (path: string) => {
     navigate(path)
     setCurrentPage(path)
   }
-  // useEffect(() => {
-  //   // const newPage = window.location.pathname;
-  //   // console.log(pathname);
-  //   setCurrentPage(pathname);
-  // }, [currentPage]);
 
   return (
     <Sidebar aria-label='Sidebar with multi-level dropdown example' className='hidden lg:block'>
@@ -53,6 +48,15 @@ const AdminSidebar: FC = function () {
                 }`}
               >
                 Categories
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => handleRedirect('/admin/size')}
+                icon={BiSolidCategoryAlt}
+                className={`cursor-pointer ${
+                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                }`}
+              >
+                Sizes
               </Sidebar.Item>
               <Sidebar.Item
                 // href="/admin/users"
@@ -113,6 +117,13 @@ const AdminSidebar: FC = function () {
               </Sidebar.Item>
             </Sidebar.ItemGroup> */}
             <Sidebar.ItemGroup>
+              <Sidebar.Item
+                onClick={() => handleRedirect('/admin/trash-can')}
+                icon={FaTrashArrowUp}
+                className={`cursor-pointer ${'/admin/trash-can' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+              >
+                Trash Can
+              </Sidebar.Item>
               <Sidebar.Item onClick={() => handleRedirect('/')} icon={MdOutlineWeb} className='cursor-pointer'>
                 View Website
               </Sidebar.Item>

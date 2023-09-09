@@ -1,5 +1,5 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
@@ -24,6 +24,15 @@ const Topping = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
+            <Breadcrumb className='mb-4'>
+              <Breadcrumb.Item href='/admin'>
+                <div className='gap-x-3 flex items-center'>
+                  <HiHome className='text-xl' />
+                  <span className='dark:text-white'>Home</span>
+                </div>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>Toppings</Breadcrumb.Item>
+            </Breadcrumb>
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All toppings</h1>
           </div>
           <div className='sm:flex'>
@@ -119,12 +128,7 @@ const ToppingTable = () => {
   return (
     <Table className='dark:divide-gray-600 min-w-full divide-y divide-gray-200'>
       <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-        <Table.HeadCell>
-          <Label htmlFor='select-all' className='sr-only'>
-            Select all
-          </Label>
-          <Checkbox id='select-all' name='select-all' />
-        </Table.HeadCell>
+        <Table.HeadCell>#</Table.HeadCell>
         <Table.HeadCell>Name</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
@@ -133,14 +137,7 @@ const ToppingTable = () => {
         {dataTopping?.data &&
           dataTopping.data.map((item, index: number) => (
             <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-              <Table.Cell className='w-4 p-4'>
-                <div className='flex items-center'>
-                  <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                  <label htmlFor='checkbox-1' className='sr-only'>
-                    checkbox
-                  </label>
-                </div>
-              </Table.Cell>
+              <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
               <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                 {item.name}
               </Table.Cell>
