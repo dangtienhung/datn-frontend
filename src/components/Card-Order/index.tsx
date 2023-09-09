@@ -63,6 +63,8 @@ const CardOrder = ({ product }: CardOrderProps) => {
       })
     }
   }
+  console.log(product)
+
   return (
     <div className='card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight '>
       <div className='py-3'>
@@ -74,7 +76,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
                 <p className='text-sm text-[#adaeae] truncate'>{item.size.name}</p>
                 <div className='customize text-[#adaeae] truncate w-[182px]' key={uuidv4()}>
                   <span className='overflow-hidden truncate'>
-                    {item.toppings?.map((topping) => topping.name).join(', ')}
+                    {item.toppings?.map((topping) => topping?.name).join(', ')}
                   </span>
                 </div>
                 <div className='total text-[#8a733f]'>

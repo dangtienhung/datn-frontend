@@ -28,6 +28,7 @@ import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
 import News from './components/Blogs/News/News'
 import BrandStory from './components/Blogs/BrandStory/BrandStory'
 import Events from './components/Blogs/Events/Events'
+import TrashCan from './pages/admin/Trash-can/TrashCan'
 
 const routes = createBrowserRouter([
   {
@@ -143,6 +144,10 @@ const routes = createBrowserRouter([
           {
             path: 'voucher',
             element: <Voucher />
+          },
+          {
+            path: 'trash-can',
+            element: <TrashCan />
           }
         ]
       }
