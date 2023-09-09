@@ -1,12 +1,12 @@
 import { Button, Table } from 'flowbite-react'
 
 import { Link } from 'react-router-dom'
-import { LuClipboardEdit } from 'react-icons/lu'
 import formatDate from '../../../utils/formatDate'
 import { useGetAllOrderCancelQuery } from '../../../store/slices/order'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 // import { type } from 'os'
 
 const AllOrdersCanceled = () => {
@@ -59,7 +59,7 @@ const AllOrdersCanceled = () => {
                   <Table.Cell>
                     <Button color='primary'>
                       <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
-                        <LuClipboardEdit className='text-xl' />
+                        <AiFillEye className='text-xl' />
                       </Link>
                     </Button>
                   </Table.Cell>

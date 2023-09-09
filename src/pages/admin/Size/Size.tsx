@@ -193,7 +193,7 @@ const AddSizeModal = function () {
       <Button color='primary' onClick={() => setOpen(true)}>
         <div className='gap-x-3 flex items-center'>
           <HiPlus className='text-xl' />
-          Add user
+          Add Size
         </div>
       </Button>
       <Modal

@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 import Loading from '../../../components/Loading'
-import { LuClipboardEdit } from 'react-icons/lu'
 import { TbMapPinCancel } from 'react-icons/tb'
 import { Tooltip } from '@mui/material'
 // import { dataDocsOrderRes } from '../../../store/slices/types/order.type'
@@ -11,6 +10,7 @@ import formatDate from '../../../utils/formatDate'
 import { v4 as uuid } from 'uuid'
 import { useGetAllOrderComfirmedQuery } from '../../../store/slices/order'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 
 interface IProps {
   // dataOrderCofirmed: dataDocsOrderRes[]
@@ -44,7 +44,7 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {orderConfirmed &&
             orderConfirmed.docs.map(
-              (item, _) =>
+              (item) =>
                 item.status == 'confirmed' && (
                   <Table.Row key={uuid()} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
                     {/* <Table.Cell className="w-4 p-4">
@@ -92,7 +92,7 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
                       <div className='gap-x-3 whitespace-nowrap flex items-center'>
                         <Button color='primary'>
                           <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
-                            <LuClipboardEdit className='text-xl' />
+                            <AiFillEye className='text-xl' />
                           </Link>
                         </Button>
                         <Tooltip title='Hủy Đơn Hàng'>

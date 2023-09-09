@@ -1,11 +1,11 @@
 import { Button, Table } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import { useGetAllOrderDoneQuery } from '../../../store/slices/order'
-import { LuClipboardEdit } from 'react-icons/lu'
 import { v4 as uuid } from 'uuid'
 import formatDate from '../../../utils/formatDate'
 import { useState } from 'react'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 const AllOrdersDone = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data } = useGetAllOrderDoneQuery(currentPage)
@@ -56,7 +56,7 @@ const AllOrdersDone = () => {
                   <Table.Cell>
                     <Button color='primary'>
                       <Link to={`/admin/orders/${order._id}`} className='gap-x-3 flex items-center'>
-                        <LuClipboardEdit className='text-xl' />
+                        <AiFillEye className='text-xl' />
                       </Link>
                     </Button>
                   </Table.Cell>

@@ -55,7 +55,7 @@ const ProductsList = () => {
   )
 }
 
-const SearchForProducts: FC = function () {
+const SearchForProducts = function () {
   return (
     <form className='mb-4 sm:mb-0 sm:pr-3' action='#' method='GET'>
       <Label htmlFor='products-search' className='sr-only'>

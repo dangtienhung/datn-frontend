@@ -3,12 +3,12 @@ import { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 import Loading from '../../../components/Loading'
-import { LuClipboardEdit } from 'react-icons/lu'
 // import { dataDocsOrderRes } from '../../../store/slices/types/order.type'
 import formatDate from '../../../utils/formatDate'
 import { v4 as uuidv4 } from 'uuid'
 import { useGetAllOrderDeliveryQuery } from '../../../store/slices/order'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 
 const AllOrderDelivered = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -91,7 +91,7 @@ const AllOrderDelivered = () => {
                       <Table.Cell>
                         <Button color='primary'>
                           <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
-                            <LuClipboardEdit className='text-xl' />
+                            <AiFillEye className='text-xl' />
                           </Link>
                         </Button>
                       </Table.Cell>

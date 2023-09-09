@@ -3,13 +3,13 @@ import { useLazyGetAllOrderQuery } from '../../../store/slices/order'
 
 import { Link } from 'react-router-dom'
 import Loading from '../../../components/Loading'
-import { LuClipboardEdit } from 'react-icons/lu'
 import { StatusOrder } from '../../../store/slices/types/order.type'
 import { TbMapPinCancel } from 'react-icons/tb'
 import Tooltip from '@mui/material/Tooltip'
 import formatDate from '../../../utils/formatDate'
 import { useEffect, useState } from 'react'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 
 interface AllOrdersTableProps {
   hanleUpdateOrderCancel: (id: string) => void
@@ -98,7 +98,7 @@ const AllOrdersTable = ({ hanleUpdateOrderCancel }: AllOrdersTableProps) => {
                       <Tooltip title='Chi tiết đơn hàng'>
                         <Button color='primary'>
                           <Link to={`/admin/orders/${order._id}`} className='flex items-center gap-x-3'>
-                            <LuClipboardEdit className='text-xl' />
+                            <AiFillEye className='text-xl' />
                           </Link>
                         </Button>
                       </Tooltip>
