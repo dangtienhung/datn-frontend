@@ -1,5 +1,5 @@
-import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiDocumentDownload, HiHome, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { useEffect, useState } from 'react'
@@ -13,29 +13,28 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { useLocation } from 'react-router-dom'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Categories = () => {
   const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
-
   const [data, setData] = useState<any>([])
+  const location = useLocation()
+  const breadCrumbItem = location.pathname.split('/').filter(Boolean).slice(1)
+  console.log(breadCrumbItem)
+
   useEffect(() => {
-    const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
-    setData([...rows])
+    if (categories && Array.isArray(categories)) {
+      const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
+      setData([...rows])
+    }
   }, [categories])
   return (
     <>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='/admin'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Categories</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All Categories</h1>
           </div>
           <div className='sm:flex'>
@@ -117,7 +116,12 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-            {dataCate &&
+            {dataCate?.length === 0 ? (
+              <>
+                <p>Không có dữ liệu</p>
+              </>
+            ) : (
+              dataCate &&
               dataCate.map((item, index: number) => (
                 <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
                   <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
@@ -150,11 +154,16 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
                     </div>
                   </Table.Cell>
                 </Table.Row>
-              ))}
+              ))
+            )}
           </Table.Body>
         </Table>
       </div>
-      <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={2} />
+      {Categories.length === 0 ? (
+        ''
+      ) : (
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={2} />
+      )}
     </>
   )
 }

@@ -1,6 +1,6 @@
-import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import {  Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import { HiDocumentDownload, HiHome, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
+import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 
 import Loading from '../../../components/Loading'
 import Swal from 'sweetalert2'
@@ -17,6 +17,7 @@ import {
 } from '../../../store/slices/size.slice'
 import { ISize, ISizeDocs } from '../../../interfaces/size.type'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const SizeList = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -28,15 +29,7 @@ const SizeList = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='/admin'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Sizes</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All Sizes</h1>
           </div>
           <div className='sm:flex'>
