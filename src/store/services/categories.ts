@@ -2,15 +2,17 @@ import { ICategory } from '../../interfaces/category.type'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import http from '../../api/instance'
 
-export const getAllCates = createAsyncThunk('cate/getAllCate', async (page: number | string) => {
-  try {
-    const { data } = await http.get(`/categories?_page=${page}&_limit=10`)
-
-    return data.docs
-  } catch (error: any) {
-    return error.message
+export const getAllCates = createAsyncThunk(
+  'cate/getAllCate',
+  async ({ _page = 1, _limit = 10 }: { _page?: number; _limit?: number }) => {
+    try {
+      const { data } = await http.get(`/categories?_page=${_page}&_limit=${_limit}`)
+      return data.docs
+    } catch (error: any) {
+      return error.message
+    }
   }
-})
+)
 
 export const deleteCate = createAsyncThunk('cate/deleteCate', async (id: string) => {
   try {
