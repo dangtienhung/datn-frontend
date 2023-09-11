@@ -21,7 +21,7 @@ import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
 import Orders from './pages/admin/Orders/Orders'
 import ProductsList from './pages/admin/Products/Products'
 import ProductsPage from './pages/Products/Products'
-import Role from './pages/admin/Role/Role'
+// import Role from './pages/admin/Manager-Staff-Shipper/Role'
 import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
 import StaffLayout from './layouts/Staff/StaffLayout'
@@ -31,6 +31,10 @@ import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
 import TrashCan from './pages/admin/Trash-can/TrashCan'
 import SizeList from './pages/admin/Size/Size'
+import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
+import Staff from './pages/admin/Manager-Staff-Shipper/Staff'
+import Shipper from './pages/admin/Manager-Staff-Shipper/Shipper'
+import Banner from './pages/admin/Banner/Banner'
 
 const routes = createBrowserRouter([
   {
@@ -132,8 +136,18 @@ const routes = createBrowserRouter([
             element: <Topping />
           },
           {
-            path: 'role',
-            element: <Role />
+            path: 'manager',
+            element: <Manager />,
+            children: [
+              {
+                path: 'staff',
+                element: <Staff />
+              },
+              {
+                path: 'Shipper',
+                element: <Shipper />
+              }
+            ]
           },
           {
             path: 'size',
@@ -142,6 +156,10 @@ const routes = createBrowserRouter([
           {
             path: 'voucher',
             element: <Voucher />
+          },
+          {
+            path: 'banners',
+            element: <Banner />
           },
           {
             path: 'trash-can',

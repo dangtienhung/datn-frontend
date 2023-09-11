@@ -17,6 +17,7 @@ import CategoryApi from '../api/category'
 import { OrderAPI } from './slices/order'
 import { CartDBAPI } from '../api/cartDB'
 import SizeApi from './slices/size.slice'
+import BannerApi from '../api/banner'
 
 const persistConfig = {
   key: 'root',
@@ -52,7 +53,8 @@ export const store = configureStore({
     [Auth.reducerPath]: Auth.reducer,
     [CartDBAPI.reducerPath]: CartDBAPI.reducer,
     [OrderAPI.reducerPath]: OrderAPI.reducer,
-    [SizeApi.reducerPath]: SizeApi.reducer
+    [SizeApi.reducerPath]: SizeApi.reducer,
+    [BannerApi.reducerPath]: BannerApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -69,7 +71,8 @@ export const store = configureStore({
       CategoryApi.middleware,
       Auth.middleware,
       SizeApi.middleware,
-      OrderAPI.middleware
+      OrderAPI.middleware,
+      BannerApi.middleware
     )
 })
 
