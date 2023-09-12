@@ -38,36 +38,6 @@ const Topping = () => {
                   <TextInput id='users-search' name='users-search' placeholder='Search for users' />
                 </div>
               </form>
-              <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Configure</span>
-                  <HiCog className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Delete</span>
-                  <HiTrash className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Purge</span>
-                  <HiExclamationCircle className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Settings</span>
-                  <HiDotsVertical className='text-2xl' />
-                </a>
-              </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
               <Tooltip content='Thêm topping'>
@@ -119,43 +89,47 @@ const ToppingTable = () => {
   if (isLoading) return <Loading />
   if (isError) return <div>Loi roi</div>
   return (
-    <Table className='dark:divide-gray-600 min-w-full divide-y divide-gray-200'>
-      <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-        <Table.HeadCell>#</Table.HeadCell>
-        <Table.HeadCell>Name</Table.HeadCell>
-        <Table.HeadCell>Price</Table.HeadCell>
-        <Table.HeadCell>Actions</Table.HeadCell>
-      </Table.Head>
-      <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-        {dataTopping?.data &&
-          dataTopping.data.map((item, index: number) => (
-            <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-              <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {item.name}
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {formatCurrency(item.price)}
-              </Table.Cell>
+    <>
+      <div className='max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
+        <Table className='dark:divide-gray-600 min-h-[500px] min-w-full divide-y divide-gray-200'>
+          <Table.Head className='dark:bg-gray-700 bg-gray-100'>
+            <Table.HeadCell>#</Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Price</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
+            {dataTopping?.data &&
+              dataTopping.data.map((item, index: number) => (
+                <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
+                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                    {item.name}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                    {formatCurrency(item.price)}
+                  </Table.Cell>
 
-              <Table.Cell>
-                <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <Tooltip content='Chỉnh sửa topping'>
-                    <EditToppingModal dataTopping={item} />
-                  </Tooltip>
-                  <Tooltip content='Xóa topping'>
-                    <Button color='failure'>
-                      <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
-                        <HiTrash className='text-lg' />
-                      </div>
-                    </Button>
-                  </Tooltip>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-      </Table.Body>
-    </Table>
+                  <Table.Cell>
+                    <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                      <Tooltip content='Chỉnh sửa topping'>
+                        <EditToppingModal dataTopping={item} />
+                      </Tooltip>
+                      <Tooltip content='Xóa topping'>
+                        <Button color='failure'>
+                          <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
+                            <HiTrash className='text-lg' />
+                          </div>
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      </div>
+    </>
   )
 }
 

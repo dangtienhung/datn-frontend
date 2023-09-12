@@ -73,7 +73,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
           product?.items?.map((item, index) => (
             <div className='flex items-center gap-1' key={uuidv4()}>
               <div>
-                <p className='text-sm text-[#adaeae] truncate'>{item.size.name}</p>
+                <p className='text-sm text-[#adaeae] truncate'>{item.size?.name}</p>
                 <div className='customize text-[#adaeae] truncate w-[182px]' key={uuidv4()}>
                   <span className='overflow-hidden truncate'>
                     {item.toppings?.map((topping) => topping?.name).join(', ')}
