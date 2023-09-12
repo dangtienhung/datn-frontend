@@ -121,14 +121,14 @@ const Voucher = () => {
             </div>
           </div>
         </div>
+        {vouchers && (
+          <PaginateNumber
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPage={vouchers.data.totalPages}
+          />
+        )}
       </div>
-      {vouchers && (
-        <PaginateNumber
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPage={vouchers.data.totalPages}
-        />
-      )}
     </>
   )
 }
@@ -181,80 +181,78 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   }
   if (isLoading) return <Loading />
   return (
-    <>
-      <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
-        <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
-          <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-            <Table.HeadCell>#</Table.HeadCell>
-            <Table.HeadCell>Code</Table.HeadCell>
-            <Table.HeadCell>Discount</Table.HeadCell>
-            <Table.HeadCell>Sale</Table.HeadCell>
-            <Table.HeadCell>Start Date</Table.HeadCell>
-            <Table.HeadCell>End Date</Table.HeadCell>
-            <Table.HeadCell>Expried</Table.HeadCell>
-            <Table.HeadCell>Actions</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[490px] overflow-y-scroll'>
-            {vouchers &&
-              vouchers.data.docs.length > 0 &&
-              vouchers.data.docs.map((item: IVoucher, index: number) => (
-                <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
-                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                    {item.code}
-                  </Table.Cell>
-                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                    {item.discount}%
-                  </Table.Cell>
-                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                    {formatCurrency(item.sale)}
-                  </Table.Cell>
-                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                    {formatDate(item.startDate!)}
-                  </Table.Cell>
-                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                    {formatDate(item.endDate!)}
-                  </Table.Cell>
-                  <Table.Cell
-                    className={`
+    <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
+      <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
+        <Table.Head className='dark:bg-gray-700 bg-gray-100'>
+          <Table.HeadCell>#</Table.HeadCell>
+          <Table.HeadCell>Code</Table.HeadCell>
+          <Table.HeadCell>Discount</Table.HeadCell>
+          <Table.HeadCell>Sale</Table.HeadCell>
+          <Table.HeadCell>Start Date</Table.HeadCell>
+          <Table.HeadCell>End Date</Table.HeadCell>
+          <Table.HeadCell>Expried</Table.HeadCell>
+          <Table.HeadCell>Actions</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[490px] overflow-y-scroll'>
+          {vouchers &&
+            vouchers.data.docs.length > 0 &&
+            vouchers.data.docs.map((item: IVoucher, index: number) => (
+              <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
+                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {item.code}
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {item.discount}%
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {formatCurrency(item.sale)}
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {formatDate(item.startDate!)}
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {formatDate(item.endDate!)}
+                </Table.Cell>
+                <Table.Cell
+                  className={`
                       whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900`}
+                >
+                  <span
+                    className={`${
+                      isExpiredVoucher(item.endDate!) === true ? 'bg-red-400 ' : 'bg-green-400 '
+                    } rounded inline-block px-2 text-white`}
                   >
-                    <span
-                      className={`${
-                        isExpiredVoucher(item.endDate!) === true ? 'bg-red-400 ' : 'bg-green-400 '
-                      } rounded inline-block px-2 text-white`}
-                    >
-                      {isExpiredVoucher(item.endDate!) ? 'Expired' : 'Unexpired'}
-                    </span>
-                  </Table.Cell>
+                    {isExpiredVoucher(item.endDate!) ? 'Expired' : 'Unexpired'}
+                  </span>
+                </Table.Cell>
 
-                  <Table.Cell>
-                    <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                      <Tooltip content='Chỉnh sửa voucher'>{item && <EditVoucherModal voucher={item} />}</Tooltip>
+                <Table.Cell>
+                  <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                    <Tooltip content='Chỉnh sửa voucher'>{item && <EditVoucherModal voucher={item} />}</Tooltip>
 
-                      <Tooltip content='Xóa voucher'>
-                        <Button
-                          disabled={!isExpiredVoucher(item.endDate!)}
-                          color='failure'
-                          onClick={() => handleDelete(item._id!)}
-                        >
-                          <div className='gap-x-2 flex items-center'>
-                            {isDelteLoading ? (
-                              <AiOutlineLoading3Quarters className='rotate text-lg' />
-                            ) : (
-                              <HiTrash className='text-lg' />
-                            )}
-                          </div>
-                        </Button>
-                      </Tooltip>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-          </Table.Body>
-        </Table>
-      </div>
-    </>
+                    <Tooltip content='Xóa voucher'>
+                      <Button
+                        disabled={!isExpiredVoucher(item.endDate!)}
+                        color='failure'
+                        onClick={() => handleDelete(item._id!)}
+                      >
+                        <div className='gap-x-2 flex items-center'>
+                          {isDelteLoading ? (
+                            <AiOutlineLoading3Quarters className='rotate text-lg' />
+                          ) : (
+                            <HiTrash className='text-lg' />
+                          )}
+                        </div>
+                      </Button>
+                    </Tooltip>
+                  </div>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
+      </Table>
+    </div>
   )
 }
 
