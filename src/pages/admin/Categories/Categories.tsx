@@ -13,16 +13,11 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
-import { useLocation } from 'react-router-dom'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Categories = () => {
   const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
   const [data, setData] = useState<any>([])
-  const location = useLocation()
-  const breadCrumbItem = location.pathname.split('/').filter(Boolean).slice(1)
-  console.log(breadCrumbItem)
-
   useEffect(() => {
     if (categories && Array.isArray(categories)) {
       const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
@@ -116,7 +111,7 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-            {dataCate?.length === 0 ? (
+            {dataCate?.length == 0 ? (
               <>
                 <p>Không có dữ liệu</p>
               </>
