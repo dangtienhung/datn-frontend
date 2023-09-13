@@ -1,4 +1,4 @@
-import {  Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 

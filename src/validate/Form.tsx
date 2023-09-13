@@ -89,25 +89,26 @@ export const UserCheckoutSchema = Yup.object({
   askRefer: Yup.boolean(),
 
   nameOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   phoneOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   shippingLocationOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   shippingNoteOther: Yup.string()
 })
+export type IUserCheckout = Yup.InferType<typeof UserCheckoutSchema>
 
 export const InforFormSchema = Yup.object({
   _id: Yup.string().required('ID Không được để trống'),
