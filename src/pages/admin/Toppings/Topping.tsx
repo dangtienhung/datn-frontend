@@ -1,5 +1,5 @@
-import {  Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
@@ -117,7 +117,10 @@ const ToppingTable = () => {
                       </Tooltip>
                       <Tooltip content='Xóa topping'>
                         <Button color='failure'>
-                          <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
+                          <div
+                            onClick={() => handleDeleteTopping(item._id as string)}
+                            className='gap-x-2 flex items-center'
+                          >
                             <HiTrash className='text-lg' />
                           </div>
                         </Button>
@@ -144,7 +147,7 @@ const AddToppingModal: FC = function () {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
@@ -216,7 +219,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import {  Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { VoucherForm, VoucherSchema } from '../../../validate/Form'
 import {
@@ -109,7 +109,7 @@ const Voucher = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <VouchersTable vouchers={vouchers!} isLoading={isLoading} />
+              <VouchersTable vouchers={vouchers as IVoucherDocs} isLoading={isLoading} />
             </div>
           </div>
         </div>
@@ -201,10 +201,10 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
                   {formatCurrency(item.sale)}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.startDate!)}
+                  {formatDate(item.startDate ?? '')}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.endDate!)}
+                  {formatDate(item?.endDate ?? '')}
                 </Table.Cell>
                 <Table.Cell
                   className={`

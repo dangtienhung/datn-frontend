@@ -1,7 +1,6 @@
-import {  Button, Label, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
 import AddProductModal from '../../../components/CrudProduct/addProduct'
-import type { FC } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import ProductsTable from '../../../components/CrudProduct/listProduct'
 import { useState } from 'react'

@@ -157,7 +157,7 @@ const RoleTable = () => {
                         <EditRoleModal role={item} />
                       </Tooltip>
                       <Tooltip content='Xóa vai trò'>
-                        <Button color='failure' onClick={() => handleDelete(item._id!)}>
+                        <Button color='failure' onClick={() => handleDelete(item._id as string)}>
                           <div className='gap-x-2 flex items-center'>
                             {isDeleting ? (
                               <AiOutlineLoading3Quarters className='rotate text-lg' />
@@ -195,14 +195,14 @@ const AddRoleModal = function () {
     resolver: yupResolver(RoleSchema)
   })
 
-  const onHandleSubmit = async (data: any) => {
+  const onHandleSubmit = handleSubmit(async (data) => {
     await addRole(data)
     if (!isError) {
       toast.success(`Added ${data.name} role`)
       reset()
       setOpen(false)
     }
-  }
+  })
   return (
     <>
       <Button
@@ -226,7 +226,7 @@ const AddRoleModal = function () {
         <Modal.Header className='border-b border-gray-200 !p-6 dark:border-gray-700'>
           <strong>Add new role</strong>
         </Modal.Header>
-        <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action='' onSubmit={onHandleSubmit}>
           <Modal.Body>
             <div className=''>
               <div>

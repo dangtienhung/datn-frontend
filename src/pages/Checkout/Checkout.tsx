@@ -394,8 +394,8 @@ const Checkout = () => {
             <div className=''>
               <Button type='checkout' size='large' shape='circle'>
                 <span className='block' onClick={handleFormInfoCheckout}>
-                Đặt hàng
-              </span>
+                  Đặt hàng
+                </span>
               </Button>
 
               <Link to='/products'>
