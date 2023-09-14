@@ -138,8 +138,11 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {users?.docs &&
             users?.docs.map((user, index) => (
-              <Table.Row key={user._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700`}>
-                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+              <Table.Row
+                key={user._id}
+                className={`${currentUser._id === user._id && 'hidden'}  hover:bg-gray-100 dark:hover:bg-gray-700`}
+              >
+                <Table.Cell className='w-4 p-4'>{index}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
                   <div className='flex items-center gap-x-4'>
                     <img
