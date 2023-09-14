@@ -1,70 +1,43 @@
-import { AiFillEye, AiOutlineEdit, AiOutlineSearch } from 'react-icons/ai'
-import { Button, Input, Popconfirm, Space, Table, message } from 'antd'
+import { AiFillEye, AiOutlineSearch } from 'react-icons/ai'
+import { Button, Input, Space, Table, Select, Tag, Popconfirm, message } from 'antd'
 import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../../api/Product'
-import { useRef, useState, useEffect } from 'react'
-
-import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { useRef, useState } from 'react'
+import type { FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
-import { IProduct } from '../../../interfaces/products.type'
 import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
+import { GiHamburgerMenu } from 'react-icons/gi'
+// import qs from 'qs'
+import { AtomSpinner } from 'react-epic-spinners'
+import { useFetchProductsQuery } from '../../../../api/Product'
+import { IProduct } from '../../../../interfaces/products.type'
+import { GrPowerReset } from 'react-icons/gr'
+import './TrashCanProduct.module.scss'
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import Skeleton from 'react-loading-skeleton'
-import type { FilterValue, SorterResult } from 'antd/es/table/interface'
-import qs from 'qs'
 
 interface DataType extends IProduct {
   key: string | React.Key | undefined
 }
-
+type DataIndex = keyof DataType
 interface TableParams {
   pagination?: TablePaginationConfig
   sortField?: string
   sortOrder?: string
   filters?: Record<string, FilterValue>
 }
-
-type DataIndex = keyof DataType
-
-const List = () => {
+const TrashCanProduct = () => {
   const { data: productData, isLoading } = useFetchProductsQuery(0)
-  const [datas, setData] = useState<any>(productData)
-  const [removeProduct] = useDeleteFakeProductMutation()
+  const [_, setData] = useState<any>(productData)
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 2
+      pageSize: productData?.limit
     }
   })
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params
-  })
-  const fetchData = () => {
-    setLoading(true)
-    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results)
-        setLoading(false)
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 200
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
-          }
-        })
-      })
-  }
-  useEffect(() => {
-    fetchData()
-  }, [JSON.stringify(tableParams)])
+
   // console.log(productData);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -76,15 +49,12 @@ const List = () => {
       filters,
       ...sorter
     })
-
-    // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([])
     }
   }
   const start = () => {
     setLoading(true)
-    // ajax request after empty completing
     setTimeout(() => {
       setSelectedRowKeys([])
       setLoading(false)
@@ -94,7 +64,6 @@ const List = () => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
-
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange
@@ -216,104 +185,122 @@ const List = () => {
     {
       title: 'INDEX',
       dataIndex: 'stt',
-      width: '3%',
-      render: (_, __, index) => index + 1
+      // width: '5%',
+      render: (_, __, index) => index + 1,
+      className: 'hidden md:table-cell dark:bg-gray-900 dark:text-[#ffffff]'
     },
     {
       title: 'PRODUCT NAME',
       dataIndex: 'name',
+      className: 'dark:bg-gray-900 dark:text-[#ffffff]',
       key: 'name',
-      width: '20%',
+      // width: '27%',
       ...getColumnSearchProps('name')
     },
     {
       title: 'IMAGES',
       dataIndex: 'images',
       key: 'images',
-      width: '20%',
-      render: (image) => <img className='w-[40px]' src={image} alt='product image' />
+      className: 'dark:bg-gray-900 dark:text-[#ffffff]',
+      // width: '20%',
+      render: (image) => <img className='w-[70px]' src={image} alt='product image' />
     },
     {
       title: 'CATEGORY',
       dataIndex: 'category',
       key: 'category',
-      width: '12%',
+      className: 'dark:bg-gray-900 dark:text-[#ffffff]',
+      // width: '25%',
       ...getColumnSearchProps('category')
-    },
-
-    {
-      title: 'price',
-      dataIndex: 'sale',
-      key: 'sale',
-      width: '20%',
-      ...getColumnSearchProps('images'),
-      sorter: (a, b) => {
-        const saleA = a.sale || 0
-        const saleB = b.sale || 0
-        return saleA - saleB
-      },
-      sortDirections: ['descend', 'ascend']
     },
     {
       title: 'ACTION',
       key: 'action',
-      width: '20%',
-      render: (record) => (
-        <Space size='middle'>
-          <Button style={{ backgroundColor: '#d46b08', height: '40px' }}>
-            <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
-              <AiFillEye className='mr-1 text-lg' />
-            </Link>
-          </Button>
-          <Button style={{ backgroundColor: '#0958d9', height: '40px' }}>
-            <Link style={{ color: 'white', margin: 'auto' }} to={`${record.key}/update`}>
-              <AiOutlineEdit className='mr-1 text-lg' />
-            </Link>
-          </Button>
-          <Popconfirm
-            title='Delete the product'
-            description='Are you sure to delete this product?'
-            onConfirm={async () => {
-              // await pause(1000)
-              await removeProduct(record.key)
-              message.success('Xóa sản phẩm thành công')
-            }}
-            okText='Yes'
-            okButtonProps={{
-              style: { backgroundColor: 'blue' }
-            }}
-            cancelText='No'
-          >
-            <Button style={{ backgroundColor: '#f5222d', color: 'white', height: '40px' }}>
-              <RiDeleteBin6Fill className='text-lg' />
+      // width: '20%',
+      className: 'dark:bg-gray-900 dark:text-[#ffffff]',
+      render: (_) => (
+        <>
+          <Space size='middle' className='hidden md:flex'>
+            <Button className='bg-[#d46b08] sm:h-[35px] lg:h-[40px] '>
+              <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
+                <AiFillEye className='md:text-[13px]  lg:text-lg' />
+              </Link>
             </Button>
-          </Popconfirm>
-        </Space>
+            <Button className='bg-[#1d39c4] sm:h-[35px] lg:h-[40px] dark:bg-none'>
+              <Link style={{ color: 'white', margin: 'auto' }} to={`#`}>
+                {/* <GrPowerReset className='md:text-[13px] lg:text-lg' /> */}
+                <GrPowerReset className='md:text-[13px] lg:text-lg' />
+              </Link>
+            </Button>
+            <Popconfirm
+              title='Delete the product'
+              description='Are you sure to delete this product?'
+              onConfirm={async () => {
+                // await pause(1000)
+                // await removeProduct(record.key)
+                message.success('Xóa sản phẩm thành công')
+              }}
+              okText='Yes'
+              okButtonProps={{
+                style: { backgroundColor: 'blue' }
+              }}
+              cancelText='No'
+            >
+              <Button className='bg-[#f5222d] sm:h-[35px] lg:h-[40px]'>
+                <RiDeleteBin6Fill className='text-[#ffffff] md:text-[13px] lg:text-lg ' />
+              </Button>
+            </Popconfirm>
+          </Space>
+          <div className='text-right inline-block md:hidden lg:hidden'>
+            <GiHamburgerMenu />
+          </div>
+        </>
       )
     }
   ]
   // console.log(productData);
+  const options = [{ value: 'gold' }, { value: 'red' }, { value: 'green' }, { value: 'cyan' }]
 
+  const tagRender = (props: CustomTagProps) => {
+    const { label, value, closable, onClose } = props
+    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    return (
+      <Tag
+        color={value}
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    )
+  }
   return (
-    <>
-      <div className='grid grid-cols-[4fr,1fr]'>
-        <h2 className='font-bold text-[30px]'>All products</h2>
-        <Button className='bg-[#1677ff] text-[#ffffff] max-w-[150px] font-bold text-[15px] h-10 hover:bg-blue-300 '>
-          + Add product
-        </Button>
-      </div>
+    <div className='dark:text-[#ffffff] dark:bg-gray-900'>
+      <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mb-3'>Đã xóa gần đây</h1>
+      <span className='text-[15px]'>Tìm theo danh mục:</span>
+      <Select
+        className='w-full max-w-[250px] ml-[20px]'
+        mode='multiple'
+        placeholder='Search category'
+        tagRender={tagRender}
+        options={options}
+      />
       {isLoading ? (
-        <Skeleton />
+        // <Skeleton />
+        <AtomSpinner color='red' className='mx-auto mt-[10%]'></AtomSpinner>
       ) : (
         <div>
           <div>
             <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}</span>
             <Table
               columns={columns}
-              // rowKey={(record) => record.login.uuid}
               dataSource={data}
               rowSelection={rowSelection}
-              // pagination={tableParams.pagination}
               onChange={handleTableChange}
               pagination={{
                 pageSize: productData?.limit,
@@ -323,15 +310,16 @@ const List = () => {
                 showQuickJumper: true,
                 ...tableParams.pagination
               }}
+              className='sm:table-auto md:table-auto lg:table-fixed xl:table-fixed'
             />
-            <Button onClick={start} disabled={!hasSelected} loading={loading}>
+            <Button onClick={start} disabled={!hasSelected} loading={loading} className='dark:text-[#ffffff]'>
               Reload
             </Button>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
-export default List
+export default TrashCanProduct

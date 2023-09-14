@@ -9,7 +9,6 @@ import {
 import Loading from '../../../components/Loading'
 import { HiHome, HiPlus, HiTrash, HiUpload } from 'react-icons/hi'
 import { useState } from 'react'
-import { IImage } from '../../../interfaces/image.type'
 import { IBanner } from '../../../interfaces/banner.type'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import Swal from 'sweetalert2'
@@ -185,7 +184,7 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
 
   return (
     <>
-      <Button color='primary' onClick={() => setOpen(true)}>
+      <Button color='primary' onClick={() => setOpen(true)} className='w-max'>
         <div className='gap-x-3 flex items-center'>
           <HiPlus className='text-xl' />
           Add Banner

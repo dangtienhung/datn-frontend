@@ -41,7 +41,7 @@ const Checkout = () => {
     setValue,
     reset
   } = useForm({
-    mode: 'onChange',
+    // mode: 'onSubmit',
     resolver: yupResolver(UserCheckoutSchema)
   })
 

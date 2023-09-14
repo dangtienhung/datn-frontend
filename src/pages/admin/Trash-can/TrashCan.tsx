@@ -1,17 +1,18 @@
-import { Tabs } from 'flowbite-react'
-import { HiShoppingBag } from 'react-icons/hi'
+import TabPane from 'antd/es/tabs/TabPane'
+import { Tabs } from 'antd'
+import TrashCanProduct from './TrashCanProduct/TrashCanProduct'
 
 const TrashCan = () => {
   return (
     <div className='p-2'>
-      <Tabs.Group>
-        <Tabs.Item title='Products' icon={HiShoppingBag}>
-          Products
-        </Tabs.Item>
-        <Tabs.Item title='users' icon={HiShoppingBag}>
-          Users
-        </Tabs.Item>
-      </Tabs.Group>
+      <Tabs defaultActiveKey='1'>
+        <TabPane tab='Product' key='Products' className='dark:text-[#ffffff]'>
+          <TrashCanProduct />
+        </TabPane>
+        <TabPane tab='User' key='2'>
+          User
+        </TabPane>
+      </Tabs>
     </div>
   )
 }

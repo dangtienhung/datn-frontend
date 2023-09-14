@@ -7,6 +7,7 @@ import { MdOutlineWeb } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { FaTrashArrowUp } from 'react-icons/fa6'
 import { FaImages } from 'react-icons/fa'
+import { AiFillSetting } from 'react-icons/ai'
 
 const AdminSidebar: FC = function () {
   const [currentPage, setCurrentPage] = useState('')
@@ -111,14 +112,16 @@ const AdminSidebar: FC = function () {
               >
                 Voucher
               </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/banners')}
-                icon={FaImages}
-                className={`cursor-pointer ${'/admin/banners' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
-              >
-                Banners
-              </Sidebar.Item>
+              <Sidebar.Collapse icon={AiFillSetting} label='Settings'>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/banners')}
+                  icon={FaImages}
+                  className={`cursor-pointer ${'/admin/banners' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                >
+                  Banners
+                </Sidebar.Item>
+              </Sidebar.Collapse>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up
               </Sidebar.Item> */}

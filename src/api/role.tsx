@@ -22,7 +22,7 @@ const RoleApi = createApi({
     }),
 
     addRole: builder.mutation({
-      query: (role: IRole) => ({
+      query: (role: Pick<IRole, 'name'>) => ({
         url: '/api/role',
         method: 'POST',
         body: role
