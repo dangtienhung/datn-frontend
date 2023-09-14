@@ -1,6 +1,7 @@
 import { ICategory } from '../../interfaces/category.type'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import http from '../../api/instance'
+import { AxiosError } from 'axios'
 
 export const getAllCates = createAsyncThunk(
   'cate/getAllCate',
@@ -10,8 +11,8 @@ export const getAllCates = createAsyncThunk(
       if (response && response.status === 201) {
         return response.data.docs
       }
-    } catch (error: any) {
-      return error.message
+    } catch (error) {
+      return (error as AxiosError).message
     }
   }
 )
@@ -40,9 +41,8 @@ export const updateCate = createAsyncThunk('cate/updateCate', async (cate: Pick<
     const { data } = await http.put(`/category/${cate._id}`, { name: cate.name })
     console.log(data)
     return data
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return error.message
+  } catch (error) {
+    return (error as AxiosError).message
   }
 })
 
@@ -50,7 +50,7 @@ export const getOneCate = createAsyncThunk('cate/getOneCate', async (id: string)
   try {
     const { data } = await http.get(`/category/${id}`)
     return data
-  } catch (error: any) {
-    return error.message
+  } catch (error) {
+    return (error as AxiosError).message
   }
 })

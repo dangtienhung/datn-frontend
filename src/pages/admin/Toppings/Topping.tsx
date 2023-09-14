@@ -1,5 +1,5 @@
-import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Loading from '../../../components/Loading'
 import { formatCurrency } from '../../../utils/formatCurrency'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Topping = () => {
   return (
@@ -24,15 +25,7 @@ const Topping = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='/admin'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Toppings</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All toppings</h1>
           </div>
           <div className='sm:flex'>
@@ -124,7 +117,10 @@ const ToppingTable = () => {
                       </Tooltip>
                       <Tooltip content='Xóa topping'>
                         <Button color='failure'>
-                          <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
+                          <div
+                            onClick={() => handleDeleteTopping(item._id as string)}
+                            className='gap-x-2 flex items-center'
+                          >
                             <HiTrash className='text-lg' />
                           </div>
                         </Button>
@@ -151,7 +147,7 @@ const AddToppingModal: FC = function () {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
@@ -223,7 +219,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   useEffect(() => {

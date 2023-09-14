@@ -76,9 +76,10 @@ export const OrderAPI = createApi({
 
     //update order status = canceled
     canceledOrder: builder.mutation({
-      query: (id: string) => ({
-        url: `/api/order/canceled/${id}`,
-        method: 'PUT'
+      query: (data: { id: string; reasonCancelOrder: string }) => ({
+        url: `/api/order/canceled/${data.id}`,
+        method: 'PUT',
+        body: { reasonCancelOrder: data.reasonCancelOrder }
       }),
       invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],

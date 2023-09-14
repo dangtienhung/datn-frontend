@@ -1,5 +1,5 @@
-import { Breadcrumb, Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiDocumentDownload, HiHome, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { VoucherForm, VoucherSchema } from '../../../validate/Form'
 import {
   useAddVoucherMutation,
@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import isExpiredVoucher from '../../../utils/isExpiredVoucher'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Voucher = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -45,16 +46,7 @@ const Voucher = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='/admin'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Vouchers</Breadcrumb.Item>
-            </Breadcrumb>
-
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All Vouchers</h1>
           </div>
           <div className='sm:flex'>
@@ -117,7 +109,7 @@ const Voucher = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <VouchersTable vouchers={vouchers!} isLoading={isLoading} />
+              <VouchersTable vouchers={vouchers as IVoucherDocs} isLoading={isLoading} />
             </div>
           </div>
         </div>
@@ -209,10 +201,10 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
                   {formatCurrency(item.sale)}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.startDate!)}
+                  {formatDate(item.startDate ?? '')}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.endDate!)}
+                  {formatDate(item?.endDate ?? '')}
                 </Table.Cell>
                 <Table.Cell
                   className={`
