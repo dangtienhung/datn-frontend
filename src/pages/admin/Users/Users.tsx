@@ -174,7 +174,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                       <Button
                         disabled={currentUser._id === user._id}
                         color='failure'
-                        onClick={() => handleDelete(user._id!)}
+                        onClick={() => handleDelete(user._id ?? '')}
                       >
                         <div className='gap-x-2 flex items-center'>
                           {isDeleting ? (
@@ -221,7 +221,7 @@ const AddUserModal: FC = function () {
           setUrlAvatar({} as IImage)
           reset()
         })
-        .catch((err: any) => {
+        .catch((err) => {
           toast.error(`Create user failed. ${err.data.message}`)
         })
     }
@@ -355,7 +355,7 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
   } = useForm<UpdateUserForm>({
     mode: 'onChange',
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues: { ...user, role: user.role?._id, address: user.address || '' } as any
+    defaultValues: { ...user, role: user.role?._id, address: user.address || '' }
   })
 
   const onHandleSubmit = (data: any) => {
