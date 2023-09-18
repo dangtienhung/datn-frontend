@@ -1,7 +1,7 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
 import ListProductItem from '../List-ProductItem'
@@ -14,6 +14,7 @@ import http from '../../api/instance'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
 import { useSelector } from 'react-redux'
+import { AxiosError } from 'axios'
 
 interface ListProductsProps {
   products: IProductDocs
@@ -24,14 +25,14 @@ interface ListProductsProps {
 const ListProducts = ({ products, isLoading }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
-  const [product, setProduct] = useState<any>({})
+  const [product, setProduct] = useState<IProduct | object>({})
   const { page } = useSelector((state: RootState) => state.persistedReducer.products)
   const dispatch = useAppDispatch()
   const { state } = useLocation()
 
-  const handleTogglePopup = () => {
+  const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
-  }
+  }, [isShowPopup])
 
   const paginatePage = (page: number) => {
     dispatch(savePage(page))
@@ -42,8 +43,8 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
       const { data } = await http.get(`/product/${id}`)
       setProduct(data.data)
       setIsShowPopup(true)
-    } catch (error: any) {
-      console.log(error.message)
+    } catch (error) {
+      console.log((error as AxiosError).message)
     }
   }
   const toggleOrder = () => {
@@ -148,7 +149,7 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
         </div>
       </div>
       {product && Object.keys(product).length > 0 && (
-        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
+        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product as IProduct} />
       )}
     </>
   )

@@ -1,7 +1,7 @@
-import { Breadcrumb, Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
-import { HiDocumentDownload, HiHome, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
+import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useAddUserMutation,
   useDeleteImageUserMutation,
@@ -174,7 +174,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                       <Button
                         disabled={currentUser._id === user._id}
                         color='failure'
-                        onClick={() => handleDelete(user._id!)}
+                        onClick={() => handleDelete(user._id ?? '')}
                       >
                         <div className='gap-x-2 flex items-center'>
                           {isDeleting ? (
@@ -211,7 +211,7 @@ const AddUserModal: FC = function () {
     // mode: 'onChange',
     resolver: yupResolver(AddUserSchema)
   })
-  const onHandleSubmit = (data: any) => {
+  const onHandleSubmit = (data: AddUserForm) => {
     if (data) {
       addUser({ ...data, avatar: urlAvatar.url })
         .unwrap()
@@ -221,7 +221,7 @@ const AddUserModal: FC = function () {
           setUrlAvatar({} as IImage)
           reset()
         })
-        .catch((err: any) => {
+        .catch((err) => {
           toast.error(`Create user failed. ${err.data.message}`)
         })
     }
@@ -355,11 +355,11 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
   } = useForm<UpdateUserForm>({
     mode: 'onChange',
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues: { ...user, role: user.role?._id, address: user.address || '' } as any
+    defaultValues: { ...user, role: user.role?._id, address: user.address || '' }
   })
 
-  const onHandleSubmit = (data: any) => {
-    updateUser({ ...data, avatar: urlAvatar.url })
+  const onHandleSubmit = (data: UpdateUserForm) => {
+    updateUser({ ...data, avatar: urlAvatar.url, _id: user._id as string })
       .unwrap()
       .then(() => {
         toast.success('Update user success')

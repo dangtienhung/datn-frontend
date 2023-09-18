@@ -13,6 +13,7 @@ import { IBanner } from '../../../interfaces/banner.type'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 const Banner = () => {
   const { data, isLoading } = useGetAllBannersQuery()
@@ -91,7 +92,7 @@ const Banner = () => {
                                     {/* <EditToppingModal dataTopping={item} /> */}
                                   </Tooltip>
                                   <Tooltip content='Xóa Banner'>
-                                    <Button color='failure' onClick={() => handleDeleteBanner(item._id!)}>
+                                    <Button color='failure' onClick={() => handleDeleteBanner(item._id ?? '')}>
                                       <div className='gap-x-2 flex items-center'>
                                         <HiTrash className='text-lg' />
                                       </div>
@@ -123,7 +124,7 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
   const [banner, setBanner] = useState([] as IBanner[])
   const [uploadBanner, { isLoading: isUploading }] = useUploadBannerMutation()
   const [addBanner] = useAddBannerMutation()
-  const handleUploadChange = (event: any) => {
+  const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files
 
     // console.log(event.target.files[0])
@@ -174,7 +175,7 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
       .then(() => {
         setBanner(banner.filter((item) => item.publicId !== publicId))
       })
-      .catch((err: any) => {
+      .catch((err: AxiosError) => {
         console.log(err)
       })
   }
