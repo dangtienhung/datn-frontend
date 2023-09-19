@@ -57,7 +57,9 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
 
   useEffect(() => {
     setProduct(state)
-    handleTogglePopup()
+    if (state && Object.keys(state)?.length > 0) {
+      handleTogglePopup()
+    }
   }, [])
 
   return (
