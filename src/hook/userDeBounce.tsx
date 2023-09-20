@@ -9,7 +9,7 @@ const useDeBounce = (value: any, delay = 500, saveValue?: string) => {
     return () => {
       clearTimeout(id)
     }
-  }, [value, delay])
+  }, [value, delay, saveValue])
 
   return debounce
 }

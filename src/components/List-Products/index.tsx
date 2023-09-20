@@ -1,6 +1,6 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
@@ -15,28 +15,30 @@ import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
 import { useSelector } from 'react-redux'
 import { AxiosError } from 'axios'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface ListProductsProps {
   products: IProductDocs
   error: string
   isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const ListProducts = ({ products, isLoading }: ListProductsProps) => {
+const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
   const [product, setProduct] = useState<IProduct | object>({})
-  const { page } = useSelector((state: RootState) => state.persistedReducer.products)
+  // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
   const dispatch = useAppDispatch()
   const { state } = useLocation()
-
+  const navigate = useNavigate()
   const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
   }, [isShowPopup])
 
-  const paginatePage = (page: number) => {
-    dispatch(savePage(page))
-  }
+  // const paginatePage = (page: number) => {
+  //   dispatch(savePage(page))
+  // }
 
   const fetchProductById = async (id: string | number) => {
     try {
@@ -53,6 +55,13 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
     console.log('Page: ', pageNumber)
+    navigate({
+      pathname: '/products',
+      search: createSearchParams({
+        ...queryConfig,
+        _page: pageNumber.toString()
+      }).toString()
+    })
   }
 
   useEffect(() => {
@@ -60,7 +69,7 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
     if (state && Object.keys(state)?.length > 0) {
       handleTogglePopup()
     }
-  }, [])
+  }, [handleTogglePopup, state])
 
   return (
     <>

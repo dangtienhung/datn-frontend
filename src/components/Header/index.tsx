@@ -2,32 +2,44 @@ import { Input } from '..'
 import { useEffect, useState } from 'react'
 
 import { AiOutlineSearch } from 'react-icons/ai'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { RootState } from '../../store/store'
 import { getAllProducts } from '../../store/services/product.service'
 import { useAppDispatch } from '../../store/hooks'
 import { useSelector } from 'react-redux'
 import useDeBounce from '../../hook/userDeBounce'
+import useQueryConfig from '../../hook/useQueryConfig'
 
 const Header = () => {
   const [value, setValue] = useState('')
-  const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate)
+  // const iDcategory = useSelector((state: RootState) => state.persistedReducer.category.idCate)
   const dispatch = useAppDispatch()
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
-  const { page, valueSearch } = useSelector((state: RootState) => state.persistedReducer.products)
+  const { valueSearch } = useSelector((state: RootState) => state.persistedReducer.products)
   const debouncedSearchValue = useDeBounce(value, 1000, valueSearch)
-
+  const queryConfig = useQueryConfig()
   useEffect(() => {
     dispatch(
       getAllProducts({
-        page: page,
-        limit: 10,
-        query: debouncedSearchValue || valueSearch,
-        category: iDcategory
+        page: queryConfig._page,
+        limit: queryConfig.limit,
+        query: queryConfig.searchName,
+        category: queryConfig.c == 'all' ? '' : queryConfig.c
       })
     )
-  }, [debouncedSearchValue, dispatch, iDcategory, page, valueSearch])
-
+  }, [dispatch, queryConfig._page, queryConfig.c, queryConfig.limit, queryConfig.searchName])
+  const navigate = useNavigate()
+  useEffect(() => {
+    // if (value != '') {
+    navigate({
+      pathname: '/products',
+      search: createSearchParams({
+        ...queryConfig,
+        searchName: value != '' ? debouncedSearchValue || valueSearch : ''
+      }).toString()
+    })
+    // }
+  }, [debouncedSearchValue, navigate, queryConfig, value, valueSearch])
   return (
     <div className='header flex items-center justify-between gap-2 px-4 py-2'>
       <div className='logo lg:block hidden'>

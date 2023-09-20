@@ -44,7 +44,6 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
             if (setText) {
               setText(e.target.value)
               dispatch(saveValueSearch(e.target.value))
-              dispatch(savePage(1))
             }
           }}
           name={name}
