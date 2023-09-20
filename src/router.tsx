@@ -35,6 +35,7 @@ import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
 import Staff from './pages/admin/Manager-Staff-Shipper/Staff'
 import Shipper from './pages/admin/Manager-Staff-Shipper/Shipper'
 import Banner from './pages/admin/Banner/Banner'
+import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 
 const routes = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const routes = createBrowserRouter([
   {
     path: '/signup',
     element: <GuardSign JSX={Signup} />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
   },
   {
     path: '/products',
