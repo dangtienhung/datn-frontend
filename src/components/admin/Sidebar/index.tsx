@@ -1,23 +1,35 @@
 import { Sidebar } from 'flowbite-react'
-import type { FC } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HiChartPie, HiClipboardCheck, HiCollection, HiShoppingBag, HiUsers, HiTicket } from 'react-icons/hi'
 import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FaTrashArrowUp } from 'react-icons/fa6'
 import { FaImages } from 'react-icons/fa'
+import { AiFillSetting, AiOutlineFontSize } from 'react-icons/ai'
 
-const AdminSidebar: FC = function () {
+type AdminSidebarProps = {
+  isSideBarOpen?: boolean
+}
+const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
   const [currentPage, setCurrentPage] = useState('')
+  const { pathname } = useLocation()
+
   const navigate = useNavigate()
   const handleRedirect = (path: string) => {
     navigate(path)
-    setCurrentPage(path)
   }
+  useEffect(() => {
+    setCurrentPage(pathname)
+  }, [pathname])
 
   return (
-    <Sidebar aria-label='Sidebar with multi-level dropdown example' className='hidden lg:block '>
+    <Sidebar
+      aria-label='Sidebar with multi-level dropdown example'
+      className={`fixed transition-all duration-500 ease-in-out translate-x-[-100%] lg:block lg:translate-x-0 ${
+        isSideBarOpen ? 'translate-x-0' : 'translate-x-[-100%]'
+      } lg:translate-x-0 `}
+    >
       <div className='flex flex-col justify-between h-full py-2 '>
         <div>
           {/* <form className='md:hidden pb-3'>
@@ -29,7 +41,7 @@ const AdminSidebar: FC = function () {
                 // href="/admin"
                 onClick={() => handleRedirect('/admin')}
                 icon={HiChartPie}
-                className={`cursor-pointer ${'/admin' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Dashboard
               </Sidebar.Item>
@@ -37,7 +49,7 @@ const AdminSidebar: FC = function () {
                 // href="/admin/products"
                 onClick={() => handleRedirect('/admin/products')}
                 icon={HiShoppingBag}
-                className={`cursor-pointer ${'/admin/products' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin/products' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Products
               </Sidebar.Item>
@@ -45,15 +57,15 @@ const AdminSidebar: FC = function () {
                 onClick={() => handleRedirect('/admin/categories')}
                 icon={BiSolidCategoryAlt}
                 className={`cursor-pointer ${
-                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
                 }`}
               >
                 Categories
               </Sidebar.Item>
               <Sidebar.Item
                 onClick={() => handleRedirect('/admin/size')}
-                icon={BiSolidCategoryAlt}
-                className={`cursor-pointer ${'/admin/size' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                icon={AiOutlineFontSize}
+                className={`cursor-pointer ${'/admin/size' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Sizes
               </Sidebar.Item>
@@ -61,7 +73,7 @@ const AdminSidebar: FC = function () {
                 // href="/admin/users"
                 onClick={() => handleRedirect('/admin/users')}
                 icon={HiUsers}
-                className={`cursor-pointer ${'/admin/users' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin/users' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Users list
               </Sidebar.Item>
@@ -69,7 +81,7 @@ const AdminSidebar: FC = function () {
                 // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/orders')}
                 icon={HiClipboardCheck}
-                className={`cursor-pointer ${'/admin/orders' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin/orders' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Orders
               </Sidebar.Item>
@@ -77,7 +89,7 @@ const AdminSidebar: FC = function () {
                 // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/toppings')}
                 icon={HiCollection}
-                className={`cursor-pointer ${'/admin/toppings' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin/toppings' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Toppings
               </Sidebar.Item>
@@ -87,7 +99,7 @@ const AdminSidebar: FC = function () {
                   onClick={() => handleRedirect('/admin/manager/staff')}
                   icon={BiSolidUserCheck}
                   className={`cursor-pointer ${
-                    '/admin/manager/staff' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                    '/admin/manager/staff' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
                   }`}
                 >
                   Staff
@@ -97,7 +109,7 @@ const AdminSidebar: FC = function () {
                   onClick={() => handleRedirect('/admin/manager/shipper')}
                   icon={BiSolidUserCheck}
                   className={`cursor-pointer ${
-                    '/admin/manager/shipper' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                    '/admin/manager/shipper' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
                   }`}
                 >
                   Shipper
@@ -107,18 +119,22 @@ const AdminSidebar: FC = function () {
                 // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/voucher')}
                 icon={HiTicket}
-                className={`cursor-pointer ${'/admin/voucher' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${'/admin/voucher' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
               >
                 Voucher
               </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/banners')}
-                icon={FaImages}
-                className={`cursor-pointer ${'/admin/banners' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
-              >
-                Banners
-              </Sidebar.Item>
+              <Sidebar.Collapse icon={AiFillSetting} label='Settings'>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/banners')}
+                  icon={FaImages}
+                  className={`cursor-pointer ${
+                    '/admin/banners' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                  }`}
+                >
+                  Banners
+                </Sidebar.Item>
+              </Sidebar.Collapse>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up
               </Sidebar.Item> */}
@@ -141,7 +157,9 @@ const AdminSidebar: FC = function () {
               <Sidebar.Item
                 onClick={() => handleRedirect('/admin/trash-can')}
                 icon={FaTrashArrowUp}
-                className={`cursor-pointer ${'/admin/trash-can' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+                className={`cursor-pointer ${
+                  '/admin/trash-can' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                }`}
               >
                 Trash Can
               </Sidebar.Item>
