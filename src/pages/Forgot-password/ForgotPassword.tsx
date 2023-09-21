@@ -10,11 +10,7 @@ const ForgotPassword = () => {
             <img src='/logo.png' alt='' className='w-[200px] mb-5' />
           </div>
           <form action='' className='flex flex-col w-full'>
-            <Input
-              type='auth'
-              placeholder='Nhập số điện thoại của bạn '
-              name='account'
-            />
+            <Input type='auth' placeholder='Nhập số điện thoại của bạn ' name='account' />
             <Button type='auth' size='large' shape='circle'>
               Tiếp theo
             </Button>

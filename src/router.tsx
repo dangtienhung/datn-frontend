@@ -124,10 +124,7 @@ const routes = createBrowserRouter([
             path: 'categories',
             element: <Categories />
           },
-          {
-            path: 'products',
-            element: <ProductsList />
-          },
+
           {
             path: 'orders',
             element: <Orders />
@@ -136,28 +133,34 @@ const routes = createBrowserRouter([
             path: 'orders/:id',
             element: <OrderDetail />
           },
+
           {
-            path: 'toppings',
-            element: <Topping />
-          },
-          {
-            path: 'manager',
+            path: 'manage',
             element: <Manager />,
             children: [
               {
-                path: 'staff',
-                element: <Staff />
+                path: 'products',
+                element: <ProductsList />
               },
               {
-                path: 'Shipper',
-                element: <Shipper />
+                path: 'toppings',
+                element: <Topping />
+              },
+              {
+                path: 'size',
+                element: <SizeList />
               }
+              // {
+              //   path: 'staff',
+              //   element: <Staff />
+              // },
+              // {
+              //   path: 'shipper',
+              //   element: <Shipper />
+              // }
             ]
           },
-          {
-            path: 'size',
-            element: <SizeList />
-          },
+
           {
             path: 'voucher',
             element: <Voucher />

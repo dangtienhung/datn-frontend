@@ -75,6 +75,7 @@ const Signin = () => {
               name='account'
               register={register}
               error={errors.account?.message}
+              typeInput='text'
             />
             <Input
               type='auth'
