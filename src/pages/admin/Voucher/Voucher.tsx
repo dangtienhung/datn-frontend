@@ -131,6 +131,7 @@ type VouchersTableProps = {
 }
 const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   // const { data: vouchers, isLoading } = useGetAllVouchersQuery()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<(string[] | (string | number | boolean | undefined)[][])[]>([])
   const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] = useDeleteVoucherMutation()
   useEffect(() => {

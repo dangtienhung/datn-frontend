@@ -54,6 +54,7 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
                   pathname: '/products',
                   search: createSearchParams({
                     ...queryConfig,
+                    searchName: '',
                     c: 'all'
                   }).toString()
                 }}
