@@ -45,56 +45,37 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
               >
                 Dashboard
               </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/products"
-                onClick={() => handleRedirect('/admin/products')}
-                icon={HiShoppingBag}
-                className={`cursor-pointer ${'/admin/products' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
-              >
-                Products
-              </Sidebar.Item>
-              <Sidebar.Item
-                onClick={() => handleRedirect('/admin/categories')}
-                icon={BiSolidCategoryAlt}
-                className={`cursor-pointer ${
-                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
-                }`}
-              >
-                Categories
-              </Sidebar.Item>
-              <Sidebar.Item
-                onClick={() => handleRedirect('/admin/size')}
-                icon={AiOutlineFontSize}
-                className={`cursor-pointer ${'/admin/size' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
-              >
-                Sizes
-              </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/users"
-                onClick={() => handleRedirect('/admin/users')}
-                icon={HiUsers}
-                className={`cursor-pointer ${'/admin/users' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
-              >
-                Users list
-              </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/orders')}
-                icon={HiClipboardCheck}
-                className={`cursor-pointer ${'/admin/orders' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
-              >
-                Orders
-              </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/toppings')}
-                icon={HiCollection}
-                className={`cursor-pointer ${'/admin/toppings' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
-              >
-                Toppings
-              </Sidebar.Item>
-              <Sidebar.Collapse label='Manager' icon={BiSolidUserCheck}>
+              <Sidebar.Collapse label='Management' icon={BiSolidUserCheck}>
                 <Sidebar.Item
+                  // href="/admin/products"
+                  onClick={() => handleRedirect('/admin/manage/products')}
+                  icon={HiShoppingBag}
+                  className={`cursor-pointer ${
+                    '/admin/manage/products' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                  }`}
+                >
+                  Products
+                </Sidebar.Item>
+                <Sidebar.Item
+                  onClick={() => handleRedirect('/admin/manage/size')}
+                  icon={AiOutlineFontSize}
+                  className={`cursor-pointer ${
+                    '/admin/manage/size' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                  }`}
+                >
+                  Sizes
+                </Sidebar.Item>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/manage/toppings')}
+                  icon={HiCollection}
+                  className={`cursor-pointer ${
+                    '/admin/manage/toppings' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                  }`}
+                >
+                  Toppings
+                </Sidebar.Item>
+                {/* <Sidebar.Item
                   // href="/admin/orders"
                   onClick={() => handleRedirect('/admin/manager/staff')}
                   icon={BiSolidUserCheck}
@@ -113,8 +94,35 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
                   }`}
                 >
                   Shipper
-                </Sidebar.Item>
+                </Sidebar.Item> */}
               </Sidebar.Collapse>
+              <Sidebar.Item
+                onClick={() => handleRedirect('/admin/categories')}
+                icon={BiSolidCategoryAlt}
+                className={`cursor-pointer ${
+                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                }`}
+              >
+                Categories
+              </Sidebar.Item>
+
+              <Sidebar.Item
+                // href="/admin/users"
+                onClick={() => handleRedirect('/admin/users')}
+                icon={HiUsers}
+                className={`cursor-pointer ${'/admin/users' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
+              >
+                Users list
+              </Sidebar.Item>
+              <Sidebar.Item
+                // href="/admin/orders"
+                onClick={() => handleRedirect('/admin/orders')}
+                icon={HiClipboardCheck}
+                className={`cursor-pointer ${'/admin/orders' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
+              >
+                Orders
+              </Sidebar.Item>
+
               <Sidebar.Item
                 // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/voucher')}

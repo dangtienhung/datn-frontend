@@ -1,5 +1,5 @@
-import { Modal, Row, Radio, Empty, message } from 'antd'
-import { useGetAllVouchersQuery } from '../../api/voucher'
+import { Modal, Row, Radio, Empty, message, Button } from 'antd'
+import { useGetVoucherUnexpriedQuery } from '../../api/voucher'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { IVoucher } from '../../interfaces/voucher.type'
 import isExpiredVoucher from '../../utils/isExpiredVoucher'
@@ -15,7 +15,7 @@ type ModalListVouchersProps = {
 }
 
 const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChecked }: ModalListVouchersProps) => {
-  const { data: vouchers } = useGetAllVouchersQuery(1)
+  const { data: vouchers } = useGetVoucherUnexpriedQuery()
 
   const onChange = (e: CheckboxChangeEvent) => {
     setVoucherChecked(e.target.value)
@@ -36,11 +36,20 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
       destroyOnClose={true}
       open={isOpen}
       onOk={toggleModal}
+      // style={{ top: 0 }}
       onCancel={onCancel}
-      okType='danger'
-      cancelText='Đóng'
-      okText='Áp dụng'
       centered
+      footer={
+        vouchers &&
+        vouchers?.data?.docs.length > 0 && [
+          <Button key='submit' onClick={onCancel}>
+            Hủy
+          </Button>,
+          <Button key='submit' type='primary' className='bg-[#1677FF]' onClick={toggleModal}>
+            Áp dụng
+          </Button>
+        ]
+      }
     >
       <Row className='flex gap-x-3'>
         {vouchers && vouchers?.data?.docs.length > 0 ? (
@@ -62,7 +71,14 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
             </Radio.Group>
           ))
         ) : (
-          <Empty />
+          <div className='flex items-center justify-center w-full py-4'>
+            <Empty
+              className='flex items-center flex-col'
+              image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
+              imageStyle={{ height: 200 }}
+              description={<span>Rất tiếc hiện tại không có mã khuyến mại nào 😥</span>}
+            />
+          </div>
         )}
       </Row>
     </Modal>
