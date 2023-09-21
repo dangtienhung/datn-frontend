@@ -42,6 +42,7 @@ const Header = () => {
           placeholder='Tìm kiếm sản phẩm...'
           setText={setValue}
           searchValue={value || valueSearch}
+          autoFocus={true}
         />
       </div>
       {user?.avatar ? (

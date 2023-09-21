@@ -225,7 +225,7 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
 
                     <Tooltip content='Xóa voucher'>
                       <Button
-                        disabled={!isExpiredVoucher(item.endDate as string)}
+                        // disabled={!isExpiredVoucher(item.endDate as string)}
                         color='failure'
                         onClick={() => handleDelete(item._id as string)}
                       >

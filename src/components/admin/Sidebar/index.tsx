@@ -5,7 +5,7 @@ import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaTrashArrowUp } from 'react-icons/fa6'
-import { FaImages } from 'react-icons/fa'
+import { FaImages, FaNewspaper } from 'react-icons/fa'
 import { AiFillSetting, AiOutlineFontSize } from 'react-icons/ai'
 
 type AdminSidebarProps = {
@@ -143,6 +143,14 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
                   Banners
                 </Sidebar.Item>
               </Sidebar.Collapse>
+              <Sidebar.Item
+                // href="/admin/orders"
+                onClick={() => handleRedirect('/admin/news')}
+                icon={FaNewspaper}
+                className={`cursor-pointer ${'/admin/news' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''}`}
+              >
+                News
+              </Sidebar.Item>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up
               </Sidebar.Item> */}
