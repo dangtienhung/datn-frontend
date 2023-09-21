@@ -1,260 +1,408 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { ToppingAPI } from '../../api/topping'
-import { ProductForm, ProductSchema } from '../../validate/Form'
-import { useForm } from 'react-hook-form'
-import { memo, useEffect, useMemo, useState } from 'react'
-import { Button, Label, TextInput, Textarea, Tooltip } from 'flowbite-react'
-import { IImage } from '../../interfaces/image.type'
-import SelectMui, { SelectChangeEvent } from '@mui/material/Select'
-import { Box, Chip, MenuItem, OutlinedInput, Select, Theme, Typography, useTheme } from '@mui/material'
-import BoxUpload from '../Upload/index'
-import Modal from '@mui/material/Modal'
-import CategoryApi from '../../api/category'
-import { useUpdateProductMutation } from '../../api/Product'
+import { Button, Tooltip } from 'flowbite-react'
 import { IProduct } from '../../interfaces/products.type'
 import { BiEditAlt } from 'react-icons/bi'
+import { memo, useEffect, useState } from 'react'
+import { BiMinus, BiPlusMedical } from 'react-icons/bi'
+import { Form, Input, Modal, Select, Button as Butt, SelectProps, Space, UploadFile, message } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
+import Upload, { UploadProps } from 'antd/es/upload'
+import { useAddProductMutation, useUpdateProductMutation, useUploadImagesProductMutation } from '../../api/Product'
+import { ToppingAPI } from '../../api/topping'
+import CategoryApi from '../../api/category'
 import { toast } from 'react-toastify'
-import DynamicallyField from '../DynamicallyField'
+import convertToBase64 from '../../utils/convertBase64'
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
+interface ItemProps {
+  label: string
+  value: string
 }
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName?.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
-  }
+interface CustomUploadFile extends UploadFile {
+  _id?: string
+  publicId: string
 }
+
+let options: ItemProps[] = []
 
 const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
-  const methods = useForm<ProductForm>({
-    mode: 'onChange',
-    resolver: yupResolver(ProductSchema),
-    defaultValues: {
-      name: DataEdit.name,
-      price: DataEdit.price,
-      sale: DataEdit.sale,
-      description: DataEdit.description,
-      toppings: DataEdit.toppings.map((item) => item._id!)
-    } as any
-  })
-
-  // console.log(DataEdit.toppings.map((item) => item._id as any));
-
-  const [isOpen, setIsOpen] = useState(false)
-
-  const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
+  const [getDataTopping] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery()
-  const [DynamicSize, setDynamicSize] = useState<any[]>([])
-  const [submit, setSubmit] = useState(false)
-
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+  const [fileList, setFileList] = useState<CustomUploadFile[]>(
+    DataEdit.images.map((item) => {
+      return {
+        uid: `${item._id}`,
+        percent: 50,
+        name: `${item.filename}`,
+        status: 'done',
+        url: `${item.url}`,
+        thumbUrl: `${item.url}`,
+        publicId: item.publicId
+      }
+    })
+  )
+  const [open, setOpen] = useState(false)
+  const [addProduct] = useAddProductMutation()
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [uploadImages] = useUploadImagesProductMutation()
   const [updateProduct] = useUpdateProductMutation()
+  const [form] = Form.useForm()
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    formState: { errors }
-  } = useMemo(() => methods, [methods])
-
-  const [urls, setUrl] = useState<IImage[]>([])
-  const theme = useTheme()
-  const [toppingState, setToppingState] = useState<string[]>([])
-  // const [sizeState, setSizeState] = useState<string[]>([])
-
-  const [loadingUpload, setLoadingUpload] = useState(false)
-  const [loadingDelete, setLoadingDelete] = useState(false)
-
-  const handleChangeTopping = (event: SelectChangeEvent<typeof toppingState>) => {
-    setValue('toppings', event.target.value as any, { shouldValidate: true })
-    const {
-      target: { value }
-    } = event
-
-    setToppingState(typeof value === 'string' ? value.split(',') : value)
+  const fillForm = ({ DataEdit }: { DataEdit: IProduct }) => {
+    const { name, category, description, toppings, sale, sizes } = DataEdit
+    form.setFieldsValue({
+      name: name,
+      category: category._id,
+      toppings: toppings.map((item) => item._id),
+      sale: sale,
+      description: description,
+      sizes: sizes.map((item) => {
+        return {
+          name: item.name,
+          price: item.price
+        }
+      })
+    })
   }
 
-  const onEditProduct = handleSubmit((data: any) => {
-    if (data && submit) {
-      const DataPost =
-        urls.length > 0
-          ? { _id: DataEdit._id, ...data, images: [...urls] }
-          : { _id: DataEdit._id, ...data, images: [...DataEdit.images], sizes: [...DynamicSize] }
-
-      updateProduct(DataPost).then((data: any) => {
-        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false)
-      })
-    }
-  })
-
   useEffect(() => {
-    getDataTopping()
+    getDataTopping().then(({ data: { data } }: any) => {
+      if (options.length == 0) {
+        data.forEach((item: any) => {
+          options.push({
+            label: `${item.name}`,
+            value: `${item._id}`
+          })
+        })
+      }
+    })
     getCategory()
-    setToppingState(DataEdit.toppings.map((item) => item._id!))
+    return () => {
+      getCategory().unsubscribe()
+      getDataTopping().unsubscribe()
+    }
   }, [])
 
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await convertToBase64(file.originFileObj!)
+    }
+
+    setPreviewImage(file.url || (file.preview as string))
+    setPreviewOpen(true)
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+  }
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList([...newFileList] as CustomUploadFile[])
+
+  const uploadButton = (
+    <div className='flex justify-center items-center flex-col'>
+      <BiPlusMedical />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  )
+
+  const selectProps: SelectProps = {
+    mode: 'multiple',
+    style: { width: '100%' },
+    options,
+    placeholder: 'Select Topping...',
+    maxTagCount: 'responsive'
+  }
+
+  const showModal = () => {
+    fillForm({ DataEdit })
+    setOpen(true)
+  }
+
+  const handleOk = () => {
+    form.submit()
+  }
+
+  const handleCancel = () => {
+    setOpen(false)
+  }
+
+  const handleCancelImg = () => setPreviewOpen(false)
+
+  const onFinish = (values: any) => {
+    setConfirmLoading(true)
+    const formData = new FormData()
+    const existImg = fileList
+      .filter((item) => {
+        return item.publicId ? item : ''
+      })
+      .map((item) => {
+        if (item.publicId) {
+          return {
+            filename: item.name,
+            publicId: item.publicId,
+            url: item.url,
+            _id: item.uid
+          }
+        }
+      })
+
+    if (!values.images) {
+      const product = {
+        _id: DataEdit._id,
+        ...values,
+        images: [...existImg]
+      }
+
+      updateProduct(product).then((data: any) => {
+        if (data.error) {
+          toast.error(data.error.data.err?.[0])
+        } else {
+          setOpen(false)
+          setConfirmLoading(false)
+          toast.success('Cập nhật sản phẩm thành công!')
+        }
+      })
+    } else if (values.images) {
+      values?.images.forEach((file: any) => {
+        formData.append('images', file.originFileObj)
+      })
+      uploadImages(formData).then(({ data }: any) => {
+        const product = {
+          _id: DataEdit._id,
+          ...values,
+          images: [...existImg, ...data.urls]
+        }
+        console.log(product)
+
+        updateProduct(product).then(() => {
+          setConfirmLoading(false)
+          setOpen(false)
+          form.resetFields()
+          toast.success('Cập nhật sản phẩm thành công!')
+        })
+      })
+    }
+  }
+
   return (
-    <div>
+    <>
       <Tooltip content='Chỉnh sửa sản phẩm'>
-        <Button color='primary' onClick={() => setIsOpen(true)}>
+        <Button color='primary' onClick={showModal}>
           <BiEditAlt className='text-sm' />
         </Button>
       </Tooltip>
       <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-        className='no-scrollbar h-full overflow-y-auto'
+        title='Edit Product'
+        open={open}
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        style={{ top: 20 }}
+        width={900}
+        footer={
+          <Butt className='bg-blue-500 font-bold text-white' onClick={handleOk} loading={confirmLoading}>
+            Sumit
+          </Butt>
+        }
       >
-        <Box
-          sx={{
-            width: '50rem',
-            margin: '0 auto',
-            backgroundColor: 'white',
-            borderRadius: '4px',
-            padding: '10px'
-          }}
-        >
-          <Typography className='p-6 bg-[#e2e8f0]' variant='h5' component='h3'>
-            Edit Product
-          </Typography>
-          <form autoComplete='off'>
-            <div className='lg:grid-cols-2 grid gap-6'>
-              <div>
-                <Label htmlFor='productName'>Product name</Label>
-                <TextInput
-                  id='productName'
-                  placeholder='Product...'
-                  className='mt-1'
-                  {...register('name')}
-                  name='name'
-                />
-                <span className='block my-2 text-sm text-red-500'>{errors.name && errors.name.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='category'>Category</Label>
-                <Select
-                  labelId='demo-simple-select-label'
-                  defaultValue={DataEdit.category?._id}
-                  id='demo-simple-select'
-                  label='Age'
-                  className='w-full h-[42px] mt-1'
-                  {...register('category')}
-                  name='category'
-                >
-                  {DataCategory?.docs.map((item) => (
-                    <MenuItem key={item._id} value={item._id}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <span className='block my-2 text-sm text-red-500'>{errors.category && errors.category.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='brand'>Topping</Label>
-                <SelectMui
-                  className='w-full mt-1'
-                  labelId='demo-multiple-chip-label'
-                  id='demo-multiple-chip'
-                  multiple
-                  value={toppingState}
-                  input={<OutlinedInput id='select-multiple-chip' label='Chip' />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={DataToping?.data.find((item) => item._id === value)?.name} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                  {...register('toppings')}
-                  name='toppings'
-                  onChange={handleChangeTopping}
-                >
-                  {DataToping?.data.map((topping) => (
-                    <MenuItem
-                      key={topping._id}
-                      value={topping._id}
-                      style={getStyles(topping.name, toppingState, theme)}
-                    >
-                      {topping.name}
-                    </MenuItem>
-                  ))}
-                </SelectMui>
-                <span className='block my-2 text-sm text-red-500'>{errors.toppings && errors.toppings.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='price'>Sale</Label>
-                <TextInput
-                  id='price'
-                  type='number'
-                  placeholder='Sale...'
-                  className='mt-1'
-                  {...register('sale')}
-                  name='sale'
-                  defaultValue={0}
-                />
-                <span className='block my-2 text-sm text-red-500'>{errors.sale && errors.sale.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='price'>Size</Label>
-                <DynamicallyField
-                  setSubmit={setSubmit}
-                  setDynamic={setDynamicSize}
-                  submit={submit}
-                  dataSize={DataEdit.sizes}
-                />
-              </div>
-              <div className='lg:col-span-2'>
-                <Label htmlFor='producTable.Celletails'>Product details</Label>
-                <Textarea
-                  id='producTable.Celletails'
-                  placeholder='Description...'
-                  rows={6}
-                  className='mt-1'
-                  {...register('description')}
-                  name='description'
-                />
-                <span className='block my-2 text-sm text-red-500'>
-                  {errors.description && errors.description.message}
-                </span>
-              </div>
-            </div>
-            <BoxUpload
-              urls={urls}
-              setLoadingUpload={setLoadingUpload}
-              setLoadingDelete={setLoadingDelete}
-              setUrl={setUrl}
-            />
-          </form>
-          {loadingUpload || loadingDelete ? (
-            <Button color='primary' className='mt-[10px]' disabled>
-              Edit product
-            </Button>
-          ) : (
-            <Button
-              color='primary'
-              className='mt-[10px]'
-              onClick={() => {
-                onEditProduct()
-                setSubmit(true)
+        <Form layout='vertical' form={form} onFinish={onFinish}>
+          <div className='grid grid-cols-2 gap-3'>
+            <Form.Item
+              name='name'
+              label='Product Name'
+              rules={[
+                {
+                  required: true,
+                  message: 'Tên sản phẩm không để trống!'
+                },
+                {
+                  whitespace: true
+                }
+              ]}
+            >
+              <Input className='rounded-[5px] h-[32.45px] border-[#d9d9d9]' placeholder='Name...' />
+            </Form.Item>
+            <Form.Item
+              name='category'
+              label='Category'
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn category'
+                }
+              ]}
+            >
+              <Select placeholder='Select category'>
+                {DataCategory?.docs.map((item) => (
+                  <Select.Option key={item._id} value={item._id}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name='sale'
+              label='Sale'
+              initialValue={0}
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy nhập giá sale!'
+                },
+                {
+                  validator(_, value) {
+                    if (value < 0) {
+                      return Promise.reject('Giá sale không hợp lệ!')
+                    }
+                    return Promise.resolve()
+                  }
+                }
+              ]}
+            >
+              <Input className='rounded-[5px] h-[32.45px] border-[#d9d9d9]' type='number' placeholder='Sale...' />
+            </Form.Item>
+            <Form.Item
+              name='toppings'
+              label='Topping'
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn topping!'
+                }
+              ]}
+            >
+              <Select {...selectProps} />
+            </Form.Item>
+            <Form.Item label='Size'>
+              <Form.List
+                name='sizes'
+                rules={[
+                  {
+                    validator(_, value) {
+                      if (!value) {
+                        return Promise.reject('Hãy nhập size!')
+                      }
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
+              >
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...restField }) => {
+                      return (
+                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                          >
+                            <Input className='rounded-[5px] h-[32.45px] border-[#d9d9d9]' placeholder='Size Name...' />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'price']}
+                            rules={[
+                              { required: true, message: 'Hãy nhập giá size!' },
+                              {
+                                validator(_, value) {
+                                  if (value && value <= 0) {
+                                    return Promise.reject('Giá size không hợp lệ!')
+                                  }
+                                  return Promise.resolve()
+                                }
+                              }
+                            ]}
+                          >
+                            <Input
+                              className='rounded-[5px] h-[32.45px] border-[#d9d9d9]'
+                              type='number'
+                              placeholder='Price Size...'
+                            />
+                          </Form.Item>
+                          <div className='cursor-pointer'>
+                            <BiMinus onClick={() => remove(name)} />
+                          </div>
+                        </Space>
+                      )
+                    })}
+                    <Form.Item wrapperCol={{ span: 10 }}>
+                      <Butt type='dashed' onClick={() => add()} block icon={<BiPlusMedical />}>
+                        Add field
+                      </Butt>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Form.Item>
+          </div>
+          <Form.Item
+            name='description'
+            label='Product Detail'
+            rules={[
+              {
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject('Hãy nhập Description!')
+                  }
+                  return Promise.resolve()
+                }
+              }
+            ]}
+          >
+            <TextArea rows={6} />
+          </Form.Item>
+        </Form>
+        <Form form={form} onFinish={onFinish}>
+          <Form.Item
+            label='Picture'
+            name='images'
+            valuePropName='files'
+            getValueFromEvent={(event) => {
+              return event?.fileList
+            }}
+            rules={[
+              {
+                validator(_, files) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList.length <= 0) {
+                      reject('Hãy upload ảnh!')
+                    } else {
+                      resolve('')
+                    }
+                  })
+                }
+              }
+            ]}
+          >
+            <Upload
+              listType='picture-card'
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+              defaultFileList={fileList}
+              beforeUpload={(file) => {
+                const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+                if (!isPNG) {
+                  message.error(`${file.name} is not a png, jpg or jpeg file`)
+                }
+                return isPNG ? false : Upload.LIST_IGNORE
               }}
             >
-              Edit product
-            </Button>
-          )}
-        </Box>
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+          <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
+            <img
+              alt='example'
+              style={{
+                width: '100%'
+              }}
+              src={previewImage}
+            />
+          </Modal>
+        </Form>
       </Modal>
-    </div>
+    </>
   )
 }
 
