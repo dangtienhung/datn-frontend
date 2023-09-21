@@ -12,6 +12,11 @@ const ApiVoucher = createApi({
       providesTags: ['voucher']
     }),
 
+    getVoucherUnexpried: builder.query<IVoucherDocs, void>({
+      query: () => `/api/vouchers/active`,
+      providesTags: ['voucher']
+    }),
+
     addVoucher: builder.mutation<void, IVoucher>({
       query: (voucher) => ({
         url: '/api/voucher',
@@ -21,7 +26,7 @@ const ApiVoucher = createApi({
       invalidatesTags: ['voucher']
     }),
 
-    deleteVoucher: builder.mutation<any, string>({
+    deleteVoucher: builder.mutation<void, string>({
       query: (id) => ({
         url: `/api/voucher/${id}`,
         method: 'DELETE'
@@ -29,7 +34,7 @@ const ApiVoucher = createApi({
       invalidatesTags: ['voucher']
     }),
 
-    updateVoucher: builder.mutation<any, IVoucher>({
+    updateVoucher: builder.mutation<void, IVoucher>({
       query: (voucher) => ({
         url: `/api/voucher/${voucher._id}`,
         method: 'PUT',
@@ -40,6 +45,11 @@ const ApiVoucher = createApi({
   })
 })
 
-export const { useGetAllVouchersQuery, useAddVoucherMutation, useDeleteVoucherMutation, useUpdateVoucherMutation } =
-  ApiVoucher
+export const {
+  useGetAllVouchersQuery,
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useUpdateVoucherMutation,
+  useGetVoucherUnexpriedQuery
+} = ApiVoucher
 export default ApiVoucher

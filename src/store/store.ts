@@ -16,6 +16,9 @@ import storage from 'redux-persist/lib/storage'
 import CategoryApi from '../api/category'
 import { OrderAPI } from './slices/order'
 import { CartDBAPI } from '../api/cartDB'
+import SizeApi from './slices/size.slice'
+import BannerApi from '../api/banner'
+import AnalyticsApi from '../api/analytics'
 
 const persistConfig = {
   key: 'root',
@@ -39,6 +42,20 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+const middleware = [
+  ApiUser.middleware,
+  ApiProducts.middleware,
+  ToppingAPI.middleware,
+  ApiVoucher.middleware,
+  RoleApi.middleware,
+  CategoryApi.middleware,
+  Auth.middleware,
+  CartDBAPI.middleware,
+  OrderAPI.middleware,
+  SizeApi.middleware,
+  BannerApi.middleware,
+  AnalyticsApi.middleware
+]
 export const store = configureStore({
   reducer: {
     persistedReducer,
@@ -50,24 +67,17 @@ export const store = configureStore({
     [CategoryApi.reducerPath]: CategoryApi.reducer,
     [Auth.reducerPath]: Auth.reducer,
     [CartDBAPI.reducerPath]: CartDBAPI.reducer,
-    [OrderAPI.reducerPath]: OrderAPI.reducer
+    [OrderAPI.reducerPath]: OrderAPI.reducer,
+    [SizeApi.reducerPath]: SizeApi.reducer,
+    [BannerApi.reducerPath]: BannerApi.reducer,
+    [AnalyticsApi.reducerPath]: AnalyticsApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
       }
-    }).concat(
-      ApiUser.middleware,
-      ApiProducts.middleware,
-      ToppingAPI.middleware,
-      CartDBAPI.middleware,
-      ApiVoucher.middleware,
-      RoleApi.middleware,
-      CategoryApi.middleware,
-      Auth.middleware,
-      OrderAPI.middleware
-    )
+    }).concat(...middleware)
 })
 
 export const persistor = persistStore(store)

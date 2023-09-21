@@ -1,4 +1,4 @@
-import { IUser, IUserDocs, responseUser } from '../interfaces/user.type'
+import { IAddUser, IUserDocs, responseUser } from '../interfaces/user.type'
 
 import { IResImage } from '../interfaces/image.type'
 import { baseQueryWithReauth } from './Auth'
@@ -18,7 +18,7 @@ export const ApiUser = createApi({
 
     //get all user
     getAllUsers: builder.query<IUserDocs, number>({
-      query: (page = 5) => `/api/users?_page=${page}`,
+      query: (page) => `/api/users?_page=${page}`,
       providesTags: ['user']
     }),
 
@@ -32,8 +32,8 @@ export const ApiUser = createApi({
     }),
 
     //add new user
-    addUser: builder.mutation<void, IUser>({
-      query: (user) => ({
+    addUser: builder.mutation({
+      query: (user: Omit<IAddUser, '_id'>) => ({
         url: '/api/users',
         method: 'POST',
         body: user
@@ -42,14 +42,14 @@ export const ApiUser = createApi({
     }),
 
     //update user
-    updateUser: builder.mutation<void, IUser>({
+    updateUser: builder.mutation<void, Omit<IAddUser, 'password' | 'account'>>({
       query: (user) => ({
         url: `/api/users/${user._id}`,
         method: 'PATCH',
         body: {
           username: user.username,
-          password: user.password,
-          account: user.account,
+          // password: user.password,
+          // account: user.account,
           role: user.role,
           address: user.address,
           avatar: user.avatar
@@ -59,7 +59,7 @@ export const ApiUser = createApi({
     }),
 
     //Upload image user
-    upLoadAvartaUser: builder.mutation<IResImage, any>({
+    upLoadAvartaUser: builder.mutation<IResImage, void>({
       query: (file) => ({
         url: '/api/uploadImages',
         method: 'POST',

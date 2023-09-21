@@ -1,59 +1,75 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { useEffect, useRef, useState } from 'react'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
-import { Link, useLocation } from 'react-router-dom'
 import ListProductItem from '../List-ProductItem'
+import { Pagination } from 'antd'
+import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
-import http from '../../api/instance'
-import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
-import Paginate from '../Pagination'
 import SKProduct from '../Skeleton/SKProduct'
-import { useAppDispatch } from '../../store/hooks'
+import http from '../../api/instance'
 import { savePage } from '../../store/slices/product.slice'
+import { useAppDispatch } from '../../store/hooks'
+import { useSelector } from 'react-redux'
+import { AxiosError } from 'axios'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface ListProductsProps {
-  categoryName: string
-  products?: IProductDocs
+  products: IProductDocs
+  error: string
+  isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const ListProducts = ({ categoryName, products }: ListProductsProps) => {
+const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
-  const [product, setProduct] = useState<any>({})
-  const { page } = useSelector((state: RootState) => state.persistedReducer.products)
+  const [product, setProduct] = useState<IProduct | object>({})
+  // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
   const dispatch = useAppDispatch()
   const { state } = useLocation()
-
-  const { products: ListProduct, isLoading } = useSelector((state: RootState) => state.persistedReducer.products)
-
-  const handleTogglePopup = () => {
+  const navigate = useNavigate()
+  const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
-  }
+  }, [isShowPopup])
 
-  const paginatePage = (page: number) => {
-    dispatch(savePage(page))
-  }
+  // const paginatePage = (page: number) => {
+  //   dispatch(savePage(page))
+  // }
 
   const fetchProductById = async (id: string | number) => {
     try {
       const { data } = await http.get(`/product/${id}`)
       setProduct(data.data)
       setIsShowPopup(true)
-    } catch (error: any) {
-      console.log(error.message)
+    } catch (error) {
+      console.log((error as AxiosError).message)
     }
   }
   const toggleOrder = () => {
     orderRef.current?.classList.toggle('show_order')
   }
 
+  const onChange: PaginationProps['onChange'] = (pageNumber) => {
+    console.log('Page: ', pageNumber)
+    navigate({
+      pathname: '/products',
+      search: createSearchParams({
+        ...queryConfig,
+        _page: pageNumber.toString()
+      }).toString()
+    })
+  }
+
   useEffect(() => {
     setProduct(state)
-    handleTogglePopup()
-  }, [])
+    if (state && Object.keys(state)?.length > 0) {
+      handleTogglePopup()
+    }
+  }, [handleTogglePopup, state])
 
   return (
     <>
@@ -61,12 +77,12 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
         <div className='pb-[160px]'>
           <div className='category '>
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
-              <div className='text-lg capitalize select-none'>{categoryName || 'Tất cả sản phẩm'}</div>
+              <div className='text-lg capitalize select-none'>{'Tất cả sản phẩm'}</div>
               <div className='right'>
                 <FaAngleDown />
               </div>
             </div>
-            {ListProduct.docs && ListProduct.docs.length <= 0 ? (
+            {products && products.docs && products.docs.length <= 0 ? (
               <section className='flex flex-col justify-center bg-gray-100 items-center h-[70vh] font-bold my-5'>
                 <img
                   className='mx-auto'
@@ -90,9 +106,9 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               )}
             </div>
           </div>
-          {product && products?.totalPages && (
-            <Paginate action={paginatePage} totalPages={products?.totalPages as number} currentPage={page} />
-          )}
+          <div className='text-center'>
+            <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+          </div>
         </div>
 
         <div className='order-bottom bg-[#fff] fixed bottom-0 w-[100vw] flex flex-col border-t border-[#f1f1f1] lg:hidden'>
@@ -144,7 +160,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
         </div>
       </div>
       {product && Object.keys(product).length > 0 && (
-        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
+        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product as IProduct} />
       )}
     </>
   )

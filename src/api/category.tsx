@@ -1,6 +1,7 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
 import { ICategory, ICategoryDocs } from '../interfaces/category.type'
+
 import { baseQueryWithReauth } from './Auth'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 const CategoryApi = createApi({
   reducerPath: 'CategoryApi',
@@ -32,7 +33,7 @@ const CategoryApi = createApi({
       invalidatesTags: ['category']
     }),
 
-    updateCategory: builder.mutation<any, ICategory>({
+    updateCategory: builder.mutation<void, ICategory>({
       query: ({ ...rest }) => ({
         url: `/api/size/${rest._id}`,
         method: 'PUT',

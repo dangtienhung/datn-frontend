@@ -1,6 +1,6 @@
 import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { useState } from 'react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { IRole } from '../../../interfaces/role.type'
 
@@ -35,7 +35,7 @@ const Role = () => {
                   <TextInput id='users-search' name='users-search' placeholder='Search for users' />
                 </div>
               </form>
-              <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
+              {/* <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
                 <a
                   href='#'
                   className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
@@ -64,7 +64,7 @@ const Role = () => {
                   <span className='sr-only'>Settings</span>
                   <HiDotsVertical className='text-2xl' />
                 </a>
-              </div>
+              </div> */}
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
               <Tooltip content='Thêm vai trò'>
@@ -119,62 +119,64 @@ const RoleTable = () => {
   if (isError) return <div>Loi roi</div>
   return (
     <>
-      <Table className='min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600'>
-        <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-          <Table.HeadCell>
-            <Label htmlFor='select-all' className='sr-only'>
-              Select all
-            </Label>
-            <Checkbox id='select-all' name='select-all' />
-          </Table.HeadCell>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>Actions</Table.HeadCell>
-        </Table.Head>
-        <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-          {roles &&
-            roles.data?.map((item) => (
-              <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                <Table.Cell className='w-4 p-4'>
-                  <div className='flex items-center'>
-                    <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                    <label htmlFor='checkbox-1' className='sr-only'>
-                      checkbox
-                    </label>
-                  </div>
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {item.name}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {item.status}
-                </Table.Cell>
+      <div className='max-h-[calc(500px-53px)] overflow-y-scroll hidden-scroll-bar'>
+        <Table className='min-w-full divide-y divide-gray-200 dark:divide-gray-600'>
+          <Table.Head className='dark:bg-gray-700 bg-gray-100'>
+            <Table.HeadCell>
+              <Label htmlFor='select-all' className='sr-only'>
+                Select all
+              </Label>
+              <Checkbox id='select-all' name='select-all' />
+            </Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
+            {roles &&
+              roles.data?.map((item) => (
+                <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
+                  <Table.Cell className='w-4 p-4'>
+                    <div className='flex items-center'>
+                      <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
+                      <label htmlFor='checkbox-1' className='sr-only'>
+                        checkbox
+                      </label>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                    {item.name}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                    {item.status}
+                  </Table.Cell>
 
-                <Table.Cell>
-                  <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                    <Tooltip content='Chỉnh sửa vai trò'>
-                      <EditRoleModal role={item} />
-                    </Tooltip>
-                    <Tooltip content='Xóa vai trò'>
-                      <Button color='failure' onClick={() => handleDelete(item._id!)}>
-                        <div className='gap-x-2 flex items-center'>
-                          {isDeleting ? (
-                            <AiOutlineLoading3Quarters className='rotate text-lg' />
-                          ) : (
-                            <HiTrash className='text-lg' />
-                          )}
-                        </div>
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
-      {/* {idRole && (
+                  <Table.Cell>
+                    <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                      <Tooltip content='Chỉnh sửa vai trò'>
+                        <EditRoleModal role={item} />
+                      </Tooltip>
+                      <Tooltip content='Xóa vai trò'>
+                        <Button color='failure' onClick={() => handleDelete(item._id as string)}>
+                          <div className='gap-x-2 flex items-center'>
+                            {isDeleting ? (
+                              <AiOutlineLoading3Quarters className='rotate text-lg' />
+                            ) : (
+                              <HiTrash className='text-lg' />
+                            )}
+                          </div>
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+        {/* {idRole && (
         <EditRoleModal isOpen={isEditPopupOpen} togglePopup={togglePopup} idRole={idRole} />
       )} */}
+      </div>
     </>
   )
 }
@@ -193,14 +195,14 @@ const AddRoleModal = function () {
     resolver: yupResolver(RoleSchema)
   })
 
-  const onHandleSubmit = async (data: any) => {
+  const onHandleSubmit = handleSubmit(async (data) => {
     await addRole(data)
     if (!isError) {
       toast.success(`Added ${data.name} role`)
       reset()
       setOpen(false)
     }
-  }
+  })
   return (
     <>
       <Button
@@ -224,7 +226,7 @@ const AddRoleModal = function () {
         <Modal.Header className='border-b border-gray-200 !p-6 dark:border-gray-700'>
           <strong>Add new role</strong>
         </Modal.Header>
-        <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
+        <form action='' onSubmit={onHandleSubmit}>
           <Modal.Body>
             <div className=''>
               <div>
@@ -266,8 +268,11 @@ const EditRoleModal = function ({ role }: EditRoleModalProps) {
     }
   })
 
-  const onHandleSubmit = async (data: any) => {
-    await updateRole(data)
+  const onHandleSubmit = async (data: RoleForm) => {
+    await updateRole({
+      ...data,
+      _id: role._id
+    })
     if (!isError) {
       toast.success(`Updated ${data.name} role`)
       setOpen(false)

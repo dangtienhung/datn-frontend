@@ -3,15 +3,22 @@ import { Fragment, useState } from 'react'
 
 import { FaBars } from 'react-icons/fa'
 import { ICategory } from '../../interfaces/category.type'
-import { useAppDispatch } from '../../store/hooks'
+import NotFound from '../../pages/Not-Found/NotFound'
+import SKProduct from '../Skeleton/SKProduct'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
+import { useAppDispatch } from '../../store/hooks'
+import { Link, createSearchParams } from 'react-router-dom'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface SidebarCateProps {
   categories: ICategory[]
+  error: string
+  isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const SidebarCate = ({ categories }: SidebarCateProps) => {
+const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
 
@@ -23,6 +30,14 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
     setAnchorEl(null)
   }
 
+  if (error) return <NotFound />
+  if (isLoading)
+    return (
+      <div className='sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
+        <SKProduct amount={10} />
+      </div>
+    )
+
   return (
     <>
       <div className='sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
@@ -32,7 +47,20 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
             onClick={() => dispatch(getIdCate(''))}
             className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
           >
-            <div className='cat-name capitalize'>All</div>
+            <div className='cat-name capitalize'>
+              <Link
+                className='block'
+                to={{
+                  pathname: '/products',
+                  search: createSearchParams({
+                    ...queryConfig,
+                    c: 'all'
+                  }).toString()
+                }}
+              >
+                All
+              </Link>
+            </div>
           </div>
           {categories &&
             categories?.length > 0 &&
@@ -45,7 +73,20 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
                 key={category._id}
                 className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
               >
-                <div className='cat-name capitalize'>{category.name}</div>
+                <div className='cat-name capitalize'>
+                  <Link
+                    className='block'
+                    to={{
+                      pathname: '/products',
+                      search: createSearchParams({
+                        ...queryConfig,
+                        c: category._id as string
+                      }).toString()
+                    }}
+                  >
+                    {category.name}
+                  </Link>
+                </div>
                 <div className='cat-amount text-[#8a733f]'>{category.products?.length}</div>
               </div>
             ))}
