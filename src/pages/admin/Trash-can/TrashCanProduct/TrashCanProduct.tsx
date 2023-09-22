@@ -1,5 +1,5 @@
 import { AiFillEye, AiOutlineSearch } from 'react-icons/ai'
-import { Button, Input, Space, Table, Select, Tag, Popconfirm, message } from 'antd'
+import { Button, Input, Space, Table, Select, Popconfirm, message } from 'antd'
 import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { useRef, useState } from 'react'
 import type { FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface'
@@ -7,13 +7,11 @@ import Highlighter from 'react-highlight-words'
 import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
-// import qs from 'qs'
+import './TrashCanProduct.module.css'
 import { AtomSpinner } from 'react-epic-spinners'
 import { useFetchProductsQuery } from '../../../../api/Product'
 import { IProduct } from '../../../../interfaces/products.type'
 import { GrPowerReset } from 'react-icons/gr'
-import './TrashCanProduct.module.scss'
-import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 
 interface DataType extends Omit<IProduct, '_id' | 'images' | 'category'> {
@@ -41,7 +39,7 @@ const TrashCanProduct = () => {
     }
   })
 
-  // console.log(productData);
+  console.log(productData)
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
@@ -236,8 +234,8 @@ const TrashCanProduct = () => {
               </Link>
             </Button>
             <Popconfirm
-              title='Delete the product'
-              description='Are you sure to delete this product?'
+              title='Xóa vĩnh viễn sản phẩm này?'
+              description='Khi thực hiện, bạn sẽ không thể khôi phục sản phẩm này!'
               onConfirm={async () => {
                 // await pause(1000)
                 // await removeProduct(record.key)
@@ -262,37 +260,29 @@ const TrashCanProduct = () => {
     }
   ]
   // console.log(productData);
-  const options = [{ value: 'gold' }, { value: 'red' }, { value: 'green' }, { value: 'cyan' }]
 
-  const tagRender = (props: CustomTagProps) => {
-    const { label, value, closable, onClose } = props
-    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    return (
-      <Tag
-        color={value}
-        onMouseDown={onPreventMouseDown}
-        closable={closable}
-        onClose={onClose}
-        style={{ marginRight: 3 }}
-      >
-        {label}
-      </Tag>
-    )
-  }
+  const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
   return (
     <div className='dark:text-[#ffffff] dark:bg-gray-900'>
-      <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mb-3'>Đã xóa gần đây</h1>
-      <span className='text-[15px]'>Tìm theo danh mục:</span>
-      <Select
-        className='w-full max-w-[250px] ml-[20px]'
-        mode='multiple'
-        placeholder='Search category'
-        tagRender={tagRender}
-        options={options}
-      />
+      <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mb-3 '>Đã xóa gần đây</h1>
+      <div className='flex'>
+        <h2 className='text-[15px]'>Tìm theo danh mục:</h2>
+        <Select
+          className='w-full max-w-[250px] ml-[20px] custom-select'
+          mode='multiple'
+          allowClear={true}
+          placeholder='Lọc theo danh mục'
+          value={selectedItems}
+          onChange={setSelectedItems}
+          options={OPTIONS.map((item) => ({
+            value: item,
+            label: item
+          }))}
+          style={{}}
+        />
+      </div>
+
       {isLoading ? (
         // <Skeleton />
         <AtomSpinner color='red' className='mx-auto mt-[10%]'></AtomSpinner>
@@ -305,6 +295,7 @@ const TrashCanProduct = () => {
               dataSource={data}
               rowSelection={rowSelection}
               onChange={handleTableChange}
+              // onChange?: (pagination: TablePaginationConfig, filters: Record<string, FilterValue | null>, sorter: SorterResult<RecordType> | SorterResult<RecordType>[], extra: TableCurrentDataSource<RecordType>) => void;
               pagination={{
                 pageSize: productData?.limit,
                 showSizeChanger: true,
@@ -315,7 +306,7 @@ const TrashCanProduct = () => {
               }}
               className='sm:table-auto md:table-auto lg:table-fixed xl:table-fixed'
             />
-            <Button onClick={start} disabled={!hasSelected} loading={loading} className='dark:text-[#ffffff]'>
+            <Button onClick={start} disabled={!hasSelected} loading={loading} className='dark:text-[#ffffff] '>
               Reload
             </Button>
           </div>

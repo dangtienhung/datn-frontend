@@ -7,10 +7,10 @@ const BreadCrumb = () => {
   const breadCrumbItem = location.pathname.split('/').filter(Boolean)
   return (
     <Breadcrumb className='mb-4'>
-      <HiHome className='text-xl mr-[7px]' />
+      <HiHome className='text-xl mr-[7px] dark:text-white' />
       {breadCrumbItem?.map((item, index) => (
-        <Breadcrumb.Item key={index} className='capitalize  font-[600] da'>
-          <Link to={`/${breadCrumbItem.slice(0, index + 1).join('/')}`}>{item}</Link>
+        <Breadcrumb.Item key={index} className='capitalize font-[600]'>
+          <Link className='dark:text-white' to={`/${breadCrumbItem.slice(0, index + 1).join('/')}`}>{item}</Link>
         </Breadcrumb.Item>
       ))}
     </Breadcrumb>

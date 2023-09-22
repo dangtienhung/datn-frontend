@@ -2,29 +2,31 @@ import { ListProducts, MyCart, SidebarCate } from '../../components'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
 import { RootState } from '../../store/store'
-import { getAllCates } from '../../store/services/categories'
+// import { getAllCates } from '../../store/services/categories'
 import { useEffect } from 'react'
 import useQueryConfig from '../../hook/useQueryConfig'
 import { createSearchParams, useNavigate } from 'react-router-dom'
+import { useGetAllCategoryQuery } from '../../api/category'
 
 const ProductsPage = () => {
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
-
-  const {
-    categories,
-    error: errorCategories,
-    isLoading: isLoadingCategories
-  } = useAppSelector((state: RootState) => state.persistedReducer.category)
+  // const {
+  //   categories,
+  //   error: errorCategories,
+  //   isLoading: isLoadingCategories
+  // } = useAppSelector((state: RootState) => state.persistedReducer.category)
+  const { data: datacate, error: errorCategories, isLoading: isLoadingCategories } = useGetAllCategoryQuery()
+  const categories =datacate?.docs
   const {
     products: ProductList,
     error: errorProduct,
     isLoading: isLoadingProduct
   } = useAppSelector((state: RootState) => state.persistedReducer.products)
-  useEffect(() => {
-    dispatch(getAllCates({ _page: queryConfig._page, _limit: queryConfig.limit }))
-  }, [dispatch, queryConfig.limit, queryConfig._page])
+  // useEffect(() => {
+  //   dispatch(getAllCates({ _page: queryConfig._page, _limit: queryConfig.limit }))
+  // }, [dispatch, queryConfig.limit, queryConfig._page])
 
   useEffect(() => {
     if (queryConfig.searchName != '' && ProductList?.docs?.length == 0) {
