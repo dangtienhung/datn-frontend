@@ -178,39 +178,44 @@ const routes = createBrowserRouter([
   },
   {
     path: '/staff',
-    element: <StaffLayout />,
+    element: <GuardAuth />,
     children: [
       {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: 'dashboard',
-        element: <Dashboard />
-      },
-      {
-        path: 'categories',
-        element: <Categories />
-      },
-      {
-        path: 'products',
-        element: <List />
-      },
-      {
-        path: 'orders',
-        element: <Orders />
-      },
-      {
-        path: 'orders/:id',
-        element: <OrderDetail />
-      },
-      {
-        path: 'toppings',
-        element: <Topping />
-      },
-      {
-        path: 'voucher',
-        element: <Voucher />
+        element: <StaffLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: 'dashboard',
+            element: <Dashboard />
+          },
+          {
+            path: 'categories',
+            element: <Categories />
+          },
+          {
+            path: 'products',
+            element: <List />
+          },
+          {
+            path: 'orders',
+            element: <Orders />
+          },
+          {
+            path: 'orders/:id',
+            element: <OrderDetail />
+          },
+          {
+            path: 'toppings',
+            element: <Topping />
+          },
+          {
+            path: 'voucher',
+            element: <Voucher />
+          }
+        ]
       }
     ]
   },
