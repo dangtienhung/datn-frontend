@@ -1,35 +1,20 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { ToppingAPI } from '../../api/topping'
-import { ProductForm, ProductSchema } from '../../validate/Form'
-import { useForm } from 'react-hook-form'
-import { useEffect, useMemo, useState } from 'react'
-import { Button, Label, TextInput, Textarea } from 'flowbite-react'
-import { IImage } from '../../interfaces/image.type'
-import SelectMui, { SelectChangeEvent } from '@mui/material/Select'
-import { Box, Chip, MenuItem, OutlinedInput, Select, Theme, Typography, useTheme } from '@mui/material'
-import BoxUpload from '../Upload/index'
-import Modal from '@mui/material/Modal'
 import CategoryApi from '../../api/category'
-import { useAddProductMutation } from '../../api/Product'
+import { ToppingAPI } from '../../api/topping'
+import { useEffect, useRef, useState } from 'react'
+import { BiMinus, BiPlusMedical } from 'react-icons/bi'
+import { Form, Input, Modal, Select, Button as Butt, SelectProps, Space, UploadFile, message } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
+import Upload, { UploadProps } from 'antd/es/upload'
+import { useAddProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { toast } from 'react-toastify'
-import DynamicField from '../DynamicallyField'
+import convertToBase64 from '../../utils/convertBase64'
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
+interface ItemProps {
+  label: string
+  value: string
 }
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight: personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
-  }
-}
+let options: ItemProps[] = []
 
 const AddProductModal = ({
   isOpen,
@@ -38,200 +23,310 @@ const AddProductModal = ({
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const methods = useForm<ProductForm>({
-    mode: 'onChange',
-    resolver: yupResolver(ProductSchema)
-  })
-
-  const [loadingUpload, setLoadingUpload] = useState(false)
-  const [loadingDelete, setLoadingDelete] = useState(false)
-  const [DynamicSize, setDynamicSize] = useState<any[]>([])
-  const [submit, setSubmit] = useState(false)
-
-  const [getDataTopping, { data: DataToping }] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
+  const [getDataTopping] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
   const [getCategory, { data: DataCategory }] = CategoryApi.endpoints.getAllCategory.useLazyQuery()
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const [addProduct] = useAddProductMutation()
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    formState: { errors }
-  } = useMemo(() => methods, [methods])
-
-  const [urls, setUrl] = useState<IImage[]>([])
-  const theme = useTheme()
-  const [toppingState, setToppingState] = useState<string[]>([])
-
-  const handleChangeTopping = (event: SelectChangeEvent<typeof toppingState>) => {
-    setValue('toppings', event.target.value as any, { shouldValidate: true })
-    const {
-      target: { value }
-    } = event
-    setToppingState(typeof value === 'string' ? value.split(',') : value)
-  }
-
-  const onAddProduct = handleSubmit(async (data: any) => {
-    if (submit) {
-      DynamicSize.forEach((item) => {
-        return delete item.errors
-      })
-      console.log(DynamicSize)
-      console.log({ ...data, images: [...urls], sizes: [...DynamicSize] })
-      await addProduct({ ...data, images: [...urls], sizes: [...DynamicSize] }).then((data: any) => {
-        data.error ? toast.error(data.error.data.err?.[0]) : setIsOpen(false)
-      })
-    }
-  })
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [uploadImages] = useUploadImagesProductMutation()
+  const selectOptions = useRef<ItemProps[]>([])
 
   useEffect(() => {
-    getDataTopping()
+    getDataTopping().then(({ data: { data } }: any) => {
+      console.log(data)
+      data.forEach((item: any) => {
+        selectOptions.current.push({
+          label: `${item.name}`,
+          value: `${item._id}`
+        })
+        options = selectOptions.current
+      })
+    })
     getCategory()
-  }, [DataCategory])
+    return () => {
+      getCategory().unsubscribe()
+      getDataTopping().unsubscribe()
+    }
+  }, [])
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await convertToBase64(file.originFileObj!)
+    }
+
+    setPreviewImage(file.url || (file.preview as string))
+    setPreviewOpen(true)
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+  }
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList)
+
+  const uploadButton = (
+    <div className='flex justify-center items-center flex-col'>
+      <BiPlusMedical />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  )
+  const [form] = Form.useForm()
+
+  const selectProps: SelectProps = {
+    mode: 'multiple',
+    style: { width: '100%' },
+    options,
+    placeholder: 'Select Topping...',
+    maxTagCount: 'responsive'
+  }
+
+  const handleOk = () => {
+    form.submit()
+  }
+
+  const handleCancel = () => {
+    setIsOpen(false)
+    form.resetFields()
+    setFileList([])
+  }
+
+  const handleCancelImg = () => setPreviewOpen(false)
+
+  const onFinish = (values: any) => {
+    setConfirmLoading(true)
+    const formData = new FormData()
+    values?.images.forEach((file: any) => {
+      formData.append('images', file.originFileObj)
+    })
+    uploadImages(formData).then(({ data }: any) => {
+      const product = {
+        ...values,
+        images: [...data.urls]
+      }
+
+      addProduct(product).then(() => {
+        setConfirmLoading(false)
+        setIsOpen(false)
+        form.resetFields()
+        toast.success('Thêm sản phẩm thành công!')
+      })
+    })
+  }
 
   return (
-    <div>
+    <>
       <Modal
+        title='Add Product'
         open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-        className='no-scrollbar h-full overflow-y-auto'
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        style={{ top: 20 }}
+        width={900}
+        footer={
+          <Butt className='bg-blue-500 font-bold text-white' onClick={handleOk} loading={confirmLoading}>
+            Sumit
+          </Butt>
+        }
       >
-        <Box
-          sx={{
-            width: '50rem',
-            margin: '0 auto',
-            backgroundColor: 'white',
-            borderRadius: '4px',
-            padding: '10px'
-          }}
-        >
-          <Typography className='p-6 bg-[#e2e8f0]' variant='h5' component='h3'>
-            Add Product
-          </Typography>
-          <form autoComplete='off'>
-            <div className='lg:grid-cols-2 grid gap-6'>
-              <div>
-                <Label htmlFor='productName'>Product name</Label>
-                <TextInput
-                  id='productName'
-                  placeholder='Product...'
-                  className='mt-1'
-                  {...register('name')}
-                  name='name'
-                />
-                <span className='block my-2 text-sm text-red-500'>{errors.name && errors.name.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='category'>Category</Label>
-                <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  label='Age'
-                  className='w-full h-[42px] mt-1'
-                  {...register('category')}
-                  name='category'
-                  defaultValue={''}
-                >
-                  {DataCategory?.docs.map((item) => (
-                    <MenuItem key={item._id} value={item._id}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <span className='block my-2 text-sm text-red-500'>{errors.category && errors.category.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='brand'>Topping</Label>
-                <SelectMui
-                  className='w-full mt-1'
-                  labelId='demo-multiple-chip-label'
-                  id='demo-multiple-chip'
-                  multiple
-                  value={toppingState}
-                  input={<OutlinedInput id='select-multiple-chip' label='Chip' />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={DataToping?.data.find((item) => item._id === value)?.name} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                  {...register('toppings')}
-                  name='toppings'
-                  onChange={handleChangeTopping}
-                >
-                  {DataToping?.data.map((topping) => (
-                    <MenuItem
-                      key={topping._id}
-                      value={topping._id}
-                      style={getStyles(topping.name, toppingState, theme)}
-                    >
-                      {topping.name}
-                    </MenuItem>
-                  ))}
-                </SelectMui>
-                <span className='block my-2 text-sm text-red-500'>{errors.toppings && errors.toppings.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='price'>Sale</Label>
-                <TextInput
-                  id='price'
-                  type='number'
-                  placeholder='Sale...'
-                  className='mt-1'
-                  {...register('sale')}
-                  name='sale'
-                  defaultValue={0}
-                />
-                <span className='block my-2 text-sm text-red-500'>{errors.sale && errors.sale.message}</span>
-              </div>
-              <div>
-                <Label htmlFor='price'>Size</Label>
-                <DynamicField setSubmit={setSubmit} setDynamic={setDynamicSize} submit={submit} />
-              </div>
-              <div className='lg:col-span-2'>
-                <Label htmlFor='producTable.Celletails'>Product details</Label>
-                <Textarea
-                  id='producTable.Celletails'
-                  placeholder='Description...'
-                  rows={6}
-                  className='mt-1'
-                  {...register('description')}
-                  name='description'
-                />
-                <span className='block my-2 text-sm text-red-500'>
-                  {errors.description && errors.description.message}
-                </span>
-              </div>
-            </div>
-            <BoxUpload
-              urls={urls}
-              setUrl={setUrl}
-              setLoadingUpload={setLoadingUpload}
-              setLoadingDelete={setLoadingDelete}
-            />
-          </form>
-          {loadingUpload || loadingDelete ? (
-            <Button color='primary' className='mt-[10px]' disabled>
-              Add product
-            </Button>
-          ) : (
-            <Button
-              color='primary'
-              className='mt-[10px]'
-              onClick={() => {
-                onAddProduct()
-                setSubmit(true)
+        <Form layout='vertical' form={form} onFinish={onFinish}>
+          <div className='grid grid-cols-2 gap-3'>
+            <Form.Item
+              name='name'
+              label='Product Name'
+              rules={[
+                {
+                  required: true,
+                  message: 'Tên sản phẩm không để trống!'
+                },
+                {
+                  whitespace: true
+                }
+              ]}
+              hasFeedback
+            >
+              <Input placeholder='Name...' />
+            </Form.Item>
+            <Form.Item
+              name='category'
+              label='Category'
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn category'
+                }
+              ]}
+              hasFeedback
+            >
+              <Select placeholder='Select category'>
+                {DataCategory?.docs.map((item) => (
+                  <Select.Option key={item._id} value={item._id}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name='sale'
+              label='Sale'
+              initialValue={0}
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy nhập giá sale!'
+                },
+                {
+                  validator(_, value) {
+                    if (value < 0) {
+                      return Promise.reject('Giá sale không hợp lệ!')
+                    }
+                    return Promise.resolve()
+                  }
+                }
+              ]}
+              hasFeedback
+            >
+              <Input type='number' placeholder='Sale...' />
+            </Form.Item>
+            <Form.Item
+              name='toppings'
+              label='Topping'
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn topping!'
+                }
+              ]}
+              hasFeedback
+            >
+              <Select {...selectProps} />
+            </Form.Item>
+            <Form.Item label='Size'>
+              <Form.List
+                name='sizes'
+                rules={[
+                  {
+                    validator(_, value) {
+                      if (!value) {
+                        return Promise.reject('Hãy nhập size!')
+                      }
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
+              >
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'name']}
+                          rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                          hasFeedback
+                        >
+                          <Input placeholder='Size Name...' />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'price']}
+                          rules={[
+                            { required: true, message: 'Hãy nhập giá size!' },
+                            {
+                              validator(_, value) {
+                                if (value && value <= 0) {
+                                  return Promise.reject('Giá size không hợp lệ!')
+                                }
+                                return Promise.resolve()
+                              }
+                            }
+                          ]}
+                          hasFeedback
+                        >
+                          <Input type='number' placeholder='Price Size...' />
+                        </Form.Item>
+                        <div className='cursor-pointer'>
+                          <BiMinus onClick={() => remove(name)} />
+                        </div>
+                      </Space>
+                    ))}
+                    <Form.Item wrapperCol={{ span: 10 }}>
+                      <Butt type='dashed' onClick={() => add()} block icon={<BiPlusMedical />}>
+                        Add field
+                      </Butt>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Form.Item>
+          </div>
+          <Form.Item
+            name='description'
+            label='Product Detail'
+            rules={[
+              {
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject('Hãy nhập Description!')
+                  }
+                  return Promise.resolve()
+                }
+              }
+            ]}
+            hasFeedback
+          >
+            <TextArea rows={6} />
+          </Form.Item>
+        </Form>
+        <Form form={form} onFinish={onFinish}>
+          <Form.Item
+            label='Profile Picture'
+            name='images'
+            valuePropName='fileList'
+            getValueFromEvent={(event) => {
+              return event?.fileList
+            }}
+            rules={[
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (!fileList) {
+                      reject('Hãy upload ảnh!')
+                    } else {
+                      resolve('')
+                    }
+                  })
+                }
+              }
+            ]}
+          >
+            <Upload
+              listType='picture-card'
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+              beforeUpload={(file) => {
+                const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+                if (!isPNG) {
+                  message.error(`${file.name} is not a png, jpg or jpeg file`)
+                }
+                return isPNG ? false : Upload.LIST_IGNORE
               }}
             >
-              Add product
-            </Button>
-          )}
-        </Box>
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+          <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
+            <img
+              alt='example'
+              style={{
+                width: '100%'
+              }}
+              src={previewImage}
+            />
+          </Modal>
+        </Form>
       </Modal>
-    </div>
+    </>
   )
 }
 

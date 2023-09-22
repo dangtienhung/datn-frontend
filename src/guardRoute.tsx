@@ -32,7 +32,7 @@ export const GuardAccount = ({ JSX }: Props) => {
       navigate('/')
     }
   }, [user])
-  return user.role?.name === 'customer' ? <JSX /> : <Navigate to={'/'} />
+  return ['customer', 'Shipper', 'Staff'].includes(user.role?.name) ? <JSX /> : <Navigate to={'/'} />
 }
 
 const GuardAuth = () => {

@@ -64,8 +64,8 @@ export const ApiProducts = createApi({
       invalidatesTags: (_, __, id) => [{ type: 'product', id: id }]
     }),
 
-    uploadImagesProduct: builder.mutation({
-      query: (files: IResImage) => ({
+    uploadImagesProduct: builder.mutation<IResImage, FormData>({
+      query: (files) => ({
         url: '/api/uploadImages',
         method: 'POST',
         body: files
