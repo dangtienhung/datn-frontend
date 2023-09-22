@@ -10,10 +10,12 @@ import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
 import { Link, createSearchParams } from 'react-router-dom'
 import { IQueryConfig } from '../../hook/useQueryConfig'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { SerializedError } from '@reduxjs/toolkit'
 
 interface SidebarCateProps {
-  categories: ICategory[]
-  error: string
+  categories: ICategory[] | undefined
+  error: FetchBaseQueryError | SerializedError | undefined
   isLoading: boolean
   queryConfig: IQueryConfig
 }
@@ -21,7 +23,8 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
-
+  console.log(categories);
+  
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }

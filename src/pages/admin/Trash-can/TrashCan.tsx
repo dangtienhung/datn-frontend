@@ -1,18 +1,26 @@
-import TabPane from 'antd/es/tabs/TabPane'
-import { Tabs } from 'antd'
+import { Tabs, TabsProps } from 'antd'
 import TrashCanProduct from './TrashCanProduct/TrashCanProduct'
 
 const TrashCan = () => {
+  const onChange = (key: string) => {
+    console.log(key)
+  }
+
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'Products',
+      children: <TrashCanProduct />
+    },
+    {
+      key: '2',
+      label: 'User',
+      children: 'User'
+    }
+  ]
   return (
     <div className='p-2'>
-      <Tabs defaultActiveKey='1'>
-        <TabPane tab='Product' key='Products' className='dark:text-[#ffffff]'>
-          <TrashCanProduct />
-        </TabPane>
-        <TabPane tab='User' key='2'>
-          User
-        </TabPane>
-      </Tabs>
+      <Tabs defaultActiveKey='1' type='card' items={items} onChange={onChange} />
     </div>
   )
 }
