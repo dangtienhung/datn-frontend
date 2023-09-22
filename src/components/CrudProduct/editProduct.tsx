@@ -44,7 +44,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     })
   )
   const [open, setOpen] = useState(false)
-  const [addProduct] = useAddProductMutation()
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [uploadImages] = useUploadImagesProductMutation()
   const [updateProduct] = useUpdateProductMutation()
@@ -115,6 +114,19 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
 
   const showModal = () => {
     fillForm({ DataEdit })
+    setFileList(
+      DataEdit.images.map((item) => {
+        return {
+          uid: `${item._id}`,
+          percent: 50,
+          name: `${item.filename}`,
+          status: 'done',
+          url: `${item.url}`,
+          thumbUrl: `${item.url}`,
+          publicId: item.publicId
+        }
+      })
+    )
     setOpen(true)
   }
 
@@ -130,6 +142,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
 
   const onFinish = (values: any) => {
     setConfirmLoading(true)
+
     const formData = new FormData()
     const existImg = fileList
       .filter((item) => {
@@ -146,13 +159,13 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
         }
       })
 
-    if (!values.images) {
-      const product = {
-        _id: DataEdit._id,
-        ...values,
-        images: [...existImg]
-      }
+    let product = {
+      _id: DataEdit._id,
+      ...values,
+      images: [...existImg]
+    }
 
+    if (!values.images) {
       updateProduct(product).then((data: any) => {
         if (data.error) {
           toast.error(data.error.data.err?.[0])
@@ -162,25 +175,42 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
           toast.success('Cập nhật sản phẩm thành công!')
         }
       })
-    } else if (values.images) {
+    } else if (values.images.length > 0) {
+      let check = false
       values?.images.forEach((file: any) => {
-        formData.append('images', file.originFileObj)
-      })
-      uploadImages(formData).then(({ data }: any) => {
-        const product = {
-          _id: DataEdit._id,
-          ...values,
-          images: [...existImg, ...data.urls]
+        if (file.originFileObj) {
+          check = true
+          formData.append('images', file.originFileObj)
         }
-        console.log(product)
-
-        updateProduct(product).then(() => {
-          setConfirmLoading(false)
-          setOpen(false)
-          form.resetFields()
-          toast.success('Cập nhật sản phẩm thành công!')
-        })
       })
+      if (check) {
+        uploadImages(formData).then(({ data }: any) => {
+          product = {
+            _id: DataEdit._id,
+            ...values,
+            images: [...existImg, ...data?.urls]
+          }
+          updateProduct(product).then((data: any) => {
+            if (data.error) {
+              toast.error(data.error.data.err?.[0])
+            } else {
+              setOpen(false)
+              setConfirmLoading(false)
+              toast.success('Cập nhật sản phẩm thành công!')
+            }
+          })
+        })
+      } else {
+        updateProduct(product).then((data: any) => {
+          if (data.error) {
+            toast.error(data.error.data.err?.[0])
+          } else {
+            setOpen(false)
+            setConfirmLoading(false)
+            toast.success('Cập nhật sản phẩm thành công!')
+          }
+        })
+      }
     }
   }
 
