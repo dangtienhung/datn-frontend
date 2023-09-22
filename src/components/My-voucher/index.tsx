@@ -1,7 +1,6 @@
 import { Skeleton } from 'antd'
 import { useGetAllVouchersQuery } from '../../api/voucher'
 import { IVoucher } from '../../interfaces/voucher.type'
-import Loading from '../Loading'
 
 const MyVoucher = () => {
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(0)

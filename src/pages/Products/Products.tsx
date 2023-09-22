@@ -5,10 +5,12 @@ import { RootState } from '../../store/store'
 import { getAllCates } from '../../store/services/categories'
 import { useEffect } from 'react'
 import useQueryConfig from '../../hook/useQueryConfig'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch()
   const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
 
   const {
     categories,
@@ -23,6 +25,23 @@ const ProductsPage = () => {
   useEffect(() => {
     dispatch(getAllCates({ _page: queryConfig._page, _limit: queryConfig.limit }))
   }, [dispatch, queryConfig.limit, queryConfig._page])
+
+  useEffect(() => {
+    if (queryConfig.searchName != '' && ProductList?.docs?.length == 0) {
+      const id = setTimeout(() => {
+        navigate({
+          pathname: '/products',
+          search: createSearchParams({
+            ...queryConfig,
+            searchName: ''
+          }).toString()
+        })
+      }, 1000)
+      return () => {
+        clearTimeout(id)
+      }
+    }
+  })
   return (
     <div>
       <div className='bg-[#fbfbfb]'>

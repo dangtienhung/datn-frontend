@@ -8,12 +8,8 @@ import ListProductItem from '../List-ProductItem'
 import { Pagination } from 'antd'
 import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
-import { RootState } from '../../store/store'
 import SKProduct from '../Skeleton/SKProduct'
 import http from '../../api/instance'
-import { savePage } from '../../store/slices/product.slice'
-import { useAppDispatch } from '../../store/hooks'
-import { useSelector } from 'react-redux'
 import { AxiosError } from 'axios'
 import { IQueryConfig } from '../../hook/useQueryConfig'
 
@@ -29,7 +25,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
   const [product, setProduct] = useState<IProduct | object>({})
   // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
-  const dispatch = useAppDispatch()
+
   const { state } = useLocation()
   const navigate = useNavigate()
   const handleTogglePopup = useCallback(() => {
