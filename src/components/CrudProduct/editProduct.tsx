@@ -318,45 +318,63 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
               >
                 {(fields, { add, remove }) => (
                   <>
-                    {fields.map(({ key, name, ...restField }) => {
-                      return (
-                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'name']}
-                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
-                          >
-                            <Input className='rounded-[5px] h-[32.45px] border-[#d9d9d9]' placeholder='Size Name...' />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'price']}
-                            rules={[
-                              { required: true, message: 'Hãy nhập giá size!' },
-                              {
-                                validator(_, value) {
-                                  if (value && value <= 0) {
-                                    return Promise.reject('Giá size không hợp lệ!')
+                    <div
+                      id='scrollSize'
+                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
+                    >
+                      {fields.map(({ key, name, ...restField }) => {
+                        return (
+                          <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'name']}
+                              rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                            >
+                              <Input
+                                className='rounded-[5px] h-[32.45px] border-[#d9d9d9]'
+                                placeholder='Size Name...'
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'price']}
+                              rules={[
+                                { required: true, message: 'Hãy nhập giá size!' },
+                                {
+                                  validator(_, value) {
+                                    if (value && value <= 0) {
+                                      return Promise.reject('Giá size không hợp lệ!')
+                                    }
+                                    return Promise.resolve()
                                   }
-                                  return Promise.resolve()
                                 }
-                              }
-                            ]}
-                          >
-                            <Input
-                              className='rounded-[5px] h-[32.45px] border-[#d9d9d9]'
-                              type='number'
-                              placeholder='Price Size...'
-                            />
-                          </Form.Item>
-                          <div className='cursor-pointer'>
-                            <BiMinus onClick={() => remove(name)} />
-                          </div>
-                        </Space>
-                      )
-                    })}
+                              ]}
+                            >
+                              <Input
+                                className='rounded-[5px] h-[32.45px] border-[#d9d9d9]'
+                                type='number'
+                                placeholder='Price Size...'
+                              />
+                            </Form.Item>
+                            <div className='cursor-pointer'>
+                              <BiMinus onClick={() => remove(name)} />
+                            </div>
+                          </Space>
+                        )
+                      })}
+                    </div>
                     <Form.Item wrapperCol={{ span: 10 }}>
-                      <Butt type='dashed' onClick={() => add()} block icon={<BiPlusMedical />}>
+                      <Butt
+                        type='dashed'
+                        onClick={() => {
+                          add()
+                          const element = document.getElementById('scrollSize')!
+
+                          element.scrollTo(0, element.scrollHeight)
+                        }}
+                        block
+                        icon={<BiPlusMedical />}
+                      >
                         Add field
                       </Butt>
                     </Form.Item>

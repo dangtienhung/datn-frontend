@@ -12,10 +12,7 @@ interface Props {
 export const GuardSign = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const navigate = useNavigate()
-  const { pathname } = location
   useEffect(() => {
-    console.log(pathname)
-
     if (['admin', 'Shipper', 'Staff'].includes(user.role?.name) && user.role.status === 'active') {
       navigate(`/${toLower(user.role.name)}`)
     } else if (user.role?.name === 'customer') {

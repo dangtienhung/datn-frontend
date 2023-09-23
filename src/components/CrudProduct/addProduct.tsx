@@ -35,6 +35,14 @@ const AddProductModal = ({
   const selectOptions = useRef<ItemProps[]>([])
 
   useEffect(() => {
+    form.setFieldsValue({
+      sizes: [0].map(() => {
+        return {
+          name: '',
+          price: ''
+        }
+      })
+    })
     getDataTopping().then(({ data: { data } }: any) => {
       console.log(data)
       data.forEach((item: any) => {
@@ -165,41 +173,6 @@ const AddProductModal = ({
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              name='sale'
-              label='Sale'
-              initialValue={0}
-              rules={[
-                {
-                  required: true,
-                  message: 'Hãy nhập giá sale!'
-                },
-                {
-                  validator(_, value) {
-                    if (value < 0) {
-                      return Promise.reject('Giá sale không hợp lệ!')
-                    }
-                    return Promise.resolve()
-                  }
-                }
-              ]}
-              hasFeedback
-            >
-              <Input type='number' placeholder='Sale...' />
-            </Form.Item>
-            <Form.Item
-              name='toppings'
-              label='Topping'
-              rules={[
-                {
-                  required: true,
-                  message: 'Hãy chọn topping!'
-                }
-              ]}
-              hasFeedback
-            >
-              <Select {...selectProps} />
-            </Form.Item>
             <Form.Item label='Size'>
               <Form.List
                 name='sizes'
@@ -216,41 +189,55 @@ const AddProductModal = ({
               >
                 {(fields, { add, remove }) => (
                   <>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'name']}
-                          rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
-                          hasFeedback
-                        >
-                          <Input placeholder='Size Name...' />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'price']}
-                          rules={[
-                            { required: true, message: 'Hãy nhập giá size!' },
-                            {
-                              validator(_, value) {
-                                if (value && value <= 0) {
-                                  return Promise.reject('Giá size không hợp lệ!')
+                    <div
+                      id='scrollSize'
+                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
+                    >
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Space key={key} style={{ display: 'flex' }} align='baseline'>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                            hasFeedback
+                          >
+                            <Input placeholder='Size Name...' />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'price']}
+                            rules={[
+                              { required: true, message: 'Hãy nhập giá size!' },
+                              {
+                                validator(_, value) {
+                                  if (value && value <= 0) {
+                                    return Promise.reject('Giá size không hợp lệ!')
+                                  }
+                                  return Promise.resolve()
                                 }
-                                return Promise.resolve()
                               }
-                            }
-                          ]}
-                          hasFeedback
-                        >
-                          <Input type='number' placeholder='Price Size...' />
-                        </Form.Item>
-                        <div className='cursor-pointer'>
-                          <BiMinus onClick={() => remove(name)} />
-                        </div>
-                      </Space>
-                    ))}
+                            ]}
+                            hasFeedback
+                          >
+                            <Input type='number' placeholder='Price Size...' />
+                          </Form.Item>
+                          <div className='cursor-pointer'>
+                            <BiMinus onClick={() => remove(name)} />
+                          </div>
+                        </Space>
+                      ))}
+                    </div>
                     <Form.Item wrapperCol={{ span: 10 }}>
-                      <Butt type='dashed' onClick={() => add()} block icon={<BiPlusMedical />}>
+                      <Butt
+                        type='dashed'
+                        onClick={() => {
+                          add()
+                          const element = document.getElementById('scrollSize')!
+                          element.scrollTop = element.scrollHeight
+                        }}
+                        block
+                        icon={<BiPlusMedical />}
+                      >
                         Add field
                       </Butt>
                     </Form.Item>
@@ -258,6 +245,131 @@ const AddProductModal = ({
                 )}
               </Form.List>
             </Form.Item>
+            <Form.Item>
+              <Form.Item
+                name='sale'
+                label='Sale'
+                initialValue={0}
+                dependencies={['sizes', 1, 'price']}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Hãy nhập giá sale!'
+                  },
+                  // {
+                  //   validator(_, value) {
+                  //     if (value < 0) {
+                  //       return Promise.reject('Giá sale không hợp lệ!')
+                  //     }
+                  //     return Promise.resolve()
+                  //   }
+                  // },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      console.log(getFieldValue('sizes'))
+
+                      if (value < 0) {
+                        return Promise.reject('Giá sale không hợp lệ!')
+                      } else if (value === 0) {
+                        return Promise.resolve()
+                      } else if (value > Number(getFieldValue('sizes')[0]?.price) * 0.7) {
+                        return Promise.reject('Sale không được lớn hơn 70% giá size')
+                      }
+                      return Promise.resolve()
+                    }
+                  })
+                ]}
+                hasFeedback
+              >
+                <Input type='number' placeholder='Sale...' />
+              </Form.Item>
+              <Form.Item
+                name='toppings'
+                label='Topping'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Hãy chọn topping!'
+                  }
+                ]}
+                hasFeedback
+              >
+                <Select {...selectProps} />
+              </Form.Item>
+            </Form.Item>
+            {/* <Form.Item label='Size'>
+              <Form.List
+                name='sizes'
+                rules={[
+                  {
+                    validator(_, value) {
+                      if (!value) {
+                        return Promise.reject('Hãy nhập size!')
+                      }
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
+              >
+                {(fields, { add, remove }) => (
+                  <>
+                    <div
+                      id='scrollSize'
+                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
+                    >
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Space key={key} style={{ display: 'flex' }} align='baseline'>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                            hasFeedback
+                          >
+                            <Input placeholder='Size Name...' />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'price']}
+                            rules={[
+                              { required: true, message: 'Hãy nhập giá size!' },
+                              {
+                                validator(_, value) {
+                                  if (value && value <= 0) {
+                                    return Promise.reject('Giá size không hợp lệ!')
+                                  }
+                                  return Promise.resolve()
+                                }
+                              }
+                            ]}
+                            hasFeedback
+                          >
+                            <Input type='number' placeholder='Price Size...' />
+                          </Form.Item>
+                          <div className='cursor-pointer'>
+                            <BiMinus onClick={() => remove(name)} />
+                          </div>
+                        </Space>
+                      ))}
+                    </div>
+                    <Form.Item wrapperCol={{ span: 10 }}>
+                      <Butt
+                        type='dashed'
+                        onClick={() => {
+                          add()
+                          const element = document.getElementById('scrollSize')!
+
+                          element.scrollTo(0, element.scrollHeight)
+                        }}
+                        block
+                        icon={<BiPlusMedical />}
+                      >
+                        Add field
+                      </Butt>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Form.Item> */}
           </div>
           <Form.Item
             name='description'
