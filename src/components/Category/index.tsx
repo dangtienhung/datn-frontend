@@ -1,15 +1,15 @@
 import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
+import { Link, createSearchParams } from 'react-router-dom'
 
 import { FaBars } from 'react-icons/fa'
 import { ICategory } from '../../interfaces/category.type'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 import NotFound from '../../pages/Not-Found/NotFound'
 import SKProduct from '../Skeleton/SKProduct'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
-import { Link, createSearchParams } from 'react-router-dom'
-import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface SidebarCateProps {
   categories: ICategory[]
@@ -64,6 +64,7 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
             </div>
           </div>
           {categories &&
+            Array.isArray(categories) &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
