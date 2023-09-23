@@ -1,5 +1,5 @@
 import { AiFillEye, AiOutlineSearch } from 'react-icons/ai'
-import { Button, Input, Space, Table, Select } from 'antd'
+import { Button, Input, Space, Table, Select, Popconfirm, message } from 'antd'
 import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { useMemo, useRef, useState } from 'react'
 import type { FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface'
@@ -10,8 +10,9 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import './TrashCanUser.module.css'
 import { AtomSpinner } from 'react-epic-spinners'
 import { GrPowerReset } from 'react-icons/gr'
-import { useGetAllUsersQuery } from '../../../../api/User'
+import { useGetAllUsersQuery, useIsAtiveUserMutation } from '../../../../api/User'
 import { IUser } from '../../../../interfaces/user.type'
+import { pause } from '../../../../utils/pause'
 
 interface DataType {
   key: string
@@ -28,11 +29,12 @@ interface TableParams {
 }
 const TrashCanUser = () => {
   const { data: userList, isLoading } = useGetAllUsersQuery(0)
-
+  const [isAtiveUserFN, isAtiveUserRes] = useIsAtiveUserMutation()
   const dataListUser: IUser[] = useMemo(
-    () => (userList ? userList.docs.filter((item) => item.role.status != 'active') : []),
+    () => (userList ? userList.docs.filter((item) => item.role.status === 'inactive') : []),
     [userList]
   )
+  // console.log(dataListUser, 'dddd')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<IUser[]>(dataListUser ?? [])
   const [loading, setLoading] = useState(false)
@@ -259,6 +261,22 @@ const TrashCanUser = () => {
 
   const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+
+  const handleProductAll = (type: string) => {
+    console.log('a', selectedRowKeys)
+
+    selectedRowKeys.length > 0 &&
+      selectedRowKeys.forEach((item) => {
+        console.log('1')
+        console.log(item)
+        if (type == 'inactive') {
+          isAtiveUserFN({ id: item as string, isStatus: 'inactive' })
+        }
+        if (type == 'active') {
+          isAtiveUserFN({ id: item as string, isStatus: 'active' })
+        }
+      })
+  }
   return (
     <div className='dark:text-[#ffffff] dark:bg-gray-900'>
       <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mb-3 '>Đã xóa gần đây</h1>
@@ -277,6 +295,36 @@ const TrashCanUser = () => {
           }))}
           style={{}}
         />
+        <div className='ml-2'>
+          {/* <Button
+            disabled={isAtiveUserRes.isLoading ||  selectedRowKeys.length < 1}
+            className='sm:h-[35px] lg:h-[40px] bg-green-500 text-[#ffffff] md:text-[13px] lg:text-lg hover:text-gray-200 mr-2 '
+            onClick={() => handleProductAll('active')}
+          >
+            Khôi phục All
+          </Button> */}
+          <Button
+            disabled={isAtiveUserRes.isLoading || selectedRowKeys.length < 1}
+            className='bg-[#f5222d] sm:h-[35px] lg:h-[40px] text-[#ffffff] md:text-[13px] lg:text-lg  '
+          >
+            <Popconfirm
+              title='Bạn có chắc muốn Active account?'
+              // description='Khi thực hiện, bạn sẽ không thể khôi phục sản phẩm này!'
+              onConfirm={async () => {
+                await pause(1000)
+                handleProductAll('inactive')
+                message.success('Active account thành công')
+              }}
+              okText='Yes'
+              okButtonProps={{
+                style: { backgroundColor: 'blue' }
+              }}
+              cancelText='No'
+            >
+              Khôi phục All
+            </Popconfirm>
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

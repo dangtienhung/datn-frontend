@@ -23,8 +23,8 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
-  console.log(categories);
-  
+  // console.log(categories)
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }

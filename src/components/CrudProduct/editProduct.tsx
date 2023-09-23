@@ -22,7 +22,7 @@ interface CustomUploadFile extends UploadFile {
   publicId: string
 }
 
-let options: ItemProps[] = []
+const options: ItemProps[] = []
 
 const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [getDataTopping] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
@@ -69,7 +69,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
   useEffect(() => {
     getDataTopping().then(({ data: { data } }: any) => {
       if (options.length == 0) {
-        data.forEach((item: any) => {
+        data.forEach((item: { name: string; _id: string }) => {
           options.push({
             label: `${item.name}`,
             value: `${item._id}`
@@ -91,7 +91,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
 
     setPreviewImage(file.url || (file.preview as string))
     setPreviewOpen(true)
-    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+    setPreviewTitle(file.name || (file.url ?? '').substring((file.url ?? '').lastIndexOf('/') + 1))
   }
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
@@ -392,7 +392,8 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
             }}
             rules={[
               {
-                validator(_, files) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                validator() {
                   return new Promise((resolve, reject) => {
                     if (fileList.length <= 0) {
                       reject('Hãy upload ảnh!')

@@ -18,7 +18,7 @@ const ProductsPage = () => {
   //   isLoading: isLoadingCategories
   // } = useAppSelector((state: RootState) => state.persistedReducer.category)
   const { data: datacate, error: errorCategories, isLoading: isLoadingCategories } = useGetAllCategoryQuery()
-  const categories =datacate?.docs
+  const categories = datacate?.docs
   const {
     products: ProductList,
     error: errorProduct,
