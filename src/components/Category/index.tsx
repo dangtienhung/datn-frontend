@@ -3,17 +3,19 @@ import { Fragment, useState } from 'react'
 import { Link, createSearchParams } from 'react-router-dom'
 
 import { FaBars } from 'react-icons/fa'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { ICategory } from '../../interfaces/category.type'
 import { IQueryConfig } from '../../hook/useQueryConfig'
 import NotFound from '../../pages/Not-Found/NotFound'
 import SKProduct from '../Skeleton/SKProduct'
+import { SerializedError } from '@reduxjs/toolkit'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
 
 interface SidebarCateProps {
-  categories: ICategory[]
-  error: string
+  categories: ICategory[] | undefined
+  error: FetchBaseQueryError | SerializedError | undefined
   isLoading: boolean
   queryConfig: IQueryConfig
 }
@@ -21,6 +23,7 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
+  console.log(categories)
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)

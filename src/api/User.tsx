@@ -21,6 +21,11 @@ export const ApiUser = createApi({
       query: (page) => `/api/users?_page=${page}`,
       providesTags: ['user']
     }),
+    //get all user
+    getAllRoleUser: builder.query({
+      query: (rolename: string) => `/api/users/${rolename}`,
+      providesTags: ['user']
+    }),
 
     //delete user
     deleteUser: builder.mutation<void, string>({
@@ -85,6 +90,7 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useUpLoadAvartaUserMutation,
-  useDeleteImageUserMutation
+  useDeleteImageUserMutation,
+  useGetAllRoleUserQuery
 } = ApiUser
 export const SizeReducer = ApiUser.reducer
