@@ -1,17 +1,17 @@
 import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
+import { Link, createSearchParams } from 'react-router-dom'
 
 import { FaBars } from 'react-icons/fa'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { ICategory } from '../../interfaces/category.type'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 import NotFound from '../../pages/Not-Found/NotFound'
 import SKProduct from '../Skeleton/SKProduct'
+import { SerializedError } from '@reduxjs/toolkit'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
-import { Link, createSearchParams } from 'react-router-dom'
-import { IQueryConfig } from '../../hook/useQueryConfig'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { SerializedError } from '@reduxjs/toolkit'
 
 interface SidebarCateProps {
   categories: ICategory[] | undefined
@@ -23,8 +23,8 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
-  console.log(categories);
-  
+  console.log(categories)
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }
@@ -67,6 +67,7 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
             </div>
           </div>
           {categories &&
+            Array.isArray(categories) &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
