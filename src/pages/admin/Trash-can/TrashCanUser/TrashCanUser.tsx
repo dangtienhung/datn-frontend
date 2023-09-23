@@ -1,25 +1,23 @@
 import { AiFillEye, AiOutlineSearch } from 'react-icons/ai'
-import { Button, Input, Space, Table, Select, Popconfirm, message } from 'antd'
+import { Button, Input, Space, Table, Select } from 'antd'
 import type { ColumnType, ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
 import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import './TrashCanProduct.module.css'
+import './TrashCanUser.module.css'
 import { AtomSpinner } from 'react-epic-spinners'
-import { useDeleteRealProductMutation, useFetchProductsQuery, useRestoreProductMutation } from '../../../../api/Product'
-import { IProduct } from '../../../../interfaces/products.type'
 import { GrPowerReset } from 'react-icons/gr'
-import { RiDeleteBin6Fill } from 'react-icons/ri'
-import { pause } from '../../../../utils/pause'
+import { useGetAllUsersQuery } from '../../../../api/User'
+import { IUser } from '../../../../interfaces/user.type'
 
-interface DataType extends Omit<IProduct, '_id' | 'images' | 'category'> {
+interface DataType {
   key: string
-  images: string
-  _id?: string
-  category: string
+  avatar: string
+  name: string
+  role: string
 }
 type DataIndex = keyof DataType
 interface TableParams {
@@ -28,24 +26,24 @@ interface TableParams {
   sortOrder?: string
   filters?: Record<string, FilterValue | null>
 }
-const TrashCanProduct = () => {
-  const { data: productData, isLoading } = useFetchProductsQuery(0)
-  const [deleteRealProductFN, deleteRealProductRes] = useDeleteRealProductMutation()
-  const [restoreProductFN, restoreProductRes] = useRestoreProductMutation()
+const TrashCanUser = () => {
+  const { data: userList, isLoading } = useGetAllUsersQuery(0)
 
-  console.log(productData, '::')
+  const dataListUser: IUser[] = useMemo(
+    () => (userList ? userList.docs.filter((item) => item.role.status != 'active') : []),
+    [userList]
+  )
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setData] = useState<IProduct[]>(productData?.docs ? productData.docs : [])
+  const [_, setData] = useState<IUser[]>(dataListUser ?? [])
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: productData?.limit
+      pageSize: userList?.limit
     }
   })
 
-  console.log(productData)
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
@@ -77,23 +75,16 @@ const TrashCanProduct = () => {
   }
   const hasSelected = selectedRowKeys.length > 0
   let data: DataType[] = []
-  if (productData && productData.docs) {
-    data = productData.docs.map((item: IProduct) => ({
-      key: item?._id,
-      name: item.name,
-      images: item.images?.[0]?.url || '',
-      description: item.description,
-      price: item.price,
-      sale: item.sale,
-      category: item.category?.name,
-      sizes: item.sizes.map((size) => ({ name: size.name, price: size.price })),
-      toppings: item.toppings,
-      is_deleted: item.is_deleted,
-      is_active: item.is_active,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt
+  if (dataListUser) {
+    data = dataListUser.map((item: IUser) => ({
+      key: item._id ?? '',
+      name: item.account ?? '',
+      // account: item.account,
+      avatar: item.avatar ?? '',
+      role: item.role.name
     }))
   }
+  console.log(data)
 
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
@@ -196,7 +187,7 @@ const TrashCanProduct = () => {
       className: 'hidden md:table-cell dark:bg-gray-900 dark:text-[#ffffff]'
     },
     {
-      title: 'PRODUCT NAME',
+      title: 'User NAME',
       dataIndex: 'name',
       className: 'dark:bg-gray-900 dark:text-[#ffffff]',
       key: 'name',
@@ -205,19 +196,19 @@ const TrashCanProduct = () => {
     },
     {
       title: 'IMAGES',
-      dataIndex: 'images',
-      key: 'images',
+      dataIndex: 'avatar',
+      key: 'avatar',
       className: 'dark:bg-gray-900 dark:text-[#ffffff]',
       // width: '20%',
-      render: (image) => <img className='w-[70px]' src={image} alt='product image' />
+      render: (avatar) => <img className='w-[70px]' src={avatar} alt='user image' />
     },
     {
-      title: 'CATEGORY',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'ROLE',
+      dataIndex: 'role',
+      key: 'role',
       className: 'dark:bg-gray-900 dark:text-[#ffffff]',
-      // width: '25%',
-      ...getColumnSearchProps('category')
+      // width: '20%',
+      ...getColumnSearchProps('role')
     },
     {
       title: 'ACTION',
@@ -238,7 +229,7 @@ const TrashCanProduct = () => {
                 <GrPowerReset className='md:text-[13px] lg:text-lg' />
               </Link>
             </Button>
-            <Popconfirm
+            {/* <Popconfirm
               title='Xóa vĩnh viễn sản phẩm này?'
               description='Khi thực hiện, bạn sẽ không thể khôi phục sản phẩm này!'
               onConfirm={async () => {
@@ -255,7 +246,7 @@ const TrashCanProduct = () => {
               <Button className='bg-[#f5222d] sm:h-[35px] lg:h-[40px]'>
                 <RiDeleteBin6Fill className='text-[#ffffff] md:text-[13px] lg:text-lg ' />
               </Button>
-            </Popconfirm>
+            </Popconfirm> */}
           </Space>
           <div className='text-right inline-block md:hidden lg:hidden'>
             <GiHamburgerMenu />
@@ -264,26 +255,10 @@ const TrashCanProduct = () => {
       )
     }
   ]
-  // console.log(productData);
+  // console.log(userList);
 
   const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-
-  const handleProductAll = (type: string) => {
-    console.log('a', selectedRowKeys)
-
-    selectedRowKeys.length > 0 &&
-      selectedRowKeys.forEach((item) => {
-        console.log('1')
-        console.log(item)
-        if (type == 'deleteRealProduct') {
-          deleteRealProductFN(item as string)
-        }
-        if (type == 'RestoreProduct') {
-          restoreProductFN(item as string)
-        }
-      })
-  }
   return (
     <div className='dark:text-[#ffffff] dark:bg-gray-900'>
       <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mb-3 '>Đã xóa gần đây</h1>
@@ -302,36 +277,6 @@ const TrashCanProduct = () => {
           }))}
           style={{}}
         />
-        <div className='ml-2'>
-          <Button
-            disabled={restoreProductRes.isLoading || deleteRealProductRes.isLoading || selectedRowKeys.length < 1}
-            className='sm:h-[35px] lg:h-[40px] bg-green-500 text-[#ffffff] md:text-[13px] lg:text-lg hover:text-gray-200 mr-2 '
-            onClick={() => handleProductAll('RestoreProduct')}
-          >
-            Khôi phục All
-          </Button>
-          <Button
-            disabled={restoreProductRes.isLoading || deleteRealProductRes.isLoading || selectedRowKeys.length < 1}
-            className='bg-[#f5222d] sm:h-[35px] lg:h-[40px] text-[#ffffff] md:text-[13px] lg:text-lg  '
-          >
-            <Popconfirm
-              title='Xóa vĩnh viễn sản phẩm này?'
-              description='Khi thực hiện, bạn sẽ không thể khôi phục sản phẩm này!'
-              onConfirm={async () => {
-                await pause(1000)
-                handleProductAll('deleteRealProduct')
-                message.success('Xóa sản phẩm thành công')
-              }}
-              okText='Yes'
-              okButtonProps={{
-                style: { backgroundColor: 'blue' }
-              }}
-              cancelText='No'
-            >
-              Xóa Vĩnh viễn
-            </Popconfirm>
-          </Button>
-        </div>
       </div>
 
       {isLoading ? (
@@ -348,7 +293,7 @@ const TrashCanProduct = () => {
               onChange={handleTableChange}
               // onChange?: (pagination: TablePaginationConfig, filters: Record<string, FilterValue | null>, sorter: SorterResult<RecordType> | SorterResult<RecordType>[], extra: TableCurrentDataSource<RecordType>) => void;
               pagination={{
-                pageSize: productData?.limit,
+                pageSize: userList?.limit,
                 showSizeChanger: true,
                 pageSizeOptions: [10, 20, 50, 100],
                 showTotal: (total, range) => `${range[0]} - ${range[1]} of ${total} items`,
@@ -367,4 +312,4 @@ const TrashCanProduct = () => {
   )
 }
 
-export default TrashCanProduct
+export default TrashCanUser

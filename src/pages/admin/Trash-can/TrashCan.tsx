@@ -1,5 +1,6 @@
 import { Tabs, TabsProps } from 'antd'
 import TrashCanProduct from './TrashCanProduct/TrashCanProduct'
+import TrashCanUser from './TrashCanUser/TrashCanUser'
 
 const TrashCan = () => {
   const onChange = (key: string) => {
@@ -15,7 +16,7 @@ const TrashCan = () => {
     {
       key: '2',
       label: 'User',
-      children: 'User'
+      children: <TrashCanUser />
     }
   ]
   return (

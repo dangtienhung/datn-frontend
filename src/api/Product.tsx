@@ -18,7 +18,7 @@ export const ApiProducts = createApi({
           : [{ type: 'product', id: 'List' }]
     }),
 
-    fetchProductById: builder.query<void, string | undefined>({
+    fetchProductById: builder.query<void, string>({
       query: (id) => `/api/product/${id}`
     }),
 
