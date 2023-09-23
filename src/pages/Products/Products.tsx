@@ -1,12 +1,13 @@
 import { ListProducts, MyCart, SidebarCate } from '../../components'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
 import { RootState } from '../../store/store'
-// import { getAllCates } from '../../store/services/categories'
 import { useEffect } from 'react'
-import useQueryConfig from '../../hook/useQueryConfig'
-import { createSearchParams, useNavigate } from 'react-router-dom'
 import { useGetAllCategoryQuery } from '../../api/category'
+import useQueryConfig from '../../hook/useQueryConfig'
+
+// import { getAllCates } from '../../store/services/categories'
 
 const ProductsPage = () => {
   // const dispatch = useAppDispatch()
