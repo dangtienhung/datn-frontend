@@ -54,7 +54,7 @@ const DynamicField = ({ setSubmit, setDynamic, dataSize }: Props) => {
 
     setField(field)
     setDynamic(field)
-    console.log(field)
+    // console.log(field)
   }, [field, setDynamic, setSubmit])
 
   return (

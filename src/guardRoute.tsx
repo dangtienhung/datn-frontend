@@ -14,7 +14,7 @@ export const GuardSign = ({ JSX }: Props) => {
   const navigate = useNavigate()
   const { pathname } = location
   useEffect(() => {
-    console.log(pathname)
+    // console.log(pathname)
 
     if (['admin', 'Shipper', 'Staff'].includes(user.role?.name) && user.role.status === 'active') {
       navigate(`/${toLower(user.role.name)}`)

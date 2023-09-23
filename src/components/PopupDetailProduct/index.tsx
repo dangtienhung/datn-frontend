@@ -53,7 +53,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     }
   }
   // const handleGetInfoPrd = (data: any) => {
-  //   console.log(data)
+
   // }
 
   useEffect(() => {

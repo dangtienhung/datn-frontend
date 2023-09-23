@@ -99,7 +99,6 @@ const List = () => {
     }, 1000)
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -291,7 +290,6 @@ const List = () => {
       )
     }
   ]
-  // console.log(productData);
 
   return (
     <>

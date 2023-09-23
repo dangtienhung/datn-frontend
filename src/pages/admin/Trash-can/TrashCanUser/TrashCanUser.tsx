@@ -34,7 +34,7 @@ const TrashCanUser = () => {
     () => (userList ? userList.docs.filter((item) => item.role.status === 'inactive') : []),
     [userList]
   )
-  // console.log(dataListUser, 'dddd')
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<IUser[]>(dataListUser ?? [])
   const [loading, setLoading] = useState(false)
@@ -68,7 +68,6 @@ const TrashCanUser = () => {
     }, 1000)
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -86,7 +85,6 @@ const TrashCanUser = () => {
       role: item.role.name
     }))
   }
-  console.log(data)
 
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
@@ -257,18 +255,13 @@ const TrashCanUser = () => {
       )
     }
   ]
-  // console.log(userList);
 
   const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
   const handleProductAll = (type: string) => {
-    console.log('a', selectedRowKeys)
-
     selectedRowKeys.length > 0 &&
       selectedRowKeys.forEach((item) => {
-        console.log('1')
-        console.log(item)
         if (type == 'inactive') {
           isAtiveUserFN({ id: item as string, isStatus: 'inactive' })
         }

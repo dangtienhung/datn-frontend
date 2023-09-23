@@ -127,7 +127,7 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
       formData.append('images', file)
       uploadBanner(formData)
         .then(({ data }: any) => {
-          console.log(data)
+          // console.log(data)
 
           const dataBanner = data.urls.map((item: IBanner) => {
             return {

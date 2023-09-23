@@ -50,7 +50,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
   }
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
-    console.log('Page: ', pageNumber)
+    // console.log('Page: ', pageNumber)
     navigate({
       pathname: '/products',
       search: createSearchParams({
