@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { VoucherForm, VoucherSchema } from '../../../validate/Form'
 import {
@@ -134,6 +134,41 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<(string[] | (string | number | boolean | undefined)[][])[]>([])
   const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] = useDeleteVoucherMutation()
+  const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
+  const [acceptChecked, setAcceptChecked] = useState(false)
+  useEffect(() => {
+    const initialChildChecks: { [key: string]: boolean } = {}
+    if (vouchers?.data?.docs) {
+      vouchers?.data?.docs.forEach((item) => {
+        initialChildChecks[`${item._id}`] = false
+      })
+    }
+    setChildChecks(initialChildChecks)
+  }, [vouchers?.data?.docs])
+  useEffect(() => {
+    const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
+    setAcceptChecked(allChildChecksChecked)
+  }, [ChildChecks])
+
+  const handleAcceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked
+    setAcceptChecked(isChecked)
+
+    const updatedChildChecks: { [key: string]: boolean } = {}
+    for (const key in ChildChecks) {
+      updatedChildChecks[key] = isChecked
+    }
+    setChildChecks(updatedChildChecks)
+  }
+
+  const handleChildChange = (event: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const isChecked = event.target.checked
+
+    setChildChecks((prevChildChecks) => ({
+      ...prevChildChecks,
+      [itemId]: isChecked
+    }))
+  }
   useEffect(() => {
     const rows = [
       ['Code', 'Discount', 'Sale', 'Start Date', 'End Date', 'Is Active', 'Created At', 'Updated At'],
@@ -177,7 +212,9 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
     <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
       <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-          <Table.HeadCell>#</Table.HeadCell>
+          <Table.HeadCell>
+            <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
+          </Table.HeadCell>
           <Table.HeadCell>Code</Table.HeadCell>
           <Table.HeadCell>Discount</Table.HeadCell>
           <Table.HeadCell>Sale</Table.HeadCell>
@@ -189,9 +226,15 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[490px] overflow-y-scroll'>
           {vouchers &&
             vouchers.data.docs.length > 0 &&
-            vouchers.data.docs.map((item: IVoucher, index: number) => (
+            vouchers.data.docs.map((item: IVoucher) => (
               <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                <Table.Cell className='w-4 py-4 px-6'>
+                  <Checkbox
+                    id={`${item._id}`}
+                    checked={ChildChecks[`${item._id}`]}
+                    onChange={(e) => handleChildChange(e, `${item._id}`)}
+                  />
+                </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {item.code}
                 </Table.Cell>

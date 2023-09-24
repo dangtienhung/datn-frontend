@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
 import { useAppDispatch } from '../../../store/hooks'
@@ -16,15 +16,6 @@ import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 import { useGetAllCategoryQuery } from '../../../api/category'
 
 const Categories = () => {
-  // const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
-
-  // const [data, setData] = useState<(string | undefined)[][]>([])
-  // useEffect(() => {
-  //   if (categories && Array.isArray(categories)) {
-  //     const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
-  //     setData([...rows])
-  //   }
-  // }, [categories])
   const { data: dataCate, error } = useGetAllCategoryQuery()
   const [data, setData] = useState<(string | undefined)[][]>([])
   useEffect(() => {
@@ -85,6 +76,41 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
   // console.log(dataCate)
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
+  const [acceptChecked, setAcceptChecked] = useState(false)
+  useEffect(() => {
+    const initialChildChecks: { [key: string]: boolean } = {};
+    if (dataCate) {
+      dataCate.forEach((item) => {
+        initialChildChecks[item._id] = false;
+      });
+    }
+    setChildChecks(initialChildChecks);
+  }, [dataCate]);
+  useEffect(() => {
+    const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
+    setAcceptChecked(allChildChecksChecked)
+  }, [ChildChecks])
+
+  const handleAcceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked
+    setAcceptChecked(isChecked)
+
+    const updatedChildChecks: { [key: string]: boolean } = {}
+    for (const key in ChildChecks) {
+      updatedChildChecks[key] = isChecked
+    }
+    setChildChecks(updatedChildChecks)
+  }
+
+  const handleChildChange = (event: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const isChecked = event.target.checked
+
+    setChildChecks((prevChildChecks) => ({
+      ...prevChildChecks,
+      [itemId]: isChecked
+    }))
+  }
   useEffect(() => {
     dispatch(getAllCates({ _page: currentPage, _limit: 10 }))
   }, [dispatch, currentPage])
@@ -112,7 +138,9 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
       <div className='max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
         <Table className='dark:divide-gray-600 min-h-[500px] min-w-full divide-y divide-gray-200'>
           <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-            <Table.HeadCell>#</Table.HeadCell>
+            <Table.HeadCell>
+              <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
+            </Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             {/* <Table.HeadCell>Slug</Table.HeadCell>
         <Table.HeadCell>Is Deleted</Table.HeadCell> */}
@@ -129,7 +157,13 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
               dataCate &&
               dataCate.map((item, index: number) => (
                 <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                  <Table.Cell className='w-4 py-4 px-6'>
+                    <Checkbox
+                      id={`${item._id}`}
+                      checked={ChildChecks[item._id]}
+                      onChange={(e) => handleChildChange(e, item._id)}
+                    />
+                  </Table.Cell>
                   <Table.Cell className='whitespace-nowrap dark:text-white w-full p-4 text-base font-medium text-gray-900'>
                     {item.name}
                   </Table.Cell>
@@ -164,7 +198,7 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
           </Table.Body>
         </Table>
       </div>
-      {Categories.length === 0 ? (
+      {dataCate && dataCate.length === 0 ? (
         ''
       ) : (
         <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={2} />

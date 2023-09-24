@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
@@ -92,6 +92,41 @@ type AllUsersTableProps = {
 const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProps) {
   const [deleteUser, { isLoading: isDeleting, isError: isDeleteErr }] = useDeleteUserMutation()
   const { user: currentUser } = useAppSelector((state) => state.persistedReducer.auth)
+  const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
+  const [acceptChecked, setAcceptChecked] = useState(false)
+  useEffect(() => {
+    const initialChildChecks: { [key: string]: boolean } = {}
+    if (users?.docs) {
+      users?.docs.forEach((item) => {
+        initialChildChecks[`${item._id}`] = false
+      })
+    }
+    setChildChecks(initialChildChecks)
+  }, [users?.docs])
+  useEffect(() => {
+    const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
+    setAcceptChecked(allChildChecksChecked)
+  }, [ChildChecks])
+
+  const handleAcceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked
+    setAcceptChecked(isChecked)
+
+    const updatedChildChecks: { [key: string]: boolean } = {}
+    for (const key in ChildChecks) {
+      updatedChildChecks[key] = isChecked
+    }
+    setChildChecks(updatedChildChecks)
+  }
+
+  const handleChildChange = (event: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const isChecked = event.target.checked
+
+    setChildChecks((prevChildChecks) => ({
+      ...prevChildChecks,
+      [itemId]: isChecked
+    }))
+  }
 
   const handleDelete = (id: string) => {
     Swal.fire({
@@ -129,7 +164,9 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
     <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
       <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-          <Table.HeadCell>#</Table.HeadCell>
+          <Table.HeadCell>
+            <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
+          </Table.HeadCell>
           <Table.HeadCell>User Name</Table.HeadCell>
           <Table.HeadCell>Address</Table.HeadCell>
           <Table.HeadCell>Position</Table.HeadCell>
@@ -137,12 +174,18 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
         </Table.Head>
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {users?.docs &&
-            users?.docs.map((user, index) => (
+            users?.docs.map((user) => (
               <Table.Row
                 key={user._id}
                 className={`${currentUser._id === user._id && 'hidden'}  hover:bg-gray-100 dark:hover:bg-gray-700`}
               >
-                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                <Table.Cell className='w-4 py-4 px-6'>
+                  <Checkbox
+                    id={`${user._id}`}
+                    checked={ChildChecks[`${user._id}`]}
+                    onChange={(e) => handleChildChange(e, `${user._id}`)}
+                  />
+                </Table.Cell>
                 <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
                   <div className='flex items-center gap-x-4'>
                     <img
