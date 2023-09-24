@@ -86,7 +86,7 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
-    console.log(dateUpdate)
+    // console.log(dateUpdate)
 
     if (!errDate) {
       if (avatar.file) {

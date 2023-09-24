@@ -44,7 +44,6 @@ const AddProductModal = ({
       })
     })
     getDataTopping().then(({ data: { data } }: any) => {
-      console.log(data)
       data.forEach((item: any) => {
         selectOptions.current.push({
           label: `${item.name}`,

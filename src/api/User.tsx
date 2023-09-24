@@ -62,6 +62,16 @@ export const ApiUser = createApi({
       }),
       invalidatesTags: ['user']
     }),
+    isAtiveUser: builder.mutation({
+      query: ({ id, isStatus }: { id: string; isStatus: string }) => ({
+        url: `/api/user/role/${id}`,
+        method: 'PUT',
+        body: {
+          status: isStatus
+        }
+      }),
+      invalidatesTags: ['user']
+    }),
 
     //Upload image user
     upLoadAvartaUser: builder.mutation<IResImage, FormData>({
@@ -91,6 +101,7 @@ export const {
   useUpdateUserMutation,
   useUpLoadAvartaUserMutation,
   useDeleteImageUserMutation,
-  useGetAllRoleUserQuery
+  useGetAllRoleUserQuery,
+  useIsAtiveUserMutation
 } = ApiUser
 export const SizeReducer = ApiUser.reducer

@@ -250,7 +250,6 @@ const EditSizeModal = function ({ size }: EditSizeModalProps) {
   })
 
   const onHandleSubmit = handleSubmit((data: SizeForm) => {
-    console.log(data)
     if (data) {
       updateSizeFn({ data: data, _id: size?._id as string })
         .unwrap()

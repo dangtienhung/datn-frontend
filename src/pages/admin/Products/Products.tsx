@@ -1,33 +1,36 @@
 import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
 import AddProductModal from '../../../components/CrudProduct/addProduct'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
+import { DrawerAddProduct } from '../../../components'
 import { FaPlus } from 'react-icons/fa'
 import ProductsTable from '../../../components/CrudProduct/listProduct'
 import { useState } from 'react'
-import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const ProductsList = () => {
   const [isOpenModalAdd, setOpenModalAdd] = useState(false)
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
 
   return (
     <>
-      <div className='block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex'>
-        <div className='mb-1 w-full'>
+      <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
+        <div className='w-full mb-1'>
           <div className='mb-4'>
             <BreadCrumb />
-            <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl'>Danh sách sản phẩm</h1>
+            <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>Danh sách sản phẩm</h1>
           </div>
-          <div className='block items-center sm:flex'>
+          <div className='sm:flex items-center block'>
             <SearchForProducts />
 
-            <div className='flex w-full items-center sm:justify-end'>
+            <div className='sm:justify-end flex items-center w-full'>
               <Tooltip content='Thêm sản phẩm'>
-                <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
+                <Button color='primary' onClick={() => setIsOpenDrawer(!isOpenDrawer)}>
                   <FaPlus className='mr-3 text-sm' />
                   Thêm sản phẩm
                 </Button>
               </Tooltip>
 
+              <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
               {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
             </div>
           </div>
@@ -48,11 +51,11 @@ const ProductsList = () => {
 
 const SearchForProducts = function () {
   return (
-    <form className='mb-4 sm:mb-0 sm:pr-3' action='#' method='GET'>
+    <form className='sm:mb-0 sm:pr-3 mb-4' action='#' method='GET'>
       <Label htmlFor='products-search' className='sr-only'>
         Search
       </Label>
-      <div className='relative mt-1 lg:w-64 xl:w-96'>
+      <div className='lg:w-64 xl:w-96 relative mt-1'>
         <TextInput id='products-search' name='products-search' placeholder='Search for products' />
       </div>
     </form>
@@ -125,7 +128,7 @@ const SearchForProducts = function () {
 //         </Modal.Header>
 //         <Modal.Body>
 //           <form>
-//             <div className="grid gap-6 lg:grid-cols-2">
+//             <div className="lg:grid-cols-2 grid gap-6">
 //               <div>
 //                 <Label htmlFor="productName">Product name</Label>
 //                 <input type="text" {...register('name')} name="name" id="" />
@@ -136,7 +139,7 @@ const SearchForProducts = function () {
 //                   {...register('name')}
 //                   name="name"
 //                 /> */}
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.name && errors.name.message}
 //                 </span>
 //               </div>
@@ -184,7 +187,7 @@ const SearchForProducts = function () {
 //                     </MenuItem>
 //                   ))}
 //                 </SelectMui>
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.toppings && errors.toppings.message}
 //                 </span>
 //               </div>
@@ -219,7 +222,7 @@ const SearchForProducts = function () {
 //                     </MenuItem>
 //                   ))}
 //                 </SelectMui>
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.sizes && errors.sizes.message}
 //                 </span>
 //               </div>
@@ -233,7 +236,7 @@ const SearchForProducts = function () {
 //                   {...register('price')}
 //                   name="price"
 //                 />
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.price && errors.price.message}
 //                 </span>
 //               </div>
@@ -248,7 +251,7 @@ const SearchForProducts = function () {
 //                   name="sale"
 //                   defaultValue={0}
 //                 />
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.sale && errors.sale.message}
 //                 </span>
 //               </div>
@@ -262,7 +265,7 @@ const SearchForProducts = function () {
 //                   {...register('description')}
 //                   name="description"
 //                 />
-//                 <span className="text-red-500 text-sm block my-2">
+//                 <span className="block my-2 text-sm text-red-500">
 //                   {errors.description && errors.description.message}
 //                 </span>
 //               </div>
@@ -295,7 +298,7 @@ const SearchForProducts = function () {
 //         </Modal.Header>
 //         <Modal.Body>
 //           <form>
-//             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+//             <div className="lg:grid-cols-2 grid grid-cols-1 gap-6">
 //               <div>
 //                 <Label htmlFor="productName">Product name</Label>
 //                 <TextInput
@@ -374,14 +377,14 @@ const SearchForProducts = function () {
 //                 </div>
 //               </div>
 //               <div className="lg:col-span-2">
-//                 <div className="flex w-full items-center justify-center">
-//                   <label className="flex h-32 w-full cursor-pointer flex-col rounded border-2 border-dashed border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700">
+//                 <div className="flex items-center justify-center w-full">
+//                   <label className="hover:bg-gray-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700 flex flex-col w-full h-32 border-2 border-gray-300 border-dashed rounded cursor-pointer">
 //                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
 //                       <HiUpload className="text-4xl text-gray-300" />
-//                       <p className="py-1 text-sm text-gray-600 dark:text-gray-500">
+//                       <p className="dark:text-gray-500 py-1 text-sm text-gray-600">
 //                         Upload a file or drag and drop
 //                       </p>
-//                       <p className="text-xs text-gray-500 dark:text-gray-400">
+//                       <p className="dark:text-gray-400 text-xs text-gray-500">
 //                         PNG, JPG, GIF up to 10MB
 //                       </p>
 //                     </div>
@@ -409,8 +412,8 @@ const SearchForProducts = function () {
 //   }, [dispatch]);
 
 //   return (
-//     <Table className="min-w-full  divide-y divide-gray-200 dark:divide-gray-600">
-//       <Table.Head className="bg-gray-100 dark:bg-gray-700">
+//     <Table className="dark:divide-gray-600 min-w-full divide-y divide-gray-200">
+//       <Table.Head className="dark:bg-gray-700 bg-gray-100">
 //         <Table.HeadCell>
 //           <span className="sr-only">Toggle selected</span>
 //           <Checkbox />
@@ -422,34 +425,34 @@ const SearchForProducts = function () {
 //         <Table.HeadCell>Price</Table.HeadCell>
 //         <Table.HeadCell>Actions</Table.HeadCell>
 //       </Table.Head>
-//       <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+//       <Table.Body className="dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200">
 //         {[0, 1, 2, 4, 5, 6, 7, 8, 9, 10]?.map((_, index: number) => (
 //           <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700">
 //             <Table.Cell className="w-4 p-4">
 //               <Checkbox />
 //             </Table.Cell>
-//             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+//             <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900">
 //               #194556
 //             </Table.Cell>
-//             <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-//               <div className="text-base font-semibold text-gray-900 dark:text-white">
+//             <Table.Cell className="whitespace-nowrap dark:text-gray-400 p-4 text-sm font-normal text-gray-500">
+//               <div className="dark:text-white text-base font-semibold text-gray-900">
 //                 Education Dashboard
 //               </div>
-//               <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
+//               <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
 //                 Html templates
 //               </div>
 //             </Table.Cell>
-//             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+//             <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900">
 //               Images
 //             </Table.Cell>
-//             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+//             <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900">
 //               Angular
 //             </Table.Cell>
-//             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+//             <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900">
 //               $149
 //             </Table.Cell>
-//             <Table.Cell className="space-x-2 whitespace-nowrap p-4">
-//               <div className="flex items-center gap-x-3">
+//             <Table.Cell className="whitespace-nowrap p-4 space-x-2">
+//               <div className="gap-x-3 flex items-center">
 //                 <EditProductModal />
 //                 <Button color="failure">
 //                   <HiTrash className="mr-2 text-lg" />

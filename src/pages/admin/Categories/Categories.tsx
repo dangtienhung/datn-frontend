@@ -33,7 +33,7 @@ const Categories = () => {
       setData([...rows])
     }
   }, [dataCate])
-  // console.log(dataCate?.docs) 
+  // console.log(dataCate?.docs)
   const categories = dataCate?.docs
 
   return (
