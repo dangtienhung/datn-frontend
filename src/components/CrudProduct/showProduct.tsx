@@ -76,15 +76,16 @@ const ShowProduct = ({ product }: Props) => {
                 <span className='text-2xl font-bold'>{product.name}</span>{' '}
                 {product.sale && (
                   <span className='text-2xl font-bold flex items-center'>
-                    <span className='mt-[2px]'>
+                    <span className='mt-[2px] mr-3'>
                       <BiSolidDiscount />
                     </span>
-                    <span className=''>{saleCaculator(product.sizes[0].price, product.sale)}%</span>
+                    <span className=''>{saleCaculator(product.sizes[0].price, product.sale)}</span>
                   </span>
                 )}
               </h1>
               <span className=''>
-                {product.category.name} - {`Sale: ${formatCurrency(product.sale)}`}
+                {product.category.name} -
+                {`Sale: ${product.sale.isPercent ? product.sale.value + '%' : formatCurrency(product.sale.value)}`}
               </span>
               <div className='mt-5'>
                 <h2 className='font-semibold text-lg'>Description</h2>

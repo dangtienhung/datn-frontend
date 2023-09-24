@@ -2,12 +2,25 @@ import CategoryApi from '../../api/category'
 import { ToppingAPI } from '../../api/topping'
 import { useEffect, useRef, useState } from 'react'
 import { BiMinus, BiPlusMedical } from 'react-icons/bi'
-import { Form, Input, Modal, Select, Button as Butt, SelectProps, Space, UploadFile, message } from 'antd'
+import {
+  Form,
+  Input,
+  Modal,
+  Select,
+  Button as Butt,
+  SelectProps,
+  Space,
+  UploadFile,
+  message,
+  InputNumber,
+  Switch
+} from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import Upload, { UploadProps } from 'antd/es/upload'
 import { useAddProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { toast } from 'react-toastify'
 import convertToBase64 from '../../utils/convertBase64'
+import { formatCurrency, formatNumberDigits } from '../../utils/formatCurrency'
 
 interface ItemProps {
   label: string
@@ -15,6 +28,10 @@ interface ItemProps {
 }
 
 let options: ItemProps[] = []
+
+const onChange = (value: number | string) => {
+  console.log('changed', value)
+}
 
 const AddProductModal = ({
   isOpen,
@@ -31,8 +48,10 @@ const AddProductModal = ({
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [addProduct] = useAddProductMutation()
   const [confirmLoading, setConfirmLoading] = useState(false)
+  const [isPercent, setIsPercent] = useState(false)
   const [uploadImages] = useUploadImagesProductMutation()
   const selectOptions = useRef<ItemProps[]>([])
+  const [form] = Form.useForm()
 
   useEffect(() => {
     form.setFieldsValue({
@@ -77,7 +96,6 @@ const AddProductModal = ({
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   )
-  const [form] = Form.useForm()
 
   const selectProps: SelectProps = {
     mode: 'multiple',
@@ -89,6 +107,20 @@ const AddProductModal = ({
 
   const handleOk = () => {
     form.submit()
+  }
+
+  const onResetSale = () => {
+    form.setFieldsValue({
+      sale: 0
+    })
+  }
+
+  const getMin = (array: any) => {
+    let min = formatNumberDigits(Number(array[0].price))
+    for (let i = 1; i < array.length; i++) {
+      min = min < formatNumberDigits(Number(array[0].price)) ? min : formatNumberDigits(Number(array[0].price))
+    }
+    return min
   }
 
   const handleCancel = () => {
@@ -108,6 +140,10 @@ const AddProductModal = ({
     uploadImages(formData).then(({ data }: any) => {
       const product = {
         ...values,
+        sale: {
+          value: values.sale,
+          isPercent: isPercent
+        },
         images: [...data.urls]
       }
 
@@ -193,7 +229,7 @@ const AddProductModal = ({
                       className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
                     >
                       {fields.map(({ key, name, ...restField }) => (
-                        <Space key={key} style={{ display: 'flex' }} align='baseline'>
+                        <Space key={key} style={{ display: 'flex', alignItems: 'center' }} align='center'>
                           <Form.Item
                             {...restField}
                             name={[name, 'name']}
@@ -218,11 +254,16 @@ const AddProductModal = ({
                             ]}
                             hasFeedback
                           >
-                            <Input type='number' placeholder='Price Size...' />
+                            <InputNumber
+                              className='w-full'
+                              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                              parser={(value: any) => value!.replace(/ \s?|(\.*)/g, '')}
+                              placeholder='Price Size...'
+                            />
                           </Form.Item>
-                          <div className='cursor-pointer'>
+                          <Form.Item className='cursor-pointer'>
                             <BiMinus onClick={() => remove(name)} />
-                          </div>
+                          </Form.Item>
                         </Space>
                       ))}
                     </div>
@@ -245,43 +286,70 @@ const AddProductModal = ({
               </Form.List>
             </Form.Item>
             <Form.Item>
-              <Form.Item
-                name='sale'
-                label='Sale'
-                initialValue={0}
-                dependencies={['sizes', 1, 'price']}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Hãy nhập giá sale!'
-                  },
-                  // {
-                  //   validator(_, value) {
-                  //     if (value < 0) {
-                  //       return Promise.reject('Giá sale không hợp lệ!')
-                  //     }
-                  //     return Promise.resolve()
-                  //   }
-                  // },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      console.log(getFieldValue('sizes'))
-
-                      if (value < 0) {
-                        return Promise.reject('Giá sale không hợp lệ!')
-                      } else if (value === 0) {
-                        return Promise.resolve()
-                      } else if (value > Number(getFieldValue('sizes')[0]?.price) * 0.7) {
-                        return Promise.reject('Sale không được lớn hơn 70% giá size')
-                      }
-                      return Promise.resolve()
-                    }
-                  })
-                ]}
-                hasFeedback
+              <Space.Compact
+                block
+                direction='horizontal'
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 5 }}
               >
-                <Input type='number' placeholder='Sale...' />
-              </Form.Item>
+                <Form.Item
+                  name='sale'
+                  label='Sale'
+                  initialValue={0}
+                  style={{ flex: 1 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Hãy nhập giá sale!'
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        console.log(formatNumberDigits(value))
+
+                        if (!isPercent) {
+                          if (value < 0) {
+                            return Promise.reject('Giá sale không hợp lệ!')
+                          } else if (value === 0) {
+                            return Promise.resolve()
+                          } else if (getFieldValue('sizes').length > 1) {
+                            const min = formatNumberDigits(getMin(getFieldValue('sizes')))
+                            return formatNumberDigits(value) > min * 0.7
+                              ? Promise.reject('Sale không được lớn hơn 70% giá size nhỏ nhất')
+                              : Promise.resolve()
+                          } else if (
+                            getFieldValue('sizes').length == 1 &&
+                            formatNumberDigits(value) >
+                              formatNumberDigits(Number(getFieldValue('sizes')[0]?.price)) * 0.7
+                          ) {
+                            return Promise.reject('Sale không được lớn hơn 70% giá size')
+                          }
+                        }
+                        return Promise.resolve()
+                      }
+                    })
+                  ]}
+                  // hasFeedback
+                >
+                  <InputNumber
+                    addonAfter={isPercent ? '%' : 'VND'}
+                    className='w-full'
+                    placeholder='Sale...'
+                    min={0}
+                    max={isPercent ? 100 : ''}
+                    formatter={(value) => (isPercent ? `${value}` : `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}
+                    parser={(value: any) => (isPercent ? value!.replace('', '') : value!.replace(/ \s?|(\.*)/g, ''))}
+                  />
+                </Form.Item>
+                <Switch
+                  checked={isPercent}
+                  checkedChildren='%'
+                  unCheckedChildren='VND'
+                  className='bg-red-500 font-bold'
+                  onChange={() => {
+                    onResetSale()
+                    setIsPercent(!isPercent)
+                  }}
+                />
+              </Space.Compact>
               <Form.Item
                 name='toppings'
                 label='Topping'
