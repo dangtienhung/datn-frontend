@@ -18,7 +18,7 @@ import {
 } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import Upload, { UploadProps } from 'antd/es/upload'
-import { useAddProductMutation, useUpdateProductMutation, useUploadImagesProductMutation } from '../../api/Product'
+import { useUpdateProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { ToppingAPI } from '../../api/topping'
 import CategoryApi from '../../api/category'
 import { toast } from 'react-toastify'

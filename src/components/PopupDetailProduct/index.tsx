@@ -77,8 +77,12 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: nameRadioInput.price - product.sale,
-      total: (price - product.sale) * quantity,
+      price: product.sale.isPercent
+        ? nameRadioInput.price * ((100 - product.sale.value) / 100)
+        : nameRadioInput.price - product.sale.value,
+      total: product.sale.isPercent
+        ? price * ((100 - product.sale.value) / 100) * quantity
+        : (price - product.sale.value) * quantity,
       product: product._id
     }
 
@@ -127,9 +131,20 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className='price flex items-end mt-4'>
                   <span className='new-price pr-[10px] text-[#8a733f] font-semibold text-sm'>
-                    {product.sale && product.sale > 0 ? formatCurrency(price - product?.sale) : formatCurrency(price)}
+                    {product.sale.value > 0
+                      ? formatCurrency(
+                          product.sale.isPercent
+                            ? price * ((100 - product.sale.value) / 100) * quantity
+                            : (price - product.sale.value) * quantity
+                        )
+                      : formatCurrency(price * quantity)}
                   </span>
-                  {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''}
+                  {product.sale ? (
+                    <span className='old-price text-xs line-through'>{formatCurrency(price * quantity)}</span>
+                  ) : (
+                    ''
+                  )}
+                  {/* {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''} */}
                 </div>
                 <div className='quantity md:items-center gap-y-2 md:flex-row flex flex-col items-start mt-5'>
                   <div className='change-quantity flex'>
@@ -154,8 +169,12 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
                   >
                     +
-                    {product.sale && product.sale > 0
-                      ? formatCurrency((price - product.sale) * quantity)
+                    {product.sale.value > 0
+                      ? formatCurrency(
+                          product.sale.isPercent
+                            ? price * ((100 - product.sale.value) / 100) * quantity
+                            : (price - product.sale.value) * quantity
+                        )
                       : formatCurrency(price * quantity)}
                   </button>
                 </div>
@@ -198,7 +217,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                         <label
                           onChange={() => {
                             setPrice(item.price + totalToppingPrice)
-                            // setNameRadioInput(item.name);
                             setNameRadioInput(item)
                           }}
                           key={uuidv4()}
@@ -207,7 +225,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           <span className='block'>Size {item.name}</span>
                           <input
                             className='absolute opacity-0'
-                            defaultChecked={product.sizes[0].price === item.price ? true : false}
+                            defaultChecked={nameRadioInput.price === item.price ? true : false}
                             type='radio'
                             name='size'
                             value={item.price}

@@ -79,7 +79,7 @@ const ShowProduct = ({ product }: Props) => {
                     <span className='mt-[2px] mr-3'>
                       <BiSolidDiscount />
                     </span>
-                    <span className=''>{saleCaculator(product.sizes[0].price, product.sale)}</span>
+                    <span className=''>{saleCaculator(product.sale)}</span>
                   </span>
                 )}
               </h1>
