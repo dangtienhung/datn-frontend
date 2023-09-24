@@ -1,4 +1,4 @@
-import { Button, Modal, Table, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Modal, Table, Tooltip } from 'flowbite-react'
 import {
   useAddBannerMutation,
   useDeleteBannerMutation,
@@ -8,7 +8,7 @@ import {
 } from '../../../api/banner'
 import Loading from '../../../components/Loading'
 import { HiPlus, HiTrash, HiUpload } from 'react-icons/hi'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IBanner } from '../../../interfaces/banner.type'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import Swal from 'sweetalert2'
@@ -20,6 +20,41 @@ const Banner = () => {
   const { data, isLoading } = useGetAllBannersQuery()
   const [deleteBanner] = useDeleteBannerMutation()
   const [deleteImageBanner, { isLoading: isDeleting }] = useDeleteImageBannerMutation()
+  const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
+  const [acceptChecked, setAcceptChecked] = useState(false)
+  useEffect(() => {
+    const initialChildChecks: { [key: string]: boolean } = {}
+    if (data?.banners) {
+      data?.banners.forEach((item) => {
+        initialChildChecks[`${item._id}`] = false
+      })
+    }
+    setChildChecks(initialChildChecks)
+  }, [data?.banners])
+  useEffect(() => {
+    const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
+    setAcceptChecked(allChildChecksChecked)
+  }, [ChildChecks])
+
+  const handleAcceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked
+    setAcceptChecked(isChecked)
+
+    const updatedChildChecks: { [key: string]: boolean } = {}
+    for (const key in ChildChecks) {
+      updatedChildChecks[key] = isChecked
+    }
+    setChildChecks(updatedChildChecks)
+  }
+
+  const handleChildChange = (event: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const isChecked = event.target.checked
+
+    setChildChecks((prevChildChecks) => ({
+      ...prevChildChecks,
+      [itemId]: isChecked
+    }))
+  }
   const handleDeleteBanner = (id: string) => {
     Swal.fire({
       title: 'Bạn thực sự muốn xóa?',
@@ -65,15 +100,23 @@ const Banner = () => {
                   <div className='max-h-[600px] overflow-y-scroll hidden-scroll-bar'>
                     <Table className='dark:divide-gray-600 min-h-[600px] min-w-full divide-y divide-gray-200'>
                       <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-                        <Table.HeadCell>#</Table.HeadCell>
+                        <Table.HeadCell>
+                          <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
+                        </Table.HeadCell>
                         <Table.HeadCell>Image</Table.HeadCell>
                         <Table.HeadCell>Actions</Table.HeadCell>
                       </Table.Head>
                       <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
                         {data?.banners &&
-                          data.banners.map((item, index: number) => (
-                            <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                              <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                          data.banners.map((item) => (
+                            <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
+                              <Table.Cell className='w-4 py-4 px-6'>
+                                <Checkbox
+                                  id={`${item._id}`}
+                                  checked={ChildChecks[`${item._id}`]}
+                                  onChange={(e) => handleChildChange(e, `${item._id}`)}
+                                />
+                              </Table.Cell>
                               <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                                 <img className='w-[500px] max-w-[500px] object-cover' src={item.url} alt='' />
                               </Table.Cell>

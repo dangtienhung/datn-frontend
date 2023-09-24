@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
@@ -93,7 +93,9 @@ const ToppingTable = () => {
       <div className='max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
         <Table className='dark:divide-gray-600 min-h-[500px] min-w-full divide-y divide-gray-200'>
           <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-            <Table.HeadCell>#</Table.HeadCell>
+            <Table.HeadCell>
+              <Checkbox></Checkbox>
+            </Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>Price</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
@@ -102,7 +104,9 @@ const ToppingTable = () => {
             {dataTopping?.data &&
               dataTopping.data.map((item, index: number) => (
                 <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                  <Table.Cell className='w-4 py-4 px-6'>
+                    <Checkbox></Checkbox>
+                  </Table.Cell>
                   <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                     {item.name}
                   </Table.Cell>

@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 
@@ -81,7 +81,41 @@ type AllUsersTableProps = {
 }
 const AllSizeListTable = function ({ dataListSize, isLoading, isError }: AllUsersTableProps) {
   const [deleteSize] = useDeleteSizeMutation()
+  const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
+  const [acceptChecked, setAcceptChecked] = useState(false)
+  useEffect(() => {
+    const initialChildChecks: { [key: string]: boolean } = {}
+    if (dataListSize?.docs) {
+      dataListSize?.docs.forEach((item) => {
+        initialChildChecks[`${item._id}`] = false
+      })
+    }
+    setChildChecks(initialChildChecks)
+  }, [dataListSize?.docs])
+  useEffect(() => {
+    const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
+    setAcceptChecked(allChildChecksChecked)
+  }, [ChildChecks])
 
+  const handleAcceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked
+    setAcceptChecked(isChecked)
+
+    const updatedChildChecks: { [key: string]: boolean } = {}
+    for (const key in ChildChecks) {
+      updatedChildChecks[key] = isChecked
+    }
+    setChildChecks(updatedChildChecks)
+  }
+
+  const handleChildChange = (event: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const isChecked = event.target.checked
+
+    setChildChecks((prevChildChecks) => ({
+      ...prevChildChecks,
+      [itemId]: isChecked
+    }))
+  }
   const handleDelete = (id: string) => {
     if (!isError && id) {
       Swal.fire({
@@ -107,7 +141,9 @@ const AllSizeListTable = function ({ dataListSize, isLoading, isError }: AllUser
     <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
       <Table className='min-w-full  min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-          <Table.HeadCell>#</Table.HeadCell>
+          <Table.HeadCell>
+            <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
+          </Table.HeadCell>
           <Table.HeadCell> Name</Table.HeadCell>
           <Table.HeadCell> Price</Table.HeadCell>
 
@@ -115,9 +151,16 @@ const AllSizeListTable = function ({ dataListSize, isLoading, isError }: AllUser
         </Table.Head>
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {dataListSize?.docs &&
-            dataListSize.docs.map((size, index) => (
+            dataListSize.docs.map((size) => (
               <Table.Row key={size._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700`}>
-                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                <Table.Cell className='w-4 py-4 px-6'>
+                  {' '}
+                  <Checkbox
+                    id={`${size._id}`}
+                    checked={ChildChecks[`${size._id}`]}
+                    onChange={(e) => handleChildChange(e, `${size._id}`)}
+                  />
+                </Table.Cell>
 
                 <Table.Cell className='whitespace-nowrap dark:text-white w-full p-4 text-base font-medium text-gray-900'>
                   {size.name}
