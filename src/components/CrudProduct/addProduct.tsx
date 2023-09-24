@@ -2,12 +2,25 @@ import CategoryApi from '../../api/category'
 import { ToppingAPI } from '../../api/topping'
 import { useEffect, useRef, useState } from 'react'
 import { BiMinus, BiPlusMedical } from 'react-icons/bi'
-import { Form, Input, Modal, Select, Button as Butt, SelectProps, Space, UploadFile, message } from 'antd'
+import {
+  Form,
+  Input,
+  Modal,
+  Select,
+  Button as Butt,
+  SelectProps,
+  Space,
+  UploadFile,
+  message,
+  InputNumber,
+  Switch
+} from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import Upload, { UploadProps } from 'antd/es/upload'
 import { useAddProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { toast } from 'react-toastify'
 import convertToBase64 from '../../utils/convertBase64'
+import { formatCurrency, formatNumberDigits } from '../../utils/formatCurrency'
 
 interface ItemProps {
   label: string
@@ -15,6 +28,10 @@ interface ItemProps {
 }
 
 let options: ItemProps[] = []
+
+const onChange = (value: number | string) => {
+  console.log('changed', value)
+}
 
 const AddProductModal = ({
   isOpen,
@@ -31,10 +48,20 @@ const AddProductModal = ({
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [addProduct] = useAddProductMutation()
   const [confirmLoading, setConfirmLoading] = useState(false)
+  const [isPercent, setIsPercent] = useState(false)
   const [uploadImages] = useUploadImagesProductMutation()
   const selectOptions = useRef<ItemProps[]>([])
+  const [form] = Form.useForm()
 
   useEffect(() => {
+    form.setFieldsValue({
+      sizes: [0].map(() => {
+        return {
+          name: '',
+          price: ''
+        }
+      })
+    })
     getDataTopping().then(({ data: { data } }: any) => {
       data.forEach((item: any) => {
         selectOptions.current.push({
@@ -69,7 +96,6 @@ const AddProductModal = ({
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   )
-  const [form] = Form.useForm()
 
   const selectProps: SelectProps = {
     mode: 'multiple',
@@ -81,6 +107,20 @@ const AddProductModal = ({
 
   const handleOk = () => {
     form.submit()
+  }
+
+  const onResetSale = () => {
+    form.setFieldsValue({
+      sale: 0
+    })
+  }
+
+  const getMin = (array: any) => {
+    let min = formatNumberDigits(Number(array[0].price))
+    for (let i = 1; i < array.length; i++) {
+      min = min < formatNumberDigits(Number(array[0].price)) ? min : formatNumberDigits(Number(array[0].price))
+    }
+    return min
   }
 
   const handleCancel = () => {
@@ -100,6 +140,10 @@ const AddProductModal = ({
     uploadImages(formData).then(({ data }: any) => {
       const product = {
         ...values,
+        sale: {
+          value: values.sale,
+          isPercent: isPercent
+        },
         images: [...data.urls]
       }
 
@@ -164,41 +208,6 @@ const AddProductModal = ({
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              name='sale'
-              label='Sale'
-              initialValue={0}
-              rules={[
-                {
-                  required: true,
-                  message: 'Hãy nhập giá sale!'
-                },
-                {
-                  validator(_, value) {
-                    if (value < 0) {
-                      return Promise.reject('Giá sale không hợp lệ!')
-                    }
-                    return Promise.resolve()
-                  }
-                }
-              ]}
-              hasFeedback
-            >
-              <Input type='number' placeholder='Sale...' />
-            </Form.Item>
-            <Form.Item
-              name='toppings'
-              label='Topping'
-              rules={[
-                {
-                  required: true,
-                  message: 'Hãy chọn topping!'
-                }
-              ]}
-              hasFeedback
-            >
-              <Select {...selectProps} />
-            </Form.Item>
             <Form.Item label='Size'>
               <Form.List
                 name='sizes'
@@ -215,41 +224,60 @@ const AddProductModal = ({
               >
                 {(fields, { add, remove }) => (
                   <>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'name']}
-                          rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
-                          hasFeedback
-                        >
-                          <Input placeholder='Size Name...' />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'price']}
-                          rules={[
-                            { required: true, message: 'Hãy nhập giá size!' },
-                            {
-                              validator(_, value) {
-                                if (value && value <= 0) {
-                                  return Promise.reject('Giá size không hợp lệ!')
+                    <div
+                      id='scrollSize'
+                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
+                    >
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Space key={key} style={{ display: 'flex', alignItems: 'center' }} align='center'>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                            hasFeedback
+                          >
+                            <Input placeholder='Size Name...' />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'price']}
+                            rules={[
+                              { required: true, message: 'Hãy nhập giá size!' },
+                              {
+                                validator(_, value) {
+                                  if (value && value <= 0) {
+                                    return Promise.reject('Giá size không hợp lệ!')
+                                  }
+                                  return Promise.resolve()
                                 }
-                                return Promise.resolve()
                               }
-                            }
-                          ]}
-                          hasFeedback
-                        >
-                          <Input type='number' placeholder='Price Size...' />
-                        </Form.Item>
-                        <div className='cursor-pointer'>
-                          <BiMinus onClick={() => remove(name)} />
-                        </div>
-                      </Space>
-                    ))}
+                            ]}
+                            hasFeedback
+                          >
+                            <InputNumber
+                              className='w-full'
+                              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                              parser={(value: any) => value!.replace(/ \s?|(\.*)/g, '')}
+                              placeholder='Price Size...'
+                            />
+                          </Form.Item>
+                          <Form.Item className='cursor-pointer'>
+                            <BiMinus onClick={() => remove(name)} />
+                          </Form.Item>
+                        </Space>
+                      ))}
+                    </div>
                     <Form.Item wrapperCol={{ span: 10 }}>
-                      <Butt type='dashed' onClick={() => add()} block icon={<BiPlusMedical />}>
+                      <Butt
+                        type='dashed'
+                        onClick={() => {
+                          add()
+                          const element = document.getElementById('scrollSize')!
+                          element.scrollTop = element.scrollHeight
+                        }}
+                        block
+                        icon={<BiPlusMedical />}
+                      >
                         Add field
                       </Butt>
                     </Form.Item>
@@ -257,6 +285,158 @@ const AddProductModal = ({
                 )}
               </Form.List>
             </Form.Item>
+            <Form.Item>
+              <Space.Compact
+                block
+                direction='horizontal'
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 5 }}
+              >
+                <Form.Item
+                  name='sale'
+                  label='Sale'
+                  initialValue={0}
+                  style={{ flex: 1 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Hãy nhập giá sale!'
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        console.log(formatNumberDigits(value))
+
+                        if (!isPercent) {
+                          if (value < 0) {
+                            return Promise.reject('Giá sale không hợp lệ!')
+                          } else if (value === 0) {
+                            return Promise.resolve()
+                          } else if (getFieldValue('sizes').length > 1) {
+                            const min = formatNumberDigits(getMin(getFieldValue('sizes')))
+                            return formatNumberDigits(value) > min * 0.7
+                              ? Promise.reject('Sale không được lớn hơn 70% giá size nhỏ nhất')
+                              : Promise.resolve()
+                          } else if (
+                            getFieldValue('sizes').length == 1 &&
+                            formatNumberDigits(value) >
+                              formatNumberDigits(Number(getFieldValue('sizes')[0]?.price)) * 0.7
+                          ) {
+                            return Promise.reject('Sale không được lớn hơn 70% giá size')
+                          }
+                        }
+                        return Promise.resolve()
+                      }
+                    })
+                  ]}
+                  // hasFeedback
+                >
+                  <InputNumber
+                    addonAfter={isPercent ? '%' : 'VND'}
+                    className='w-full'
+                    placeholder='Sale...'
+                    min={0}
+                    max={isPercent ? 100 : ''}
+                    formatter={(value) => (isPercent ? `${value}` : `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}
+                    parser={(value: any) => (isPercent ? value!.replace('', '') : value!.replace(/ \s?|(\.*)/g, ''))}
+                  />
+                </Form.Item>
+                <Switch
+                  checked={isPercent}
+                  checkedChildren='%'
+                  unCheckedChildren='VND'
+                  className='bg-red-500 font-bold'
+                  onChange={() => {
+                    onResetSale()
+                    setIsPercent(!isPercent)
+                  }}
+                />
+              </Space.Compact>
+              <Form.Item
+                name='toppings'
+                label='Topping'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Hãy chọn topping!'
+                  }
+                ]}
+                hasFeedback
+              >
+                <Select {...selectProps} />
+              </Form.Item>
+            </Form.Item>
+            {/* <Form.Item label='Size'>
+              <Form.List
+                name='sizes'
+                rules={[
+                  {
+                    validator(_, value) {
+                      if (!value) {
+                        return Promise.reject('Hãy nhập size!')
+                      }
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
+              >
+                {(fields, { add, remove }) => (
+                  <>
+                    <div
+                      id='scrollSize'
+                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
+                    >
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Space key={key} style={{ display: 'flex' }} align='baseline'>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
+                            hasFeedback
+                          >
+                            <Input placeholder='Size Name...' />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'price']}
+                            rules={[
+                              { required: true, message: 'Hãy nhập giá size!' },
+                              {
+                                validator(_, value) {
+                                  if (value && value <= 0) {
+                                    return Promise.reject('Giá size không hợp lệ!')
+                                  }
+                                  return Promise.resolve()
+                                }
+                              }
+                            ]}
+                            hasFeedback
+                          >
+                            <Input type='number' placeholder='Price Size...' />
+                          </Form.Item>
+                          <div className='cursor-pointer'>
+                            <BiMinus onClick={() => remove(name)} />
+                          </div>
+                        </Space>
+                      ))}
+                    </div>
+                    <Form.Item wrapperCol={{ span: 10 }}>
+                      <Butt
+                        type='dashed'
+                        onClick={() => {
+                          add()
+                          const element = document.getElementById('scrollSize')!
+
+                          element.scrollTo(0, element.scrollHeight)
+                        }}
+                        block
+                        icon={<BiPlusMedical />}
+                      >
+                        Add field
+                      </Butt>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Form.Item> */}
           </div>
           <Form.Item
             name='description'

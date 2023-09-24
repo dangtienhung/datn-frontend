@@ -85,7 +85,6 @@ const TrashCanUser = () => {
       role: item.role.name
     }))
   }
-
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)

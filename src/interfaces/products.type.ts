@@ -9,7 +9,10 @@ export interface IProduct {
   images: IImage[]
   description: string
   price: number
-  sale: number
+  sale: {
+    value: number,
+    isPercent: boolean
+  }
   category: ICategory
   sizes: { name: string; price: number }[]
   toppings: ITopping[]

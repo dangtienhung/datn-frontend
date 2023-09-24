@@ -24,13 +24,13 @@ const ProductsList = () => {
 
             <div className='sm:justify-end flex items-center w-full'>
               <Tooltip content='Thêm sản phẩm'>
-                <Button color='primary' onClick={() => setIsOpenDrawer(!isOpenDrawer)}>
+                <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
                   <FaPlus className='mr-3 text-sm' />
                   Thêm sản phẩm
                 </Button>
               </Tooltip>
 
-              <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
+              {/* <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} /> */}
               {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
             </div>
           </div>
