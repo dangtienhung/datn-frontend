@@ -263,7 +263,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
         width={900}
         footer={
           <Butt className='bg-blue-500 font-bold text-white' onClick={handleOk} loading={confirmLoading}>
-            Sumit
+            Submit
           </Butt>
         }
       >
