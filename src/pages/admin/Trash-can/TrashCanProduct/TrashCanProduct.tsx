@@ -7,7 +7,7 @@ import Highlighter from 'react-highlight-words'
 import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import './TrashCanProduct.module.css'
+import './TrashCanProduct.scss'
 import { AtomSpinner } from 'react-epic-spinners'
 import { useDeleteRealProductMutation, useFetchProductsQuery, useRestoreProductMutation } from '../../../../api/Product'
 import { IProduct } from '../../../../interfaces/products.type'
@@ -290,7 +290,7 @@ const TrashCanProduct = () => {
       <div className='flex'>
         <h2 className='text-[15px]'>Tìm theo danh mục:</h2>
         <Select
-          className='w-full max-w-[250px] ml-[20px] custom-select'
+          className='w-full max-w-[250px] ml-[20px] custom-select !border-none !outline-none focus:!ring-0'
           mode='multiple'
           allowClear={true}
           placeholder='Lọc theo danh mục'
