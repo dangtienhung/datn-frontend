@@ -27,7 +27,7 @@ const Orders = () => {
   // }, [data])
   const hanleUpdateOrderCancel = (id: string) => {
     const textReason = prompt('Làm ơn điền lý do hủy đơn hàng')
-    console.log(textReason)
+
     if (id && textReason != '' && textReason) {
       updateOrderCancel({ id, reasonCancelOrder: textReason })
         .unwrap()

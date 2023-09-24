@@ -21,6 +21,11 @@ export const ApiUser = createApi({
       query: (page) => `/api/users?_page=${page}`,
       providesTags: ['user']
     }),
+    //get all user
+    getAllRoleUser: builder.query({
+      query: (rolename: string) => `/api/users/${rolename}`,
+      providesTags: ['user']
+    }),
 
     //delete user
     deleteUser: builder.mutation<void, string>({
@@ -57,9 +62,19 @@ export const ApiUser = createApi({
       }),
       invalidatesTags: ['user']
     }),
+    isAtiveUser: builder.mutation({
+      query: ({ id, isStatus }: { id: string; isStatus: string }) => ({
+        url: `/api/user/role/${id}`,
+        method: 'PUT',
+        body: {
+          status: isStatus
+        }
+      }),
+      invalidatesTags: ['user']
+    }),
 
     //Upload image user
-    upLoadAvartaUser: builder.mutation<IResImage, void>({
+    upLoadAvartaUser: builder.mutation<IResImage, FormData>({
       query: (file) => ({
         url: '/api/uploadImages',
         method: 'POST',
@@ -85,6 +100,8 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useUpLoadAvartaUserMutation,
-  useDeleteImageUserMutation
+  useDeleteImageUserMutation,
+  useGetAllRoleUserQuery,
+  useIsAtiveUserMutation
 } = ApiUser
 export const SizeReducer = ApiUser.reducer

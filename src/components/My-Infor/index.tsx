@@ -86,7 +86,7 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
-    console.log(dateUpdate)
+    // console.log(dateUpdate)
 
     if (!errDate) {
       if (avatar.file) {
@@ -156,6 +156,20 @@ const MyInfor = () => {
                       readOnly
                     />
                   </div>
+                  {['admin', 'Shipper', 'Staff'].includes(user.role.name) ? (
+                    <div className='item-profile w-[50%] my-3 '>
+                      <label className='block py-2 text-[#959393]'>Chức vụ</label>
+                      <input
+                        className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
+                        type='text'
+                        name='grade'
+                        defaultValue={user.role.name}
+                        readOnly
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
                   <div className='item-profile w-[50%] my-3 '>
                     <label className='block py-2 text-[#959393]'>Điểm</label>
                     <input

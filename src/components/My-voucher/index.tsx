@@ -1,11 +1,10 @@
 import { Skeleton } from 'antd'
 import { useGetAllVouchersQuery } from '../../api/voucher'
 import { IVoucher } from '../../interfaces/voucher.type'
-import Loading from '../Loading'
 
 const MyVoucher = () => {
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(0)
-  // console.log(vouchers)
+
   return (
     <div>
       <h1 className='dark:text-white sm:text-2xl text-xl my-[10px] font-semibold text-gray-900'>Kho Mã Giảm Giá</h1>

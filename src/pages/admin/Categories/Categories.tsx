@@ -1,12 +1,11 @@
 import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
-import { useAppDispatch, useAppSelector } from '../../../store/hooks'
+import { useAppDispatch } from '../../../store/hooks'
 import { useEffect, useState } from 'react'
 
 import { CateSchema } from '../../../validate/Form'
 import { ICategory } from '../../../interfaces/category.type'
-import { RootState } from '../../../store/store'
 import Swal from 'sweetalert2'
 import { exportToExcel } from '../../../utils/excelExport'
 import { toast } from 'react-toastify'
@@ -14,17 +13,29 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
+import { useGetAllCategoryQuery } from '../../../api/category'
 
 const Categories = () => {
-  const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
+  // const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
 
+  // const [data, setData] = useState<(string | undefined)[][]>([])
+  // useEffect(() => {
+  //   if (categories && Array.isArray(categories)) {
+  //     const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
+  //     setData([...rows])
+  //   }
+  // }, [categories])
+  const { data: dataCate, error } = useGetAllCategoryQuery()
   const [data, setData] = useState<(string | undefined)[][]>([])
   useEffect(() => {
-    if (categories && Array.isArray(categories)) {
-      const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
+    if (dataCate && Array.isArray(dataCate)) {
+      const rows = [...dataCate.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
       setData([...rows])
     }
-  }, [categories])
+  }, [dataCate])
+  // console.log(dataCate?.docs)
+  const categories = dataCate?.docs
+
   return (
     <>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
@@ -45,9 +56,7 @@ const Categories = () => {
               </form>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <Tooltip content='Thêm danh mục'>
-                <AddCategoryModal error={error} />
-              </Tooltip>
+              <Tooltip content='Thêm danh mục'>{/* <AddCategoryModal error={error} /> */}</Tooltip>
 
               <Button color='gray' onClick={() => exportToExcel(data, 'categories')}>
                 <div className='gap-x-3 flex items-center'>
@@ -63,7 +72,7 @@ const Categories = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <CategoryTable dataCate={categories} error={error} />
+              <CategoryTable dataCate={categories} error={`${error}`} />
             </div>
           </div>
         </div>
@@ -72,7 +81,7 @@ const Categories = () => {
   )
 }
 
-const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: string }) => {
+const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined; error: string }) => {
   // console.log(dataCate)
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState<number>(1)

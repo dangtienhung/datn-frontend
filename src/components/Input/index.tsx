@@ -56,7 +56,6 @@ const Input = ({
             if (setText) {
               setText(e.target.value)
               dispatch(saveValueSearch(e.target.value))
-              dispatch(savePage(1))
             }
           }}
           name={name}

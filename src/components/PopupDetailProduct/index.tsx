@@ -2,13 +2,13 @@ import { FaAngleDown, FaTimes } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useEffect, useState } from 'react'
 
+import { CartItem } from '../../store/slices/types/cart.type'
 import { IProduct } from '../../interfaces/products.type'
 import { addToCart } from '../../store/slices/cart.slice'
 import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { v4 as uuidv4 } from 'uuid'
-import { CartItem } from '../../store/slices/types/cart.type'
 
 type PopupDetailProductProps = {
   showPopup: boolean
@@ -53,7 +53,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     }
   }
   // const handleGetInfoPrd = (data: any) => {
-  //   console.log(data)
+
   // }
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     // checkboxes.forEach((item: any) => (item.checked = false));
-  }, [product.sizes, showPopup])
+  }, [product])
 
   const handleAddToCart = () => {
     togglePopup()
@@ -121,9 +121,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   alt='product image'
                 />
               </div>
-              <div className='right flex-1 md:flex-none ml-4'>
+              <div className='right md:flex-none flex-1 ml-4'>
                 <div className='title mr-4'>
-                  <h4 className='text-lg font-semibold line-clamp-2'>{product.name}</h4>
+                  <h4 className='line-clamp-2 text-lg font-semibold'>{product.name}</h4>
                 </div>
                 <div className='price flex items-end mt-4'>
                   <span className='new-price pr-[10px] text-[#8a733f] font-semibold text-sm'>
@@ -131,7 +131,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   </span>
                   {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''}
                 </div>
-                <div className='quantity flex items-start md:items-center gap-y-2 flex-col md:flex-row mt-5'>
+                <div className='quantity md:items-center gap-y-2 md:flex-row flex flex-col items-start mt-5'>
                   <div className='change-quantity flex'>
                     <div
                       onClick={() => (quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1))}

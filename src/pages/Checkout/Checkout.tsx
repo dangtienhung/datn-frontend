@@ -25,7 +25,6 @@ import { IOrderCheckout } from '../../store/slices/types/order.type'
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-
   const [orderAPIFn] = useCreateOrderMutation()
   const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
   const dispatch = useAppDispatch()
@@ -86,7 +85,7 @@ const Checkout = () => {
   )
 
   const moneyShipping = useMemo(() => 117000, [])
-  const moneyPromotion = useMemo(() => 0 as number, [])
+  const moneyPromotion = useMemo(() => voucherChecked && (voucherChecked.sale as number), [voucherChecked])
   const totalMoneyCheckout = useMemo(() => {
     const all = getData('total') as number[]
     return all.reduce((acc: number, curent: number) => {
@@ -104,16 +103,15 @@ const Checkout = () => {
   }, [getData])
 
   const totalAllMoneyCheckOut = useMemo(() => {
-    return moneyShipping + moneyPromotion + totalMoneyCheckout
-  }, [moneyPromotion, moneyShipping, totalMoneyCheckout])
+    return moneyShipping + moneyPromotion + totalMoneyCheckout - (voucherChecked && voucherChecked.sale)
+  }, [moneyPromotion, moneyShipping, totalMoneyCheckout, voucherChecked])
 
   const handleFormInfoCheckout = handleSubmit((data) => {
-    console.log('adf')
     if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
       return navigate('/signin')
     } else {
       // const productOrder = getData('list')
-      console.log(data)
+
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
@@ -128,7 +126,6 @@ const Checkout = () => {
           noteShipping: data.shippingNoteOther != '' ? data.shippingNoteOther : data.shippingNote
         }
       }
-      console.log(dataForm)
       orderAPIFn(dataForm)
         .unwrap()
         .then((res) => {

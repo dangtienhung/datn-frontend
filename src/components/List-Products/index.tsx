@@ -1,42 +1,40 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { AxiosError } from 'axios'
 import { Button } from '..'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 import ListProductItem from '../List-ProductItem'
 import { Pagination } from 'antd'
 import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
-import { RootState } from '../../store/store'
 import SKProduct from '../Skeleton/SKProduct'
 import http from '../../api/instance'
-import { savePage } from '../../store/slices/product.slice'
-import { useAppDispatch } from '../../store/hooks'
-import { useSelector } from 'react-redux'
-import { AxiosError } from 'axios'
 
 interface ListProductsProps {
   products: IProductDocs
   error: string
   isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const ListProducts = ({ products, isLoading }: ListProductsProps) => {
+const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
   const [product, setProduct] = useState<IProduct | object>({})
-  const { page } = useSelector((state: RootState) => state.persistedReducer.products)
-  const dispatch = useAppDispatch()
-  const { state } = useLocation()
+  // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
 
+  const { state } = useLocation()
+  const navigate = useNavigate()
   const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
   }, [isShowPopup])
 
-  const paginatePage = (page: number) => {
-    dispatch(savePage(page))
-  }
+  // const paginatePage = (page: number) => {
+  //   dispatch(savePage(page))
+  // }
 
   const fetchProductById = async (id: string | number) => {
     try {
@@ -52,7 +50,14 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
   }
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
-    console.log('Page: ', pageNumber)
+    // console.log('Page: ', pageNumber)
+    navigate({
+      pathname: '/products',
+      search: createSearchParams({
+        ...queryConfig,
+        _page: pageNumber.toString()
+      }).toString()
+    })
   }
 
   useEffect(() => {

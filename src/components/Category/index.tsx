@@ -1,21 +1,26 @@
 import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
+import { Link, createSearchParams } from 'react-router-dom'
 
 import { FaBars } from 'react-icons/fa'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { ICategory } from '../../interfaces/category.type'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 import NotFound from '../../pages/Not-Found/NotFound'
 import SKProduct from '../Skeleton/SKProduct'
+import { SerializedError } from '@reduxjs/toolkit'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
 
 interface SidebarCateProps {
-  categories: ICategory[]
-  error: string
+  categories: ICategory[] | undefined
+  error: FetchBaseQueryError | SerializedError | undefined
   isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
+const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
 
@@ -44,9 +49,24 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
             onClick={() => dispatch(getIdCate(''))}
             className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
           >
-            <div className='cat-name capitalize'>All</div>
+            <div className='cat-name capitalize'>
+              <Link
+                className='block'
+                to={{
+                  pathname: '/products',
+                  search: createSearchParams({
+                    ...queryConfig,
+                    searchName: '',
+                    c: 'all'
+                  }).toString()
+                }}
+              >
+                All
+              </Link>
+            </div>
           </div>
           {categories &&
+            Array.isArray(categories) &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
@@ -57,7 +77,20 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
                 key={category._id}
                 className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
               >
-                <div className='cat-name capitalize'>{category.name}</div>
+                <div className='cat-name capitalize'>
+                  <Link
+                    className='block'
+                    to={{
+                      pathname: '/products',
+                      search: createSearchParams({
+                        ...queryConfig,
+                        c: category._id as string
+                      }).toString()
+                    }}
+                  >
+                    {category.name}
+                  </Link>
+                </div>
                 <div className='cat-amount text-[#8a733f]'>{category.products?.length}</div>
               </div>
             ))}

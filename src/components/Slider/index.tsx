@@ -1,9 +1,11 @@
-import styles from './Slider.module.scss'
-import { Link } from 'react-router-dom'
-import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+
+import { Link } from 'react-router-dom'
+import Slider from 'react-slick'
+import styles from './Slider.module.scss'
 import { useGetAllBannersQuery } from '../../api/banner'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -46,7 +48,7 @@ const Sliders = () => {
               <div className={`${styles.overlay}`}></div>
               <img
                 src={banner.url}
-                className='block w-[414px] h-[276px] md:w-[820px] md:h-[546px] lg:w-[1536px] lg:max-w-[1536px] lg:h-[864px] lg:max-h-[864px] object-cover'
+                className='block w-[414px] h-[276px] md:w-[820px] md:h-[546px] lg:w-full lg:h-[864px] lg:max-h-[864px] object-cover'
                 alt='banner'
               />
               <div className='slide-content center-slider text-center'>

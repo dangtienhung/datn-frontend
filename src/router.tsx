@@ -32,8 +32,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import TrashCan from './pages/admin/Trash-can/TrashCan'
 import SizeList from './pages/admin/Size/Size'
 import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
-import Staff from './pages/admin/Manager-Staff-Shipper/Staff'
-import Shipper from './pages/admin/Manager-Staff-Shipper/Shipper'
+
 import Banner from './pages/admin/Banner/Banner'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 
@@ -179,39 +178,44 @@ const routes = createBrowserRouter([
   },
   {
     path: '/staff',
-    element: <StaffLayout />,
+    element: <GuardAuth />,
     children: [
       {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: 'dashboard',
-        element: <Dashboard />
-      },
-      {
-        path: 'categories',
-        element: <Categories />
-      },
-      {
-        path: 'products',
-        element: <List />
-      },
-      {
-        path: 'orders',
-        element: <Orders />
-      },
-      {
-        path: 'orders/:id',
-        element: <OrderDetail />
-      },
-      {
-        path: 'toppings',
-        element: <Topping />
-      },
-      {
-        path: 'voucher',
-        element: <Voucher />
+        element: <StaffLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: 'dashboard',
+            element: <Dashboard />
+          },
+          {
+            path: 'categories',
+            element: <Categories />
+          },
+          {
+            path: 'products',
+            element: <List />
+          },
+          {
+            path: 'orders',
+            element: <Orders />
+          },
+          {
+            path: 'orders/:id',
+            element: <OrderDetail />
+          },
+          {
+            path: 'toppings',
+            element: <Topping />
+          },
+          {
+            path: 'voucher',
+            element: <Voucher />
+          }
+        ]
       }
     ]
   },
