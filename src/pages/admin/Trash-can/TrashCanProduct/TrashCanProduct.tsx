@@ -8,12 +8,12 @@ import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import './TrashCanProduct.scss'
-import { AtomSpinner } from 'react-epic-spinners'
 import { useDeleteRealProductMutation, useFetchProductsQuery, useRestoreProductMutation } from '../../../../api/Product'
 import { IProduct } from '../../../../interfaces/products.type'
 import { GrPowerReset } from 'react-icons/gr'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { pause } from '../../../../utils/pause'
+import Loading from '../../../../components/Loading'
 
 interface DataType extends Omit<IProduct, '_id' | 'images' | 'category'> {
   key: string
@@ -335,8 +335,7 @@ const TrashCanProduct = () => {
       </div>
 
       {isLoading ? (
-        // <Skeleton />
-        <AtomSpinner color='red' className='mx-auto mt-[10%]'></AtomSpinner>
+        <Loading />
       ) : (
         <div>
           <div>

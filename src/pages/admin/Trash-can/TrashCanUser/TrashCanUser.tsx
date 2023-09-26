@@ -8,11 +8,11 @@ import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import './TrashCanUser.module.css'
-import { AtomSpinner } from 'react-epic-spinners'
 import { GrPowerReset } from 'react-icons/gr'
 import { useGetAllUsersQuery, useIsAtiveUserMutation } from '../../../../api/User'
 import { IUser } from '../../../../interfaces/user.type'
 import { pause } from '../../../../utils/pause'
+import Loading from '../../../../components/Loading'
 
 interface DataType {
   key: string
@@ -320,8 +320,7 @@ const TrashCanUser = () => {
       </div>
 
       {isLoading ? (
-        // <Skeleton />
-        <AtomSpinner color='red' className='mx-auto mt-[10%]'></AtomSpinner>
+        <Loading />
       ) : (
         <div>
           <div>

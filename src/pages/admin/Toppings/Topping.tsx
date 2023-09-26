@@ -18,6 +18,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import Loading from '../../../components/Loading'
 import { formatCurrency } from '../../../utils/formatCurrency'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 const Topping = () => {
   return (
@@ -64,7 +65,9 @@ const Topping = () => {
 
 const ToppingTable = () => {
   const { data: dataTopping, isLoading, isError } = useGetAllToppingQuery()
-
+  console.log(dataTopping);
+  
+  const [currentPage, setCurrentPage] = useState<number>(1)
   const [deleteTopping, responDelete] = useDeleteToppingMutation()
   const handleDeleteTopping = (id: string) => {
     if (!responDelete.isError) {
@@ -136,6 +139,7 @@ const ToppingTable = () => {
           </Table.Body>
         </Table>
       </div>
+      <PaginateNumber currentPage={currentPage} totalPage={2} setCurrentPage={setCurrentPage}></PaginateNumber>
     </>
   )
 }

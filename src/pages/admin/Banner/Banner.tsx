@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 
 const Banner = () => {
   const { data, isLoading } = useGetAllBannersQuery()
@@ -22,6 +23,7 @@ const Banner = () => {
   const [deleteImageBanner, { isLoading: isDeleting }] = useDeleteImageBannerMutation()
   const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
   const [acceptChecked, setAcceptChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
   useEffect(() => {
     const initialChildChecks: { [key: string]: boolean } = {}
     if (data?.banners) {
@@ -146,6 +148,7 @@ const Banner = () => {
           </div>
         </div>
       </div>
+      <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={2}></PaginateNumber>
     </>
   )
 }
