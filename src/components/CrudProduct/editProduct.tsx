@@ -425,7 +425,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                       }
                     })
                   ]}
-                  // hasFeedback
                 >
                   <InputNumber
                     addonAfter={isPercent ? '%' : 'VND'}
@@ -457,7 +456,6 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                     message: 'Hãy chọn topping!'
                   }
                 ]}
-                hasFeedback
               >
                 <Select {...selectProps} />
               </Form.Item>
