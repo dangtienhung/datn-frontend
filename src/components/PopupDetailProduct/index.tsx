@@ -163,10 +163,10 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     </div>
                   </div>
                   <button
-                    onClick={() => {
-                      handleAddToCart()
-                    }}
-                    className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
+                    // onClick={() => {
+                    //   handleAddToCart()
+                    // }}
+                    className='cursor-auto btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
                   >
                     +
                     {product.sale.value > 0
@@ -177,6 +177,12 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                         )
                       : formatCurrency(price * quantity)}
                   </button>
+                  <button
+                    onClick={() => {
+                      handleAddToCart()
+                    }}
+                    className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[10px] text-sm'
+                  >Thêm vào giỏ</button>
                 </div>
               </div>
             </div>
