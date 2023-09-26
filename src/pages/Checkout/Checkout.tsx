@@ -1,5 +1,5 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
+import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -20,6 +20,9 @@ import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
+import YaSuoMap from '../../components/map/YaSuoMap'
+import YasuoGap from '../../components/map/YasuoGap'
+import ListStore from '../../interfaces/ListStore.type'
 
 //
 const Checkout = () => {
@@ -27,11 +30,31 @@ const Checkout = () => {
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
   const [orderAPIFn] = useCreateOrderMutation()
   const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
+  const [gapStore, setGapStore] = useState<ListStore[]>([])
   const dispatch = useAppDispatch()
+  const [OpenGapStore, setOpenGapStore] = useState(false)
+  const [address, setAddress] = useState() // Lấy value ở input địa chỉ người nhận;
+  const [pickGapStore, setPickGapStore] = useState()
+
+  const toggleModal = () => {
+    setIsModalOpen(false)
+  }
+
+  // const showModal = () => {
+  //   setIsModalOpen(true)
+  // }
+
+  // const handleOk = () => {
+  //   setIsModalOpen(false)
+  // }
+
+  // const handleCancel = () => {
+  //   setIsModalOpen(false)
+  // }
 
   // const formIdRef = useRef<HTMLFormElement>(null)
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen)
+  const toggleOpenGapStore = () => {
+    setOpenGapStore(false)
   }
   const {
     register,
@@ -53,6 +76,7 @@ const Checkout = () => {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
       dataInfoUser.user.address && setValue('shippingLocation', dataInfoUser.user.address)
     }
+    // YaSuoMap();
   }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue])
 
   const getData = useCallback(
@@ -168,7 +192,7 @@ const Checkout = () => {
               <FaAngleDown />
             </div>
           </div>
-          <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5'>
+          <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] p-5'>
             <div className='py-[10px]'>
               <Input
                 name='name'
@@ -192,15 +216,19 @@ const Checkout = () => {
               <div className='title pt-[10px] text-sm'>
                 <h2>Giao đến</h2>
               </div>
-              <div className='py-[10px]'>
-                <Input
+              <div>
+                <div id='geocoder' className='flex flex-row gap-3'>
+                  <i className='fa-solid fa-location-dot'></i>
+                </div>
+              </div>
+              {/* <Input
                   prefix={<FaMapMarkerAlt />}
                   placeholder='Địa chỉ người nhận'
-                  name='shippingLocation'
+                  name='address'
                   error={errors.shippingLocation?.message}
                   register={register}
-                />
-              </div>
+                /> */}
+              {/* </div> */}
             </div>
             <div className='py-[10px]'>
               <Input
@@ -211,7 +239,12 @@ const Checkout = () => {
                 register={register}
               />
             </div>
+            <div>
+              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} />
+              <div id='map'></div>
+            </div>
           </div>
+
           <div className='title mb-[7px] px-5'>
             <button type='button' className='py-[10px]   my-2   ' onClick={() => setBtnShipOrder(!btnShipOrder)}>
               <label className='flex items-center gap-2' htmlFor='askRefer'>
@@ -321,9 +354,9 @@ const Checkout = () => {
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
-            {/* <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
+            <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
               <h3 className='text-sm'>Chọn cửa hàng</h3>
-              <div className=' flex items-center justify-between cursor-pointer'>
+              <div className=' flex items-center justify-between cursor-pointer' onClick={() => setOpenGapStore(true)}>
                 <div className='gap-x-2 flex items-center'>
                   <FaStore />
                   <span className='text-sm'>MilkTea - 93 Hoàng Công</span>
@@ -333,7 +366,7 @@ const Checkout = () => {
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>
-            </div> */}
+            </div>
             <div className='list'>
               {dataCartCheckout.items &&
                 dataCartCheckout.items.map((item) => <CheckoutItem key={uuidv4()} dataCartCheckout={item} />)}
@@ -405,6 +438,12 @@ const Checkout = () => {
         </div>
       </div>
 
+      <YasuoGap
+        isOpen={OpenGapStore}
+        gapStore={gapStore}
+        setPickGapStore={setPickGapStore}
+        toggleModal={toggleOpenGapStore}
+      />
       <ModalListVouchers
         isOpen={isModalOpen}
         voucherChecked={voucherChecked}
