@@ -22,7 +22,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
 import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
-import ListStore from '../../interfaces/ListStore.type'
+import ListStore from '../../interfaces/Map.type'
+import { message } from 'antd'
 
 //
 const Checkout = () => {
@@ -34,10 +35,10 @@ const Checkout = () => {
   const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
   const [address, setAddress] = useState() // Lấy value ở input địa chỉ người nhận;
-  const [pickGapStore, setPickGapStore] = useState()
+  const [pickGapStore, setPickGapStore] = useState({} as ListStore)
 
   const toggleModal = () => {
-    setIsModalOpen(false)
+    setIsModalOpen(!isModalOpen)
   }
 
   // const showModal = () => {
@@ -108,7 +109,14 @@ const Checkout = () => {
     [dataCartCheckout.items]
   )
 
-  const moneyShipping = useMemo(() => 117000, [])
+  const moneyShipping = useMemo(() => {
+    if (pickGapStore.value) {
+      return (pickGapStore.value! - 2000) * 2
+    } else if (gapStore[0]?.value! > 0) {
+      return (gapStore[0]?.value! - 2000) * 2
+    }
+    return 0
+  }, [gapStore, pickGapStore])
   const moneyPromotion = useMemo(() => voucherChecked && (voucherChecked.sale as number), [voucherChecked])
   const totalMoneyCheckout = useMemo(() => {
     const all = getData('total') as number[]
@@ -356,13 +364,26 @@ const Checkout = () => {
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
             <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
               <h3 className='text-sm'>Chọn cửa hàng</h3>
-              <div className=' flex items-center justify-between cursor-pointer' onClick={() => setOpenGapStore(true)}>
+              <div
+                className=' flex items-center justify-between cursor-pointer'
+                onClick={() => {
+                  if (gapStore.length <= 0) {
+                    message.error('Vui lòng điền địa chỉ giao hàng', 2)
+                  } else {
+                    setOpenGapStore(true)
+                  }
+                }}
+              >
                 <div className='gap-x-2 flex items-center'>
                   <FaStore />
-                  <span className='text-sm'>MilkTea - 93 Hoàng Công</span>
+                  <span className='text-sm'>
+                    {pickGapStore.highName ? pickGapStore.highName : gapStore[0]?.highName}
+                  </span>
                 </div>
                 <div className='gap-x-2 flex items-center'>
-                  <span className='text-sm'>20.45km</span>
+                  <span className='text-sm'>
+                    {pickGapStore.text ? pickGapStore.text : gapStore.length > 0 && gapStore[0].text}
+                  </span>
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>

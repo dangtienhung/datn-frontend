@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import '../../StyleMap.css'
 import axios from 'axios'
 import GeoLoCaTion from '../../utils/geolocation'
-import ListStore from '../../interfaces/ListStore.type'
+import ListStore, { Distance } from '../../interfaces/Map.type'
 
 interface LngLat {
   lng: number
@@ -54,16 +54,14 @@ getLocation()
 const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-  const [places, setPlaces] = useState<LngLat>({
-    lng: 0,
-    lat: 0
-  })
   //   const [gapStore, setGapStore] = useState([])
 
   const getDistance = async () => {
     setTimeout(async () => {
       const controller = new AbortController()
       const StorageDistance = JSON.parse(localStorage.getItem('location')!)
+      console.log(StorageDistance)
+
       await axios
         .get(
           `https://rsapi.goong.io/DistanceMatrix?origins=${StorageDistance?.lat ? StorageDistance.lat : lnglat.lat},${
@@ -74,16 +72,15 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
           { signal: controller.signal }
         )
         .then(({ data: { rows } }) => {
-          const fetchDistance = rows[0].elements
-          console.log('places', places)
-          const listDistance = fetchDistance.map((item: any, index: number) => {
+          const fetchDistance: Distance[] = rows[0].elements
+          const listDistance: ListStore[] = fetchDistance.map((item, index: number) => {
             return { ...List[index], ...item.distance }
           })
 
           if (setGapStore) {
             setGapStore(
-              fetchDistance.map((item: any, index: number) => {
-                return { ...List[index], ...item.distance }
+              listDistance.sort((a, b) => {
+                return a.value! - b.value!
               })
             )
           }
@@ -92,6 +89,21 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
           controller.abort()
         })
     }, 1000)
+  }
+
+  const fillAddress = async () => {
+    const controller = new AbortController()
+    await axios
+      .get(
+        `https://rsapi.goong.io/Geocode?latlng=${lnglat.lat},${lnglat.lng}&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
+        { signal: controller.signal }
+      )
+      .then(({ data: { results } }) => {
+        console.log(results)
+        ;(document.querySelector<HTMLInputElement>('.mapboxgl-ctrl-geocoder--input')!.value =
+          results[0].formatted_address),
+          controller.abort()
+      })
   }
 
   useEffect(() => {
@@ -121,7 +133,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
       var map = new goongjs.Map({
         container: 'map',
         style: 'https://tiles.goong.io/assets/goong_map_web.json',
-        center: [${places.lng}, ${places.lat}],
+        center: [${lnglat.lng}, ${lnglat.lat}],
         zoom: 13
       });
       var geocoder = new GoongGeocoder({
@@ -133,7 +145,6 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
          
         // Add geocoder result to container.
         geocoder.on('result', function ({result:{result:{geometry:{location}}}}) {
-          console.log(location)
           marker.remove();
           localStorage.setItem("location",JSON.stringify(location))
           marker
@@ -154,13 +165,6 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
           localStorage.removeItem("location")
         // results.innerText = '';
         });
-
-        map.flyTo({
-          center: [
-            ${places.lng}, ${places.lat}
-          ],
-          essential: true // this animation is considered essential with respect to prefers-reduced-motion
-      });
   
       map.addControl(new goongjs.NavigationControl());
        map.on("load",()=>{
@@ -197,19 +201,21 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
     }
     if (lnglat.lat > 0 && lnglat.lng > 0) {
       getDistance()
+      fillAddress()
     }
+    // getDistance()
 
     document.body.appendChild(map.current)
-  }, [lnglat, places])
+  }, [lnglat])
   return (
     <>
-      <div>
-        {/* {gapStore.map((item: any, index: number) => (
+      {/* <div> */}
+      {/* {gapStore.map((item: any, index: number) => (
           <div key={index}>
             {item.name} {item.text}
           </div>
         ))} */}
-        {/* <input
+      {/* <input
           type="text"
           className="outline-none shadow-lg shadow-indigo-500/40 p-1"
           placeholder="Search..."
@@ -233,7 +239,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
         ) : (
           ""
         )} */}
-      </div>
+      {/* </div> */}
     </>
   )
 }
