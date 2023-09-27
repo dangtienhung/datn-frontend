@@ -57,6 +57,15 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
                   Products
                 </Sidebar.Item>
                 <Sidebar.Item
+                onClick={() => handleRedirect('/admin/manage/categories')}
+                icon={BiSolidCategoryAlt}
+                className={`cursor-pointer ${
+                  '/admin/manage/categories' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                }`}
+              >
+                Categories
+              </Sidebar.Item>
+                <Sidebar.Item
                   onClick={() => handleRedirect('/admin/manage/size')}
                   icon={AiOutlineFontSize}
                   className={`cursor-pointer ${
@@ -96,15 +105,7 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
                   Shipper
                 </Sidebar.Item> */}
               </Sidebar.Collapse>
-              <Sidebar.Item
-                onClick={() => handleRedirect('/admin/categories')}
-                icon={BiSolidCategoryAlt}
-                className={`cursor-pointer ${
-                  '/admin/categories' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
-                }`}
-              >
-                Categories
-              </Sidebar.Item>
+
 
               <Sidebar.Item
                 // href="/admin/users"

@@ -75,8 +75,10 @@ const ProductsTable = function () {
               <Checkbox checked={acceptChecked} onChange={handleAcceptChange} />
             </Table.HeadCell>
             <Table.HeadCell>Product Name</Table.HeadCell>
-            <Table.HeadCell>Images</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
+            <Table.HeadCell>Size</Table.HeadCell>
+            {/* <Table.HeadCell>Pri</Table.HeadCell> */}
+            <Table.HeadCell>Images</Table.HeadCell>
             <Table.HeadCell colSpan={3}>Actions</Table.HeadCell>
           </Table.Head>
           {/* {isLoading ? (
@@ -96,13 +98,22 @@ const ProductsTable = function () {
                   <div className='dark:text-white text-base font-semibold text-gray-900'>{product.name}</div>
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  <img src={product.images[0]?.url} alt='' className='w-20 h-20' />
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {product.category?.name}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  {product.sizes.map(item=>(
+                  <ul key={item.price+1}>
+                    <li className="flex justify-between p-1 mb-0.5">
+                      <span>{item.name}</span>
+                      <span className='mr-1'> {formatCurrency(item.price)}</span>
+                      </li>
+                  </ul>))}
+                </Table.Cell>
+                {/* <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {formatCurrency(product.price)}
+                </Table.Cell> */}
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                  <img src={product.images[0]?.url} alt='' className='w-20 h-20' />
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap p-4 space-x-2'>
                   <div className='gap-x-3 flex items-center'>

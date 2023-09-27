@@ -1,6 +1,6 @@
 import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
 import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
-import { addCate, deleteCate, getAllCates, updateCate } from '../../../store/services/categories'
+import { addCate, deleteCate, updateCate } from '../../../store/services/categories'
 import { useAppDispatch } from '../../../store/hooks'
 import { useEffect, useState } from 'react'
 
@@ -14,10 +14,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 import { useGetAllCategoryQuery } from '../../../api/category'
+import Loading from '../../../components/Loading'
 
 const Categories = () => {
-  const { data: dataCate, error } = useGetAllCategoryQuery()
+  const { data: dataCate, error, isLoading } = useGetAllCategoryQuery()
   const [data, setData] = useState<(string | undefined)[][]>([])
+  const [currentPage, setCurrentPage] = useState<number>(1)
   useEffect(() => {
     if (dataCate && Array.isArray(dataCate)) {
       const rows = [...dataCate.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]
@@ -25,7 +27,6 @@ const Categories = () => {
     }
   }, [dataCate])
   // console.log(dataCate?.docs)
-  const categories = dataCate?.docs
 
   return (
     <>
@@ -63,30 +64,40 @@ const Categories = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <CategoryTable dataCate={categories} error={`${error}`} />
+              <CategoryTable dataCate={dataCate?.docs} error={`${error}`} isLoading={isLoading} />
             </div>
           </div>
         </div>
       </div>
+      {dataCate?.docs && dataCate?.docs.length === 0 ? (
+        ''
+      ) : (
+        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={dataCate?.totalPages || 0} />
+      )}
     </>
   )
 }
 
-const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined; error: string }) => {
-  // console.log(dataCate)
+type CategoryTableProps = {
+  dataCate: ICategory[] | undefined
+  error: string
+  isLoading: boolean
+}
+
+const CategoryTable = ({ dataCate, error, isLoading }: CategoryTableProps) => {
+  console.log(dataCate)
   const dispatch = useAppDispatch()
-  const [currentPage, setCurrentPage] = useState<number>(1)
   const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
   const [acceptChecked, setAcceptChecked] = useState(false)
   useEffect(() => {
-    const initialChildChecks: { [key: string]: boolean } = {};
+    const initialChildChecks: { [key: string]: boolean } = {}
     if (dataCate) {
       dataCate.forEach((item) => {
-        initialChildChecks[item._id] = false;
-      });
+        initialChildChecks[item._id] = false
+      })
     }
-    setChildChecks(initialChildChecks);
-  }, [dataCate]);
+    setChildChecks(initialChildChecks)
+  }, [dataCate])
   useEffect(() => {
     const allChildChecksChecked = Object.values(ChildChecks).every((isChecked) => isChecked)
     setAcceptChecked(allChildChecksChecked)
@@ -111,9 +122,9 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
       [itemId]: isChecked
     }))
   }
-  useEffect(() => {
-    dispatch(getAllCates({ _page: currentPage, _limit: 10 }))
-  }, [dispatch, currentPage])
+  // useEffect(() => {
+  //   dispatch(getAllCates({ _page: currentPage, _limit: 10 }))
+  // }, [dispatch, currentPage])
 
   const handleDeleteCate = (id: string) => {
     if (!error && id) {
@@ -133,6 +144,7 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
       toast.error('Delete failed!')
     }
   }
+  if (isLoading) return <Loading />
   return (
     <>
       <div className='max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
@@ -198,11 +210,11 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[] | undefined;
           </Table.Body>
         </Table>
       </div>
-      {dataCate && dataCate.length === 0 ? (
+      {/* {dataCate && dataCate.length === 0 ? (
         ''
       ) : (
         <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={2} />
-      )}
+      )} */}
     </>
   )
 }
