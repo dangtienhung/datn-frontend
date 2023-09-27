@@ -9,4 +9,11 @@ interface ListStore {
   value?: number
 }
 
+export interface Distance {
+  distance: {
+    text: string
+    value: number
+  }
+}
+
 export default ListStore

@@ -1,11 +1,10 @@
 import { Button, Modal } from 'antd'
-import { useEffect } from 'react'
-import ListStore from '../../interfaces/ListStore.type'
+import ListStore from '../../interfaces/Map.type'
 
 interface Props {
   isOpen: boolean
   gapStore: ListStore[]
-  setPickGapStore: React.Dispatch<React.SetStateAction<undefined>>
+  setPickGapStore: React.Dispatch<React.SetStateAction<ListStore>>
   toggleModal: () => void
 }
 
@@ -28,8 +27,11 @@ const YasuoGap = ({ isOpen, gapStore, setPickGapStore, toggleModal }: Props) => 
         {gapStore.map((item, index: number) => (
           <div
             key={index}
-            className='cursor-pointer hover:bg-slate-100 py-3 px-1'
-            // onClick={() => onGetPlace(item.place_id)}
+            className='cursor-pointer hover:bg-slate-100 py-3 px-1 hover:bg-gray-50'
+            onClick={() => {
+              setPickGapStore(item)
+              handleCancel()
+            }}
           >
             <h3 className='font-medium'>{item.highName}</h3>
             <div className='flex gap-2 justify-between'>
