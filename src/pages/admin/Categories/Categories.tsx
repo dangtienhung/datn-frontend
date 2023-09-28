@@ -72,7 +72,11 @@ const Categories = () => {
       {dataCate?.docs && dataCate?.docs.length === 0 ? (
         ''
       ) : (
-        <PaginateNumber currentPage={currentPage} setCurrentPage={setCurrentPage} totalPage={dataCate?.totalPages || 0} />
+        <PaginateNumber
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPage={dataCate?.totalPages || 0}
+        />
       )}
     </>
   )
@@ -219,7 +223,7 @@ const CategoryTable = ({ dataCate, error, isLoading }: CategoryTableProps) => {
   )
 }
 
-const AddCategoryModal = function ({ error }: { error: string }) {
+const AddCategoryModal = function ({ error }: { error: any }) {
   const [isOpen, setOpen] = useState(false)
 
   const dispatch = useAppDispatch()

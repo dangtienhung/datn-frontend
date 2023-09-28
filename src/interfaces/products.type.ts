@@ -10,7 +10,7 @@ export interface IProduct {
   description: string
   price: number
   sale: {
-    value: number,
+    value: number
     isPercent: boolean
   }
   category: ICategory

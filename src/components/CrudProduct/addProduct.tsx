@@ -20,7 +20,7 @@ import Upload, { UploadProps } from 'antd/es/upload'
 import { useAddProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { toast } from 'react-toastify'
 import convertToBase64 from '../../utils/convertBase64'
-import { formatCurrency, formatNumberDigits } from '../../utils/formatCurrency'
+import { formatNumberDigits } from '../../utils/formatCurrency'
 
 interface ItemProps {
   label: string
@@ -364,79 +364,6 @@ const AddProductModal = ({
                 <Select {...selectProps} />
               </Form.Item>
             </Form.Item>
-            {/* <Form.Item label='Size'>
-              <Form.List
-                name='sizes'
-                rules={[
-                  {
-                    validator(_, value) {
-                      if (!value) {
-                        return Promise.reject('Hãy nhập size!')
-                      }
-                      return Promise.resolve()
-                    }
-                  }
-                ]}
-              >
-                {(fields, { add, remove }) => (
-                  <>
-                    <div
-                      id='scrollSize'
-                      className='h-[200px] overflow-auto border-[1px] border-[#d9d9d9] rounded mb-1 p-2'
-                    >
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Space key={key} style={{ display: 'flex' }} align='baseline'>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'name']}
-                            rules={[{ required: true, message: 'Hãy nhập tên size!' }]}
-                            hasFeedback
-                          >
-                            <Input placeholder='Size Name...' />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'price']}
-                            rules={[
-                              { required: true, message: 'Hãy nhập giá size!' },
-                              {
-                                validator(_, value) {
-                                  if (value && value <= 0) {
-                                    return Promise.reject('Giá size không hợp lệ!')
-                                  }
-                                  return Promise.resolve()
-                                }
-                              }
-                            ]}
-                            hasFeedback
-                          >
-                            <Input type='number' placeholder='Price Size...' />
-                          </Form.Item>
-                          <div className='cursor-pointer'>
-                            <BiMinus onClick={() => remove(name)} />
-                          </div>
-                        </Space>
-                      ))}
-                    </div>
-                    <Form.Item wrapperCol={{ span: 10 }}>
-                      <Butt
-                        type='dashed'
-                        onClick={() => {
-                          add()
-                          const element = document.getElementById('scrollSize')!
-
-                          element.scrollTo(0, element.scrollHeight)
-                        }}
-                        block
-                        icon={<BiPlusMedical />}
-                      >
-                        Add field
-                      </Butt>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-            </Form.Item> */}
           </div>
           <Form.Item
             name='description'

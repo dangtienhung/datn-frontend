@@ -120,7 +120,6 @@ const routes = createBrowserRouter([
             element: <UserList />
           },
 
-
           {
             path: 'orders',
             element: <Orders />
@@ -149,7 +148,7 @@ const routes = createBrowserRouter([
               {
                 path: 'categories',
                 element: <Categories />
-              },
+              }
               // {
               //   path: 'staff',
               //   element: <Staff />

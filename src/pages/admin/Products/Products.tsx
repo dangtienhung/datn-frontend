@@ -2,14 +2,14 @@ import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
 import AddProductModal from '../../../components/CrudProduct/addProduct'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
-import { DrawerAddProduct } from '../../../components'
+// import { DrawerAddProduct } from '../../../components'
 import { FaPlus } from 'react-icons/fa'
 import ProductsTable from '../../../components/CrudProduct/listProduct'
 import { useState } from 'react'
 
-export default function ProductsList  () {
+export default function ProductsList() {
   const [isOpenModalAdd, setOpenModalAdd] = useState(false)
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+  // const [isOpenDrawer, setIsOpenDrawer] = useState(false)
 
   return (
     <>
