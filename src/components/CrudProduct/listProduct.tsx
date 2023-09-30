@@ -101,13 +101,14 @@ const ProductsTable = function () {
                   {product.category?.name}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {product.sizes.map(item=>(
-                  <ul key={item.price+1}>
-                    <li className="flex justify-between p-1 mb-0.5">
-                      <span>{item.name}</span>
-                      <span className='mr-1'> {formatCurrency(item.price)}</span>
+                  {product.sizes.map((item) => (
+                    <ul key={item.price + 1}>
+                      <li className='flex justify-between p-1 mb-0.5'>
+                        <span>{item.name}</span>
+                        <span className='mr-1'> {formatCurrency(item.price)}</span>
                       </li>
-                  </ul>))}
+                    </ul>
+                  ))}
                 </Table.Cell>
                 {/* <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {formatCurrency(product.price)}

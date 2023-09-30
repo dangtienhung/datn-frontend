@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import '../../StyleMap.css'
 import axios from 'axios'
 import GeoLoCaTion from '../../utils/geolocation'
@@ -139,10 +139,10 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
       var geocoder = new GoongGeocoder({
         accessToken: "BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P"
         });
-      
+
       var marker = new goongjs.Marker();
         geocoder.addTo('#geocoder');
-         
+
         // Add geocoder result to container.
         geocoder.on('result', function ({result:{result:{geometry:{location}}}}) {
           marker.remove();
@@ -159,13 +159,13 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
               essential: true // this animation is considered essential with respect to prefers-reduced-motion
             })
         });
-  
+
         // Clear results container when search is cleared.
         geocoder.on('clear', function () {
           localStorage.removeItem("location")
         // results.innerText = '';
         });
-  
+
       map.addControl(new goongjs.NavigationControl());
        map.on("load",()=>{
         if (navigator.geolocation) {
@@ -196,7 +196,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
              );
           });
         }
-  
+
        }); `
     }
     if (lnglat.lat > 0 && lnglat.lng > 0) {

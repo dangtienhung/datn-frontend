@@ -1,4 +1,4 @@
-import { savePage, saveValueSearch } from '../../store/slices/product.slice'
+import { saveValueSearch } from '../../store/slices/product.slice'
 
 import { UseFormRegister } from 'react-hook-form'
 import { useAppDispatch } from '../../store/hooks'

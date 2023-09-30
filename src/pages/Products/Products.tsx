@@ -1,6 +1,6 @@
 import { ListProducts, MyCart, SidebarCate } from '../../components'
 import { createSearchParams, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppSelector } from '../../store/hooks'
 
 import { RootState } from '../../store/store'
 import { useEffect } from 'react'

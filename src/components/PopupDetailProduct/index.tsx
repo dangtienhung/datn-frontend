@@ -182,7 +182,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                       handleAddToCart()
                     }}
                     className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[10px] text-sm'
-                  >Thêm vào giỏ</button>
+                  >
+                    Thêm vào giỏ
+                  </button>
                 </div>
               </div>
             </div>
