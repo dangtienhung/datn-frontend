@@ -1,10 +1,9 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
+import { FaAngleDown, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
 import CheckoutItem from '../../components/Checkout-Item'
@@ -30,30 +29,17 @@ const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
   const [orderAPIFn] = useCreateOrderMutation()
-  const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
+  // const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
-  const [address, setAddress] = useState() // Lấy value ở input địa chỉ người nhận;
+  const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
   }
 
-  // const showModal = () => {
-  //   setIsModalOpen(true)
-  // }
-
-  // const handleOk = () => {
-  //   setIsModalOpen(false)
-  // }
-
-  // const handleCancel = () => {
-  //   setIsModalOpen(false)
-  // }
-
-  // const formIdRef = useRef<HTMLFormElement>(null)
   const toggleOpenGapStore = () => {
     setOpenGapStore(false)
   }
@@ -64,7 +50,6 @@ const Checkout = () => {
     setValue,
     reset
   } = useForm({
-    // mode: 'onSubmit',
     resolver: yupResolver(UserCheckoutSchema)
   })
 
@@ -72,6 +57,14 @@ const Checkout = () => {
   const dataInfoUser = useAppSelector((state) => state.persistedReducer.auth)
   const textNoteOrderRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setValue('shippingLocation', address ?? '')
+  }, [address, setValue])
+  useEffect(() => {
+    dataCartCheckout.items.length < 1 && navigate('/products')
+  }, [dataCartCheckout.items, navigate])
+
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
@@ -88,7 +81,7 @@ const Checkout = () => {
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, ...rest } = data
+            const { total, _id, ...rest } = data
             arrTotal.push(rest)
           } else {
             let value: number | undefined
@@ -111,20 +104,25 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return (pickGapStore.value! - 2000) * 2
-    } else if (gapStore[0]?.value! > 0) {
-      return (gapStore[0]?.value! - 2000) * 2
+      return (pickGapStore.value - 2000) * 2
+    } else if ((gapStore[0]?.value as number) > 0) {
+      return ((gapStore[0]?.value as number) - 2000) * 2
     }
     return 0
   }, [gapStore, pickGapStore])
-  const moneyPromotion = useMemo(() => voucherChecked && (voucherChecked.sale as number), [voucherChecked])
+  // total khuyen mai
+  const moneyPromotion = useMemo(() => voucherChecked.sale ?? 0, [voucherChecked])
+
+  // tong 1 san pham
   const totalMoneyCheckout = useMemo(() => {
     const all = getData('total') as number[]
+
     return all.reduce((acc: number, curent: number) => {
       const a = acc + curent
       return a
     }, 0)
   }, [getData])
+
   const totalQuantity = useMemo(() => {
     const all = getData('quantity') as number[]
 
@@ -134,16 +132,15 @@ const Checkout = () => {
     return a
   }, [getData])
 
+  // tong cong tien
   const totalAllMoneyCheckOut = useMemo(() => {
-    return moneyShipping + moneyPromotion + totalMoneyCheckout - (voucherChecked && voucherChecked.sale)
-  }, [moneyPromotion, moneyShipping, totalMoneyCheckout, voucherChecked])
+    return moneyShipping + totalMoneyCheckout - moneyPromotion
+  }, [moneyPromotion, moneyShipping, totalMoneyCheckout])
 
   const handleFormInfoCheckout = handleSubmit((data) => {
     if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
       return navigate('/signin')
     } else {
-      // const productOrder = getData('list')
-
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
@@ -152,12 +149,13 @@ const Checkout = () => {
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
-          name: data.nameOther != '' ? (data.nameOther as string) : data.name,
-          phone: data.phoneOther != '' ? (data.phoneOther as string) : data.phone,
-          address: data.shippingLocationOther != '' ? (data.shippingLocationOther as string) : data.shippingLocation,
-          noteShipping: data.shippingNoteOther != '' ? data.shippingNoteOther : data.shippingNote
+          name: data.name,
+          phone: data.phone,
+          address: data.shippingLocation,
+          noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
         }
       }
+      // console.log(dataForm, '::::::dâtf')
       orderAPIFn(dataForm)
         .unwrap()
         .then((res) => {
@@ -171,18 +169,20 @@ const Checkout = () => {
             // reset();
             // dispatch(resetAllCart());
             // navigate('http://localhost:4000/vnpay');
-            const returnUrl = 'http://localhost:5173' // url trả về
-            window.location.href =
-              'http://ketquaday99.com/vnpay/fast?amount=' +
-              dataForm.total +
-              '&txt_inv_mobile=' +
-              data.phone +
-              '&txt_billing_fullname=' +
-              data.name +
-              '&txt_ship_addr1=' +
-              data.shippingLocation +
-              '&returnUrl=' +
-              returnUrl
+            if (data.paymentMethod == 'vnpay') {
+              const returnUrl = 'http://localhost:5173' // url trả về
+              window.location.href =
+                'http://ketquaday99.com/vnpay/fast?amount=' +
+                dataForm.total +
+                '&txt_inv_mobile=' +
+                data.phone +
+                '&txt_billing_fullname=' +
+                data.name +
+                '&txt_ship_addr1=' +
+                data.shippingLocation +
+                '&returnUrl=' +
+                returnUrl
+            }
           }
         })
     }
@@ -191,7 +191,7 @@ const Checkout = () => {
   return (
     <div className='w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto'>
       <div className='detail gap-y-10 lg:gap-y-0 lg:flex-row flex flex-col justify-between mt-6'>
-        <form id='form_info_checkout' className='left w-full lg:w-[60%]' method='get' action='.pay'>
+        <form id='form_info_checkout' className='left w-full lg:w-[60%]'>
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin giao hàng</h2>
@@ -253,7 +253,7 @@ const Checkout = () => {
             </div>
           </div>
 
-          <div className='title mb-[7px] px-5'>
+          {/* <div className='title mb-[7px] px-5'>
             <button type='button' className='py-[10px]   my-2   ' onClick={() => setBtnShipOrder(!btnShipOrder)}>
               <label className='flex items-center gap-2' htmlFor='askRefer'>
                 <AiOutlinePlusCircle />
@@ -261,9 +261,10 @@ const Checkout = () => {
               </label>
             </button>
             <input type='checkbox' id='askRefer' className='hidden' {...register('askRefer')} />
-          </div>
-          <div className='mt-8'>
-            {/* info order shipping other */}
+          </div> */}
+
+          {/* <div className='mt-8'>
+
             {btnShipOrder && (
               <>
                 <div className='title mb-[7px] px-5'>
@@ -315,7 +316,7 @@ const Checkout = () => {
                 </div>
               </>
             )}
-          </div>
+          </div> */}
           <div className=' mt-8'>
             <div className='title mb-[7px] px-5'>
               <h2 className='font-semibold text-sm'>Phương thức thanh toán</h2>
@@ -436,8 +437,6 @@ const Checkout = () => {
             <div className='note'>
               <textarea
                 ref={textNoteOrderRef}
-                name=''
-                id=''
                 placeholder='Thêm ghi chú...'
                 className='w-full text-sm border-none outline-none'
               ></textarea>

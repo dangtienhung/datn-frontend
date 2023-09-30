@@ -86,32 +86,32 @@ export const UserCheckoutSchema = Yup.object({
     .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
   shippingLocation: Yup.string().trim().required('Địa chỉ không được để trống'),
 
-  shippingNote: Yup.string().trim(),
-  paymentMethod: Yup.string().trim().required(),
-  askRefer: Yup.boolean(),
+  shippingNote: Yup.string().trim().default(' '),
+  paymentMethod: Yup.string().trim().required()
+  // askRefer: Yup.boolean(),
 
-  nameOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  phoneOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  shippingLocationOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  shippingNoteOther: Yup.string().trim()
+  // nameOther: Yup.string()
+  //   .trim()
+
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // phoneOther: Yup.string()
+  //   .trim()
+
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // shippingLocationOther: Yup.string()
+  //   .trim()
+
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // shippingNoteOther: Yup.string().trim()
 })
 export type IUserCheckout = Yup.InferType<typeof UserCheckoutSchema>
 
@@ -126,7 +126,7 @@ export const InforFormSchema = Yup.object({
 export type InforForm = Yup.InferType<typeof InforFormSchema>
 
 export const BlogsSchema = Yup.object({
-  name:Yup.string().trim().required('Name is required'),
-  description:Yup.string().trim().required('Description is required')
+  name: Yup.string().trim().required('Name is required'),
+  description: Yup.string().trim().required('Description is required')
 })
 export type BlogsForm = Yup.InferType<typeof BlogsSchema>

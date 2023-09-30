@@ -23,13 +23,14 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
   const [addCartDbFn] = useCreateCartDBMutation()
+  console.log(product, ':rpoduct')
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<{
     name: string
     price: number
     _id?: string
-  }>(product.sizes[0])
+  }>()
   const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number; _id: string }[]>([])
 
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
@@ -57,12 +58,14 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   // }
 
   useEffect(() => {
-    setPrice(product.sizes[0]?.price)
+    if (product.sizes) {
+      setPrice(product?.sizes[0]?.price ?? 0)
+      setNameRadioInput(product?.sizes[0] ?? { name: '', price: 0 })
+    }
     setQuantity(1)
     setTotalToppingPrice(0)
     setCheckedToppings([])
     // setNameRadioInput(product.sizes[0].name);
-    setNameRadioInput(product.sizes[0])
 
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -77,9 +80,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: product.sale.isPercent
-        ? nameRadioInput.price * ((100 - product.sale.value) / 100)
-        : nameRadioInput.price - product.sale.value,
+      price: (product.sale.isPercent
+        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale.value) / 100)
+        : nameRadioInput && nameRadioInput?.price - product.sale.value) as number,
       total: product.sale.isPercent
         ? price * ((100 - product.sale.value) / 100) * quantity
         : (price - product.sale.value) * quantity,
@@ -220,6 +223,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className='custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded'>
                   {product &&
+                    product.sizes &&
                     product?.sizes.map((item) => {
                       return (
                         <label
@@ -233,7 +237,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           <span className='block'>Size {item.name}</span>
                           <input
                             className='absolute opacity-0'
-                            defaultChecked={nameRadioInput.price === item.price ? true : false}
+                            defaultChecked={nameRadioInput?.price === item.price ? true : false}
                             type='radio'
                             name='size'
                             value={item.price}

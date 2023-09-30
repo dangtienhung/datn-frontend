@@ -30,7 +30,7 @@ const List: ListStore[] = [
 
 interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
-  setAddress?: React.Dispatch<React.SetStateAction<undefined>>
+  setAddress?: React.Dispatch<React.SetStateAction<string>>
 }
 
 const getLocation = () => {
@@ -59,7 +59,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
   const getDistance = async () => {
     setTimeout(async () => {
       const controller = new AbortController()
-      const StorageDistance = JSON.parse(localStorage.getItem('location')!)
+      const StorageDistance = JSON.parse(localStorage.getItem('location') ?? '')
       console.log(StorageDistance)
 
       await axios
@@ -80,7 +80,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
           if (setGapStore) {
             setGapStore(
               listDistance.sort((a, b) => {
-                return a.value! - b.value!
+                return (a.value ?? 0) - (b.value ?? 0)
               })
             )
           }
