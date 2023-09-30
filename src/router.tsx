@@ -149,7 +149,7 @@ const routes = createBrowserRouter([
               {
                 path: 'categories',
                 element: <Categories />
-              }
+              },
               // {
               //   path: 'staff',
               //   element: <Staff />
