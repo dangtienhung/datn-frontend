@@ -1,7 +1,7 @@
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiChartPie, HiClipboardCheck, HiCollection, HiShoppingBag, HiUsers, HiTicket } from 'react-icons/hi'
-import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
+import { BiLogoBlogger, BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaTrashArrowUp } from 'react-icons/fa6'
@@ -83,6 +83,16 @@ const AdminSidebar = function ({ isSideBarOpen }: AdminSidebarProps) {
                   }`}
                 >
                   Toppings
+                </Sidebar.Item>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/manage/blogs')}
+                  icon={BiLogoBlogger}
+                  className={`cursor-pointer ${
+                    '/admin/manage/blogs' === currentPage ? 'bg-gray-300 dark:bg-[#2563EB]' : ''
+                  }`}
+                >
+                  Blogs
                 </Sidebar.Item>
                 {/* <Sidebar.Item
                   // href="/admin/orders"

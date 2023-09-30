@@ -124,3 +124,9 @@ export const InforFormSchema = Yup.object({
 })
 
 export type InforForm = Yup.InferType<typeof InforFormSchema>
+
+export const BlogsSchema = Yup.object({
+  name:Yup.string().trim().required('Name is required'),
+  description:Yup.string().trim().required('Description is required')
+})
+export type BlogsForm = Yup.InferType<typeof BlogsSchema>

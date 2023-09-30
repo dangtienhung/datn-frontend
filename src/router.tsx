@@ -35,6 +35,7 @@ import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
 
 import Banner from './pages/admin/Banner/Banner'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
+import Blogs from './pages/admin/Blogs/Blogs'
 
 const routes = createBrowserRouter([
   {
@@ -148,7 +149,7 @@ const routes = createBrowserRouter([
               {
                 path: 'categories',
                 element: <Categories />
-              }
+              },
               // {
               //   path: 'staff',
               //   element: <Staff />
@@ -156,7 +157,11 @@ const routes = createBrowserRouter([
               // {
               //   path: 'shipper',
               //   element: <Shipper />
-              // }
+              // },
+              {
+                path: 'blogs',
+                element: <Blogs />
+              }
             ]
           },
 
