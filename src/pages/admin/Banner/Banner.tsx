@@ -16,6 +16,8 @@ import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { MutationTrigger } from '@reduxjs/toolkit/dist/query/react/buildHooks'
+import { BaseQueryFn, FetchArgs, FetchBaseQueryError, MutationDefinition } from '@reduxjs/toolkit/dist/query'
 
 const Banner = () => {
   const { data, isLoading } = useGetAllBannersQuery()
@@ -153,7 +155,9 @@ const Banner = () => {
   )
 }
 type AddBannerModalProps = {
-  deleteImageBanner: any
+  deleteImageBanner: MutationTrigger<
+    MutationDefinition<string, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>, 'banner', void, 'Banner'>
+  >
   isDeleting: boolean
 }
 

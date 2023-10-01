@@ -39,7 +39,7 @@ const GuardAuth = () => {
     if (!user.role?.name) {
       navigate('/')
     }
-  }, [user])
+  }, [navigate, user])
   return pathname.split('/')[1] === toLower(user.role?.name) && user.role.status === 'active' ? (
     <Outlet />
   ) : (

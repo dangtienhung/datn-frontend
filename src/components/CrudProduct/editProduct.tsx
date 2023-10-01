@@ -221,7 +221,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
           product = {
             _id: DataEdit._id,
             ...values,
-            images: [...existImg, ...data?.urls]
+            images: [...existImg, ...(data.urls ?? [])]
           }
           updateProduct(product).then((data: any) => {
             if (data.error) {
@@ -353,7 +353,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                               <InputNumber
                                 className='w-full'
                                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                                parser={(value: any) => value!.replace(/ \s?|(\.*)/g, '')}
+                                parser={(value: any) => value?.replace(/ \s?|(\.*)/g, '')}
                                 placeholder='Price Size...'
                               />
                             </Form.Item>
@@ -369,9 +369,9 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                         type='dashed'
                         onClick={() => {
                           add()
-                          const element = document.getElementById('scrollSize')!
+                          const element = document.getElementById('scrollSize')
 
-                          element.scrollTo(0, element.scrollHeight)
+                          element && element.scrollTo(0, element.scrollHeight)
                         }}
                         block
                         icon={<BiPlusMedical />}
@@ -433,7 +433,7 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
                     min={0}
                     max={isPercent ? 100 : ''}
                     formatter={(value) => (isPercent ? `${value}` : `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}
-                    parser={(value: any) => (isPercent ? value!.replace('', '') : value!.replace(/ \s?|(\.*)/g, ''))}
+                    parser={(value: any) => (isPercent ? value?.replace('', '') : value?.replace(/ \s?|(\.*)/g, ''))}
                   />
                 </Form.Item>
                 <Switch

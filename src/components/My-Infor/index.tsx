@@ -40,12 +40,13 @@ const MyInfor = () => {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    await convertToBase64(file!).then((data) => {
-      setAvatar({
-        file: file,
-        base64: data
-      })
-    })
+    file &&
+      (await convertToBase64(file).then((data) => {
+        setAvatar({
+          file: file,
+          base64: data
+        })
+      }))
   }
 
   const handleDateChange = (selectedDates: Date[]) => {
@@ -93,10 +94,10 @@ const MyInfor = () => {
         const form = new FormData()
         form.append('images', avatar.file)
         uploadAvatar(form).then(({ data: { urls } }: any) => {
-          ChangeInfor({ ...dateUpdate, birthday: birthday!, avatar: urls[0].url })
+          ChangeInfor({ ...dateUpdate, birthday: birthday, avatar: urls[0].url })
         })
       } else {
-        ChangeInfor({ ...dateUpdate, birthday: birthday! })
+        ChangeInfor({ ...dateUpdate, birthday: birthday })
       }
     }
   }

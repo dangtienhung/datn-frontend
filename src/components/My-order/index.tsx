@@ -11,7 +11,7 @@ const MyOrder = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
   console.log(user._id)
 
-  const { data: orderUser } = useGetOrderUserByidQuery(user._id!)
+  const { data: orderUser } = useGetOrderUserByidQuery(user._id ?? '')
   // console.log(orderUser)
 
   if (orderUser?.docs.length <= 0)

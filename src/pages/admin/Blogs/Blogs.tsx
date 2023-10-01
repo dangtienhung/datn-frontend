@@ -247,8 +247,7 @@ const AddBlogsModal = function ({ error }: { error: string }) {
       reset()
     } else {
       toast.error('Blog add failed!')
-      console.log(error);
-      
+      console.log(error)
     }
 
     setOpen(false)

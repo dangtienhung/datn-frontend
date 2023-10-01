@@ -1,4 +1,4 @@
-import { IImage } from "./image.type"
+import { IImage } from './image.type'
 
 export interface IBlogsDocs {
   docs: IBlogs[]

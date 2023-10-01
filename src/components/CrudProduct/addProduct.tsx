@@ -79,8 +79,8 @@ const AddProductModal = ({
   }, [])
 
   const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await convertToBase64(file.originFileObj!)
+    if (!file.url && !file.preview && file.originFileObj) {
+      file.preview = await convertToBase64(file.originFileObj)
     }
 
     setPreviewImage(file.url || (file.preview as string))
@@ -257,7 +257,7 @@ const AddProductModal = ({
                             <InputNumber
                               className='w-full'
                               formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                              parser={(value: any) => value!.replace(/ \s?|(\.*)/g, '')}
+                              parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
                               placeholder='Price Size...'
                             />
                           </Form.Item>
@@ -272,8 +272,10 @@ const AddProductModal = ({
                         type='dashed'
                         onClick={() => {
                           add()
-                          const element = document.getElementById('scrollSize')!
-                          element.scrollTop = element.scrollHeight
+                          const element = document.getElementById('scrollSize')
+                          if (element) {
+                            element.scrollTop = element.scrollHeight
+                          }
                         }}
                         block
                         icon={<BiPlusMedical />}
@@ -336,7 +338,7 @@ const AddProductModal = ({
                     min={0}
                     max={isPercent ? 100 : ''}
                     formatter={(value) => (isPercent ? `${value}` : `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.'))}
-                    parser={(value: any) => (isPercent ? value!.replace('', '') : value!.replace(/ \s?|(\.*)/g, ''))}
+                    parser={(value: any) => (isPercent ? value.replace('', '') : value.replace(/ \s?|(\.*)/g, ''))}
                   />
                 </Form.Item>
                 <Switch
