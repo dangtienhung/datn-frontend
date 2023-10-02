@@ -10,6 +10,7 @@ import PaginateNumber from '../admin/PaginationWithNumber'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import DrawerEditProduct from './DrawerEditProduct'
 
 const ProductsTable = function () {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -101,7 +102,7 @@ const ProductsTable = function () {
                   {product.category?.name}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {product.sizes.map((item) => (
+                  {product.sizes?.map((item) => (
                     <ul key={item.price + 1}>
                       <li className='flex justify-between p-1 mb-0.5'>
                         <span>{item.name}</span>
@@ -125,6 +126,7 @@ const ProductsTable = function () {
                     <ShowProduct product={product} />
 
                     <EditProductModal DataEdit={product} />
+                    {/* <DrawerEditProduct DataEdit={product} /> */}
                     <Tooltip content='Xoá sản phẩm'>
                       <Button color='failure' onClick={() => onHandleDeleteFake(product._id)}>
                         <HiTrash className='text-center' />

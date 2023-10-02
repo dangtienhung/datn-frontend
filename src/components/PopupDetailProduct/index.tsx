@@ -23,6 +23,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
   const [addCartDbFn] = useCreateCartDBMutation()
+  const [sizes, setSizes] = useState<{ name: string; price: number }[]>([])
   console.log(product, ':rpoduct')
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
@@ -61,6 +62,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     if (product.sizes) {
       setPrice(product?.sizes[0]?.price ?? 0)
       setNameRadioInput(product?.sizes[0] ?? { name: '', price: 0 })
+      setSizes([...product?.sizes, ...product.customsizes])
     }
     setQuantity(1)
     setTotalToppingPrice(0)
@@ -224,7 +226,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 <div className='custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded'>
                   {product &&
                     product.sizes &&
-                    product?.sizes.map((item) => {
+                    sizes.map((item) => {
                       return (
                         <label
                           onChange={() => {

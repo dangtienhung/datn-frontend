@@ -14,7 +14,8 @@ export interface IProduct {
     isPercent: boolean
   }
   category: ICategory
-  sizes: { name: string; price: number }[]
+  sizes: { _id: string; name: string; price: number }[]
+  customsizes: { name: string; price: number }[]
   toppings: ITopping[]
   is_deleted?: boolean
   is_active?: boolean
