@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { AiFillEye } from 'react-icons/ai'
 import { BiSolidDiscount } from 'react-icons/bi'
@@ -17,6 +17,7 @@ interface Props {
 }
 
 const ShowProduct = ({ product }: Props) => {
+  const [sizes, setSize] = useState<{ name: string; price: number }[]>([])
   const settings = {
     dots: false,
     infinite: true,
@@ -31,6 +32,10 @@ const ShowProduct = ({ product }: Props) => {
   const handleCancel = () => {
     setIsOpen(false)
   }
+
+  useEffect(() => {
+    setSize([...product?.sizes, ...product.customsizes])
+  }, [])
 
   const columns = [
     {
@@ -84,7 +89,7 @@ const ShowProduct = ({ product }: Props) => {
                 )}
               </h1>
               <span className=''>
-                {product.category.name} -
+                {product.category?.name} -
                 {`Sale: ${product.sale.isPercent ? product.sale.value + '%' : formatCurrency(product.sale.value)}`}
               </span>
               <div className='mt-5'>
@@ -97,7 +102,7 @@ const ShowProduct = ({ product }: Props) => {
                   <h2 className='font-semibold text-lg'>Size</h2>
                 </div>
                 <Table
-                  dataSource={product.sizes.map((item) => ({ ...item, key: uuidv4() }))}
+                  dataSource={sizes.map((item) => ({ ...item, key: uuidv4() }))}
                   columns={columns}
                   pagination={false}
                 />

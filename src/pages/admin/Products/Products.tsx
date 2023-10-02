@@ -1,15 +1,13 @@
 import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
-import AddProductModal from '../../../components/CrudProduct/addProduct'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
-// import { DrawerAddProduct } from '../../../components'
+import { DrawerAddProduct } from '../../../components'
 import { FaPlus } from 'react-icons/fa'
 import ProductsTable from '../../../components/CrudProduct/listProduct'
 import { useState } from 'react'
 
 export default function ProductsList() {
-  const [isOpenModalAdd, setOpenModalAdd] = useState(false)
-  // const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
 
   return (
     <>
@@ -24,14 +22,14 @@ export default function ProductsList() {
 
             <div className='sm:justify-end flex items-center w-full'>
               <Tooltip content='Thêm sản phẩm'>
-                <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
+                <Button color='primary' onClick={() => setIsOpenDrawer(!isOpenDrawer)}>
                   <FaPlus className='mr-3 text-sm' />
                   Thêm sản phẩm
                 </Button>
               </Tooltip>
 
-              {/* <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} /> */}
-              {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
+              <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
+              {/* {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''} */}
             </div>
           </div>
         </div>
