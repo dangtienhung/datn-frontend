@@ -1,7 +1,6 @@
 import { Button, Table, Tooltip, Checkbox } from 'flowbite-react'
 import { useDeleteFakeProductMutation, useFetchProductsQuery } from '../../api/Product'
 
-import EditProductModal from './editProduct'
 import { HiTrash } from 'react-icons/hi'
 import Loading from '../Loading'
 import ShowProduct from './showProduct'
@@ -125,8 +124,8 @@ const ProductsTable = function () {
                     </Button> */}
                     <ShowProduct product={product} />
 
-                    <EditProductModal DataEdit={product} />
-                    {/* <DrawerEditProduct DataEdit={product} /> */}
+                    {/* <EditProductModal DataEdit={product} /> */}
+                    <DrawerEditProduct DataEdit={product} />
                     <Tooltip content='Xoá sản phẩm'>
                       <Button color='failure' onClick={() => onHandleDeleteFake(product._id)}>
                         <HiTrash className='text-center' />
