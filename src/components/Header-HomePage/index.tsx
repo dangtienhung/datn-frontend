@@ -4,9 +4,14 @@ import { useEffect, useRef } from 'react'
 import { Auth } from '../../api/Auth'
 import { Link } from 'react-router-dom'
 import { MdKeyboardArrowDown } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
 
 const HeaderHomePage = () => {
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery()
+  const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
+  console.log(user)
+
   useEffect(() => {
     fetchUser()
   }, [fetchUser])
@@ -124,9 +129,19 @@ const HeaderHomePage = () => {
           ></div>
         </div>
         <div className='right '>
-          <div className='hidden w-8 h-8 rounded-[50%] md:flex items-center justify-center bg-[#d3b673] text-white'>
-            <FaSearch />
-          </div>
+          {user?.avatar ? (
+            <div className='hidden w-8 h-8 rounded-[50%] md:flex items-center justify-center bg-[#d3b673] text-white'>
+              <FaSearch />
+            </div>
+          ) : (
+            <Link
+              to='signin'
+              className='hidden py-2 uppercase text-sm rounded px-4  md:flex items-center justify-center bg-[#d3b673] text-white'
+            >
+              Đăng nhập
+            </Link>
+          )}
+
           <div className='block md:hidden text-white text-2xl cursor-pointer' onClick={toggleMenu}>
             <FaBars />
           </div>
