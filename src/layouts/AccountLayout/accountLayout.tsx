@@ -42,7 +42,7 @@ const AccountLayout = () => {
   return (
     <>
       <Header />
-      <div className='container mx-auto p-[20px] flex'>
+      <div className='container mx-auto p-[20px] grid grid-cols-[1fr,3fr]'>
         <div className='list-sidebar w-[250px] max-w-[250px] mr-[20px] flex-shrink-0'>
           <Menu mode='inline' openKeys={openKeys} onOpenChange={onOpenChange} items={items({ onLogout })} />
         </div>
