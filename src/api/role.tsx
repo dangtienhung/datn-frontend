@@ -1,4 +1,4 @@
-import { IRole, IRoleDocs } from '../interfaces/role.type'
+import { IRoleDocs } from '../interfaces/role.type'
 
 import { baseQueryWithReauth } from './Auth'
 import { createApi } from '@reduxjs/toolkit/query/react'

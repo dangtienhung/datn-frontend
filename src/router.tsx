@@ -1,40 +1,38 @@
-import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
 import { MyInfor, MyOrder, MyVoucher } from './components'
+import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
 
-import AccountLayout from './layouts/AccountLayout/accountLayout'
 import Achievement from './components/Achievement/Achievement'
-import AdminLayout from './layouts/admin'
 import BrandStory from './components/Blogs/BrandStory/BrandStory'
-import Categories from './pages/admin/Categories/Categories'
-import Checkout from './pages/Checkout/Checkout'
-import ClientLayout from './layouts/client'
-import Dashboard from './pages/admin/Dashboard/Dashboard'
 import Events from './components/Blogs/Events/Events'
-import HomePage from './pages/Home/HomePage'
-import Introduce from './components/Introduce/Introduce'
 import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
-import List from './components/Staff/CrudProducts/List'
-import MyAddress from './components/My-address'
 import News from './components/Blogs/News/News'
+import Introduce from './components/Introduce/Introduce'
+import MyAddress from './components/My-address'
+import AccountLayout from './layouts/AccountLayout/accountLayout'
+import AdminLayout from './layouts/admin'
+import ClientLayout from './layouts/client'
+import Checkout from './pages/Checkout/Checkout'
+import HomePage from './pages/Home/HomePage'
 import NotFound from './pages/Not-Found/NotFound'
+import ProductsPage from './pages/Products/Products'
+import Categories from './pages/admin/Categories/Categories'
+import Dashboard from './pages/admin/Dashboard/Dashboard'
 import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
 import Orders from './pages/admin/Orders/Orders'
 import ProductsList from './pages/admin/Products/Products'
-import ProductsPage from './pages/Products/Products'
 // import Role from './pages/admin/Manager-Staff-Shipper/Role'
+import { createBrowserRouter } from 'react-router-dom'
 import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
-import StaffLayout from './layouts/Staff/StaffLayout'
+import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
+import SizeList from './pages/admin/Size/Size'
 import Topping from './pages/admin/Toppings/Topping'
+import TrashCan from './pages/admin/Trash-can/TrashCan'
 import UserList from './pages/admin/Users/Users'
 import Voucher from './pages/admin/Voucher/Voucher'
-import { createBrowserRouter } from 'react-router-dom'
-import TrashCan from './pages/admin/Trash-can/TrashCan'
-import SizeList from './pages/admin/Size/Size'
-import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
 
-import Banner from './pages/admin/Banner/Banner'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
+import Banner from './pages/admin/Banner/Banner'
 import Blogs from './pages/admin/Blogs/Blogs'
 
 const routes = createBrowserRouter([
@@ -181,49 +179,7 @@ const routes = createBrowserRouter([
       }
     ]
   },
-  {
-    path: '/staff',
-    element: <GuardAuth />,
-    children: [
-      {
-        element: <StaffLayout />,
-        children: [
-          {
-            index: true,
-            element: <Dashboard />
-          },
-          {
-            path: 'dashboard',
-            element: <Dashboard />
-          },
-          {
-            path: 'categories',
-            element: <Categories />
-          },
-          {
-            path: 'products',
-            element: <List />
-          },
-          {
-            path: 'orders',
-            element: <Orders />
-          },
-          {
-            path: 'orders/:id',
-            element: <OrderDetail />
-          },
-          {
-            path: 'toppings',
-            element: <Topping />
-          },
-          {
-            path: 'voucher',
-            element: <Voucher />
-          }
-        ]
-      }
-    ]
-  },
+
   {
     path: '*',
     element: <NotFound />

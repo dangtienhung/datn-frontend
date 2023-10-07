@@ -205,7 +205,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                   {user.address ? user.address : 'Unknow'}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {user?.role?.name}
+                  {user?.role}
                 </Table.Cell>
 
                 <Table.Cell>
@@ -349,7 +349,7 @@ const AddUserModal: FC = function () {
                       roles.data.length > 0 &&
                       roles.data.map((role) => (
                         <option key={role._id} value={role._id}>
-                          {role.name}
+                          {role}
                         </option>
                       ))}
                   </Select>
@@ -474,7 +474,7 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
                       roles.data.length > 0 &&
                       roles.data.map((role) => (
                         <option key={role._id} value={role._id}>
-                          {role.name}
+                          {role}
                         </option>
                       ))}
                   </Select>

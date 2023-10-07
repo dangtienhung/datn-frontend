@@ -2,7 +2,6 @@ import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowb
 import { useState } from 'react'
 import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { IRole } from '../../../interfaces/role.type'
 
 import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form'
