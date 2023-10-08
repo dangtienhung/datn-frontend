@@ -31,7 +31,7 @@ const MyVoucher = () => {
           {vouchers &&
             vouchers?.data?.docs?.map((voucher: IVoucher) => {
               if (voucher.isActive) {
-                const endDate = voucher?.endDate ? new Date(voucher?.endDate) : null
+                const endDate = voucher?.endDate ? new Date(voucher?.endDate) : new Date()
                 const formattedEndDate = `${endDate?.getDate()}/${
                   endDate && endDate?.getMonth() + 1
                 }/${endDate?.getFullYear()}`

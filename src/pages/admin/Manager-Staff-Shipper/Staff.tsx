@@ -5,8 +5,8 @@ import { Button, Label, TextInput } from 'flowbite-react'
 
 const Staff = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const { data: users, isLoading } = useGetAllUsersQuery(currentPage)
-  // const [staff, setStaff] = useState<any>([])
+  const { data, isLoading } = useGetAllUsersQuery(currentPage)
+
   if (isLoading) return <Loading />
   return (
     <>
@@ -29,11 +29,6 @@ const Staff = () => {
                 </div>
               </form>
             </div>
-            {/* <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <Tooltip content='Thêm vai trò'>
-                <AddRoleModal />
-              </Tooltip>
-            </div> */}
           </div>
         </div>
       </div>
@@ -48,11 +43,5 @@ const Staff = () => {
     </>
   )
 }
-// type StaffTableProps = {
-//   staff
-// }
-// const StaffTable = (staff)=> {
-
-// }
 
 export default Staff
