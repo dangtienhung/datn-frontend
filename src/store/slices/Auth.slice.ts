@@ -16,7 +16,7 @@ const initialState: responseUser = {
     address: '',
     products: [],
     order: [],
-    role: {} as IRole,
+    role: '',
     accessToken: '',
     refreshToken: ''
   }
