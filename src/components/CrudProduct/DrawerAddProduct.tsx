@@ -252,14 +252,12 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
             <Form.Item
               name='category'
               label='Category'
-              rules={
-                [
-                  // {
-                  //   required: true,
-                  //   message: 'Hãy chọn category'
-                  // }
-                ]
-              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn category'
+                }
+              ]}
               hasFeedback
             >
               <Select placeholder='Select category'>
@@ -275,14 +273,12 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
             <Form.Item
               name='toppings'
               label='Topping'
-              rules={
-                [
-                  // {
-                  //   required: true,
-                  //   message: 'Hãy chọn topping!'
-                  // }
-                ]
-              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Hãy chọn topping!'
+                }
+              ]}
               hasFeedback
             >
               <Select {...selectPropsTopping} />
@@ -322,22 +318,12 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
                           return item && item
                         })
 
-                        console.log(sizes)
-
                         const duplicateSize = array_is_unique(sizes, sizes.length)
 
-                        console.log(duplicateSize)
                         if (duplicateSize === 1) {
                           return Promise.reject('Size không lên trùng nhau!')
                         }
-
-                        // return value.filter((item: any) => {
-                        //   return value[0].name === item.name
-                        // }).length > 0
-                        //   ? Promise.reject('Size bị trùng!')
-                        //   : Promise.resolve()
                       }
-                      // return Promise.reject('kaka')
                     }
                   }
                 ]}
@@ -375,7 +361,6 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
                             {...restField}
                             name={[name, 'price']}
                             rules={[
-                              // { required: true, message: 'Hãy nhập giá size!' },
                               {
                                 validator(_, value) {
                                   if (value && value <= 0) {
@@ -431,33 +416,29 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
                   initialValue={0}
                   style={{ flex: 1 }}
                   rules={[
-                    // {
-                    //   required: true,
-                    //   message: 'Hãy nhập giá sale!'
-                    // },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
                         if (!isPercent) {
-                          if (value < 0) {
-                            return Promise.reject('Giá sale không hợp lệ!')
-                          } else if (value === 0) {
+                          if (value === 0) {
                             return Promise.resolve()
-                          } else if (getFieldValue('customsizes')?.length >= 1 || getFieldValue('sizes').length >= 1) {
-                            const originalSize = getFieldValue('sizes').map((item: any) => {
+                          } else if (!getFieldValue('customsizes') && !getFieldValue('sizes')) {
+                            return Promise.reject('Hãy chọn hoặc nhập giá size hợp lệ!')
+                          } else if (getFieldValue('customsizes')?.length >= 1 || getFieldValue('sizes')?.length >= 1) {
+                            const originalSize = getFieldValue('sizes')?.map((item: any) => {
                               return Number(item.split('|')[2])
                             })
                             const size = getFieldValue('customsizes')?.map((item: any) => {
-                              return Number(item.price)
+                              return Number(item?.price)
                             })
 
-                            // console.log([...originalSize, ...size])
+                            if (!originalSize && isNaN(size[0])) {
+                              return Promise.reject('Hãy chọn hoặc nhập giá size hợp lệ!')
+                            }
 
                             const min =
                               size?.[0] > 0
                                 ? formatNumberDigits(getMin([...originalSize, ...size]))
                                 : formatNumberDigits(getMin([...originalSize]))
-
-                            console.log(min)
 
                             return formatNumberDigits(value) > min * 0.7
                               ? Promise.reject('Sale không được lớn hơn 70% giá size nhỏ nhất')
@@ -498,54 +479,53 @@ export const DrawerAddProduct = ({ setIsOpenDrawer, isOpenDrawer }: DrawerAddPro
                 />
               </Space.Compact>
             </Form.Item>
-            <Form form={form} onFinish={onFinish}>
-              <Form.Item
-                label='Profile Picture'
-                name='images'
-                valuePropName='fileList'
-                getValueFromEvent={(event) => {
-                  return event?.fileList
-                }}
-                rules={[
-                  {
-                    validator(_, fileList) {
-                      return new Promise((resolve, reject) => {
-                        if (!fileList) {
-                          reject('Hãy upload ảnh!')
-                        } else {
-                          resolve('')
-                        }
-                      })
-                    }
+            <Form.Item
+              label='Profile Picture'
+              name='images'
+              valuePropName='fileList'
+              getValueFromEvent={(event) => {
+                return event?.fileList
+              }}
+              rules={[
+                {
+                  validator(_, fileList) {
+                    return new Promise((resolve, reject) => {
+                      console.log(fileList)
+                      if (!fileList || fileList.length <= 0) {
+                        reject('Hãy upload ảnh!')
+                      } else {
+                        resolve('')
+                      }
+                    })
                   }
-                ]}
+                }
+              ]}
+            >
+              <Upload
+                listType='picture-card'
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                beforeUpload={(file) => {
+                  const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+                  if (!isPNG) {
+                    message.error(`${file.name} is not a png, jpg or jpeg file`)
+                  }
+                  return isPNG ? false : Upload.LIST_IGNORE
+                }}
               >
-                <Upload
-                  listType='picture-card'
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                  beforeUpload={(file) => {
-                    const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
-                    if (!isPNG) {
-                      message.error(`${file.name} is not a png, jpg or jpeg file`)
-                    }
-                    return isPNG ? false : Upload.LIST_IGNORE
-                  }}
-                >
-                  {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-              </Form.Item>
-              <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
-                <img
-                  alt='example'
-                  style={{
-                    width: '100%'
-                  }}
-                  src={previewImage}
-                />
-              </Modal>
-            </Form>
+                {fileList.length >= 8 ? null : uploadButton}
+              </Upload>
+            </Form.Item>
+            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
+              <img
+                alt='example'
+                style={{
+                  width: '100%'
+                }}
+                src={previewImage}
+              />
+            </Modal>
           </Col>
         </Row>
         <Row gutter={24}>
