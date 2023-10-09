@@ -43,7 +43,7 @@ const Sliders = () => {
     <section className='slider overflow-hidden'>
       <Slider {...settings}>
         {data?.banners &&
-          data.banners.map((banner) => (
+          data.banners.map((banner: { url: string }) => (
             <div key={uuidv4()} className='item relative'>
               <div className={`${styles.overlay}`}></div>
               <img

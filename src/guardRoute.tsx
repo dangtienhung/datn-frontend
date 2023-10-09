@@ -13,7 +13,7 @@ export const GuardSign = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const navigate = useNavigate()
   useEffect(() => {
-    if (['admin', 'Shipper', 'Staff'].includes(user.role) && user.role) {
+    if (['admin', 'shipper', 'staff'].includes(toLower(user.role)) && user.role) {
       navigate(`/${toLower(user.role)}`)
     } else if (user.role === 'customer') {
       navigate('/')
@@ -24,7 +24,7 @@ export const GuardSign = ({ JSX }: Props) => {
 
 export const GuardAccount = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  return ['customer', 'shipper', 'staff', 'admin'].includes(user.role) ? <JSX /> : <Navigate to={'/'} />
+  return ['customer', 'shipper', 'staff', 'admin'].includes(toLower(user.role)) ? <JSX /> : <Navigate to={'/'} />
 }
 
 const GuardAuth = () => {

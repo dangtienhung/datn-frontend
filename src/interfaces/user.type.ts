@@ -1,5 +1,4 @@
 import { AddUserForm } from '../validate/Form'
-import { IRole } from './role.type'
 
 export interface IUser {
   _id?: string

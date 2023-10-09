@@ -82,7 +82,7 @@ const TrashCanUser = () => {
       name: item.account ?? '',
       // account: item.account,
       avatar: item.avatar ?? '',
-      role: item.role.name
+      role: item.role
     }))
   }
   const [searchText, setSearchText] = useState('')

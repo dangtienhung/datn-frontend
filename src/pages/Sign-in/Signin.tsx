@@ -12,13 +12,6 @@ import { useCreateCartDBMutation } from '../../api/cartDB'
 import { useAppSelector } from '../../store/hooks'
 import { RootState } from '../../store/store'
 
-// import { IUser } from '../../interfaces/user.type'
-
-// type Login = {
-//   account: string;
-//   password: string;
-// };
-
 const Signin = () => {
   const [loginUser] = useLoginMutation()
   const [addCartDbFn] = useCreateCartDBMutation()
