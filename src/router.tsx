@@ -107,7 +107,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <GuardAuth />,
+    // element: <GuardAuth />,
     children: [
       {
         element: <AdminLayout />,
