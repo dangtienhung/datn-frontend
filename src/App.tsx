@@ -12,7 +12,7 @@ import { pause } from './utils/pause'
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
-  pause(2000).then(() => {
+  pause(3000).then(() => {
     setIsLoading(false)
   })
   if (isLoading) return <Loader />

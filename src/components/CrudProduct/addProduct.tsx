@@ -132,6 +132,9 @@ const AddProductModal = ({
   const handleCancelImg = () => setPreviewOpen(false)
 
   const onFinish = (values: any) => {
+    // console.log(values?.images)
+    // return
+
     setConfirmLoading(true)
     const formData = new FormData()
     values?.images.forEach((file: any) => {
@@ -385,54 +388,53 @@ const AddProductModal = ({
             <TextArea rows={6} />
           </Form.Item>
         </Form>
-        <Form form={form} onFinish={onFinish}>
-          <Form.Item
-            label='Profile Picture'
-            name='images'
-            valuePropName='fileList'
-            getValueFromEvent={(event) => {
-              return event?.fileList
-            }}
-            rules={[
-              {
-                validator(_, fileList) {
-                  return new Promise((resolve, reject) => {
-                    if (!fileList) {
-                      reject('Hãy upload ảnh!')
-                    } else {
-                      resolve('')
-                    }
-                  })
-                }
+
+        <Form.Item
+          label='Profile Picture'
+          name='images'
+          valuePropName='fileList'
+          getValueFromEvent={(event) => {
+            return event?.fileList
+          }}
+          rules={[
+            {
+              validator(_, fileList) {
+                return new Promise((resolve, reject) => {
+                  if (!fileList) {
+                    reject('Hãy upload ảnh!')
+                  } else {
+                    resolve('')
+                  }
+                })
               }
-            ]}
+            }
+          ]}
+        >
+          <Upload
+            listType='picture-card'
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            beforeUpload={(file) => {
+              const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+              if (!isPNG) {
+                message.error(`${file.name} is not a png, jpg or jpeg file`)
+              }
+              return isPNG ? false : Upload.LIST_IGNORE
+            }}
           >
-            <Upload
-              listType='picture-card'
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-              beforeUpload={(file) => {
-                const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
-                if (!isPNG) {
-                  message.error(`${file.name} is not a png, jpg or jpeg file`)
-                }
-                return isPNG ? false : Upload.LIST_IGNORE
-              }}
-            >
-              {fileList.length >= 8 ? null : uploadButton}
-            </Upload>
-          </Form.Item>
-          <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
-            <img
-              alt='example'
-              style={{
-                width: '100%'
-              }}
-              src={previewImage}
-            />
-          </Modal>
-        </Form>
+            {fileList.length >= 8 ? null : uploadButton}
+          </Upload>
+        </Form.Item>
+        <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelImg}>
+          <img
+            alt='example'
+            style={{
+              width: '100%'
+            }}
+            src={previewImage}
+          />
+        </Modal>
       </Modal>
     </>
   )
