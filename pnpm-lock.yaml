@@ -40,7 +40,14 @@ dependencies:
     version: 1.5.1
   dayjs:
     specifier: ^1.11.9
+<<<<<<< HEAD
+    version: 1.11.9
+  du-an-react-fe:
+    specifier: 'link:'
+    version: 'link:'
+=======
     version: 1.11.10
+>>>>>>> 2f025cca8fec6ed6c8bf735de567d9fbfb9bc90d
   flatpickr:
     specifier: ^4.6.13
     version: 4.6.13
