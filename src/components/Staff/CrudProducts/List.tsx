@@ -62,7 +62,7 @@ const List = () => {
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
-    sorter: SorterResult<DataType>[]
+    sorter: SorterResult<DataType> | SorterResult<DataType>[]
   ) => {
     setTableParams({
       pagination,

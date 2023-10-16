@@ -20,5 +20,5 @@ export const formatPriceCompact = (price: number) => {
 }
 
 export const formatNumberDigits = (number: number) => {
-  return Number(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 10 }).format(number))
+  return Number(new Intl.NumberFormat('vi-VN').format(number).split('.').join(''))
 }

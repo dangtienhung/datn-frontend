@@ -48,7 +48,9 @@ const Categories = () => {
               </form>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
-              <Tooltip content='Thêm danh mục'>{/* <AddCategoryModal error={error} /> */}</Tooltip>
+              <Tooltip content='Thêm danh mục'>
+                <AddCategoryModal error={error} />
+              </Tooltip>
 
               <Button color='gray' onClick={() => exportToExcel(data, 'categories')}>
                 <div className='gap-x-3 flex items-center'>
