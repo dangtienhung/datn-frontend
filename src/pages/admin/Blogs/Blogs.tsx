@@ -322,7 +322,7 @@ interface IPropBlog {
   dataBlogs11: IBlogs
   error: string
 }
-const EditBlogsModal = function ({ dataBlogs11, error }: IPropBlog) {
+const EditBlogsModal = function ({ dataBlogs11 }: IPropBlog) {
   const [isOpen, setOpen] = useState(false)
   const [updateBlog] = useUpdateBlogsMutation()
   // const dispatch = useAppDispatch()

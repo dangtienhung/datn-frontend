@@ -18,7 +18,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useForm } from 'react-hook-form'
 import { AddUserForm, AddUserSchema, UpdateUserForm, UpdateUserSchema } from '../../../validate/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useGetAllRolesQuery } from '../../../api/role'
+
 import { useAppSelector } from '../../../store/hooks'
 import UserUpload from '../../../components/Upload/UserUpload'
 import { IImage } from '../../../interfaces/image.type'
@@ -205,7 +205,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                   {user.address ? user.address : 'Unknow'}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {user?.role?.name}
+                  {user?.role}
                 </Table.Cell>
 
                 <Table.Cell>
@@ -244,7 +244,7 @@ const AddUserModal: FC = function () {
   const [addUser, { isLoading }] = useAddUserMutation()
   const [upLoadAvartaUser, { isLoading: isUpLoading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
-  const { data: roles } = useGetAllRolesQuery()
+
   const {
     register,
     handleSubmit,
@@ -346,15 +346,15 @@ const AddUserModal: FC = function () {
               <div>
                 <Label htmlFor='department'>Role</Label>
                 <div className='mt-1'>
-                  <Select {...register('role')}>
+                  {/* <Select {...register('role')}>
                     {roles &&
                       roles.data.length > 0 &&
                       roles.data.map((role) => (
                         <option key={role._id} value={role._id}>
-                          {role.name}
+                          {role}
                         </option>
                       ))}
-                  </Select>
+                  </Select> */}
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.role && errors.role.message}</span>
               </div>
@@ -387,7 +387,7 @@ type EditUserModalProps = {
 }
 const EditUserModal = function ({ user }: EditUserModalProps) {
   const [isOpen, setOpen] = useState(false)
-  const { data: roles } = useGetAllRolesQuery()
+
   const [updateUser, { isLoading }] = useUpdateUserMutation()
   const [upLoadAvartaUser, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [deleteImageUser, { isLoading: isDeleting }] = useDeleteImageUserMutation()
@@ -400,7 +400,7 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
   } = useForm<UpdateUserForm>({
     mode: 'onChange',
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues: { ...user, role: user.role?._id, address: user.address || '' }
+    defaultValues: { ...user, role: user.role, address: user.address || '' }
   })
 
   const onHandleSubmit = (data: UpdateUserForm) => {
@@ -472,13 +472,13 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
                 <Label htmlFor='Role'>Role</Label>
                 <div className='mt-1'>
                   <Select {...register('role')}>
-                    {roles &&
+                    {/* {roles &&
                       roles.data.length > 0 &&
                       roles.data.map((role) => (
                         <option key={role._id} value={role._id}>
-                          {role.name}
+                          {role}
                         </option>
-                      ))}
+                      ))} */}
                   </Select>
                   {/* <TextInput name="company" placeholder="Somewhere" /> */}
                 </div>

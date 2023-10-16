@@ -6,7 +6,7 @@ import './New.module.scss'
 const { Meta } = Card
 
 const News = () => {
-  const { data: dataBlog, isLoading } = useGetAllBlogsQuery()
+  const { data: dataBlog } = useGetAllBlogsQuery()
   console.log(dataBlog)
 
   return (

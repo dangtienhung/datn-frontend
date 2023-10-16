@@ -103,7 +103,9 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
             </div>
           </div>
           <div className='text-center'>
-            <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+            {products.totalDocs > 1 && (
+              <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+            )}
           </div>
         </div>
 
