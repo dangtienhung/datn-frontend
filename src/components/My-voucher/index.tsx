@@ -1,25 +1,13 @@
-import { Skeleton, Modal } from 'antd'
+import { Skeleton, Popover } from 'antd'
 import { useGetAllVouchersQuery } from '../../api/voucher'
 import { IVoucher } from '../../interfaces/voucher.type'
 import style from './Voucher.module.scss'
 import { BiDetail } from 'react-icons/bi'
-import { useState } from 'react'
+import { Content } from './content'
 const MyVoucher = () => {
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const currentDate = new Date()
 
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
   return (
     <div>
       <h1 className='dark:text-white sm:text-2xl text-xl my-[10px] font-semibold text-gray-900'>Kho Mã Giảm Giá</h1>
@@ -27,7 +15,7 @@ const MyVoucher = () => {
         // <Loading />
         <Skeleton />
       ) : (
-        <div className={`${style.allVoucher} grid grid-cols-2 gap-3`}>
+        <div className={`${style.allVoucher} grid lg:grid-cols-2 lg:gap-3 sm:grid-cols-1 sm:gap-3`}>
           {vouchers &&
             vouchers?.data?.docs?.map((voucher: IVoucher) => {
               if (voucher.isActive) {
@@ -35,12 +23,7 @@ const MyVoucher = () => {
                 const formattedEndDate = `${endDate?.getDate()}/${
                   endDate && endDate?.getMonth() + 1
                 }/${endDate?.getFullYear()}`
-                // const currentEndDate = new Date(voucher?.endDate)
                 console.log('currentDate', currentDate, '/endDate', endDate)
-
-                // console.log('Vhoucher',voucher.endDate, '  end Date/', endDate, '  new Date/', currentDate)
-                // console.log('Vhoucher',voucher.endDate, '  formattedEndDate/', formattedEndDate, '  new Date/', currentDate)
-
                 if (endDate > currentDate) {
                   return (
                     <div key={voucher._id} className='grid grid-cols-[1fr,2fr]'>
@@ -52,15 +35,22 @@ const MyVoucher = () => {
                         <div className='grid grid-cols-[3fr,1fr]'>
                           <div className='p-3 text-white'>
                             <h2>Giảm {voucher?.sale / 1000}K</h2>
-                            <p>Cho đơn hàng từ 2 tỷ</p>
+                            <p>Cho đơn hàng từ 2B $</p>
                           </div>
                           <div className='p-3 text-[#fff] text-right'>
-                            <button onClick={showModal}>
-                              <BiDetail />
-                            </button>
+                            <Popover
+                              placement='bottom'
+                              content={() => (
+                                <Content code={voucher.code} endDate={formattedEndDate} title={voucher.title} />
+                              )}
+                            >
+                              <button>
+                                <BiDetail />
+                              </button>
+                            </Popover>
                           </div>
                         </div>
-                        <p className='px-4 pt-5 text-[13px] text-gray-600'>HSD: {formattedEndDate}</p>
+                        <p className='px-4 pt-5 text-[13px] text-[#fff]'>HSD: {formattedEndDate}</p>
                       </div>
                     </div>
                   )
@@ -70,11 +60,6 @@ const MyVoucher = () => {
             })}
         </div>
       )}
-      <Modal title='Basic Modal' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
     </div>
   )
 }
