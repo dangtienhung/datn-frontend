@@ -48,7 +48,7 @@ const Sliders = () => {
               <div className={`${styles.overlay}`}></div>
               <img
                 src={banner.url}
-                className='block w-[414px] h-[276px] md:w-[820px] md:h-[546px] lg:w-full lg:h-[864px] lg:max-h-[864px] object-cover'
+                className='block h-[276px] w-full lg:h-[864px] lg:max-h-[864px] object-cover'
                 alt='banner'
               />
               <div className='slide-content center-slider text-center'>
