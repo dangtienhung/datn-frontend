@@ -39,8 +39,8 @@ interface CustomUploadFile extends UploadFile {
   publicId: string
 }
 
-let optionTopping: ItemProps[] = []
-let optionOriginalSize: ItemProps[] = []
+const optionTopping: ItemProps[] = []
+const optionOriginalSize: ItemProps[] = []
 
 const DrawerEditProduct = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [getDataTopping] = ToppingAPI.endpoints.getAllTopping.useLazyQuery()
