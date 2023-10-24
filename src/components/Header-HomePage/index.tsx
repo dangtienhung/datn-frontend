@@ -23,7 +23,7 @@ const HeaderHomePage = () => {
   }
 
   return (
-    <header className='w-full absolute z-[99] py-3 px-5 md:px-10 lg:px-0 '>
+    <header className='w-full absolute z-[99] py-3 px-5 md:px-10 lg:px-0'>
       <div className='container my-0 mx-auto flex items-center justify-between '>
         <div className='left flex items-center '>
           <Link to='/' className='self-start'>
