@@ -34,6 +34,7 @@ import Voucher from './pages/admin/Voucher/Voucher'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 import Banner from './pages/admin/Banner/Banner'
 import Blogs from './pages/admin/Blogs/Blogs'
+import ChangePassword from './components/ChangePassword/ChangePassword'
 
 const routes = createBrowserRouter([
   {
@@ -100,7 +101,8 @@ const routes = createBrowserRouter([
       { index: true, element: <MyInfor /> },
       { path: 'my-order', element: <MyOrder /> },
       { path: 'my-voucher', element: <MyVoucher /> },
-      { path: 'my-address', element: <MyAddress /> }
+      { path: 'my-address', element: <MyAddress /> },
+      { path: 'change-password', element: <ChangePassword /> }
     ]
   },
   {
