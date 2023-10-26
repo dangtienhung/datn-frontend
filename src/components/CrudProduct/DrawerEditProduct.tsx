@@ -52,7 +52,7 @@ const DrawerEditProduct = ({ DataEdit }: { DataEdit: IProduct }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [uploadImages] = useUploadImagesProductMutation()
   const [updateProduct] = useUpdateProductMutation()
-  const [isPercent, setIsPercent] = useState(DataEdit.sale.isPercent)
+  const [isPercent, setIsPercent] = useState(DataEdit.sale)
   const [isOpenDrawer, setIsOpenDrawer] = useState(false)
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<CustomUploadFile[]>(
@@ -70,20 +70,20 @@ const DrawerEditProduct = ({ DataEdit }: { DataEdit: IProduct }) => {
   )
 
   const fillForm = ({ DataEdit }: { DataEdit: IProduct }) => {
-    const { name, category, description, toppings, sale, sizes, customsizes } = DataEdit
+    const { name, category, description, toppings, sale, sizes } = DataEdit
     form.setFieldsValue({
       name: name,
       category: category._id,
       toppings: toppings.map((item) => item._id),
       sizes: sizes.map((item) => `${item._id}|${item.name}|${item.price}`),
-      sale: sale.value,
-      description: description,
-      customsizes: customsizes.map((item) => {
-        return {
-          name: item.name,
-          price: item.price
-        }
-      })
+      sale: sale,
+      description: description
+      // customsizes: customsizes.map((item) => {
+      //   return {
+      //     name: item.name,
+      //     price: item.price
+      //   }
+      // })
     })
   }
 
@@ -575,7 +575,7 @@ const DrawerEditProduct = ({ DataEdit }: { DataEdit: IProduct }) => {
                       parser={(value: any) => (isPercent ? value.replace('', '') : value.replace(/ \s?|(\.*)/g, ''))}
                     />
                   </Form.Item>
-                  <Switch
+                  {/* <Switch
                     checked={isPercent}
                     checkedChildren='%'
                     unCheckedChildren='VND'
@@ -584,7 +584,7 @@ const DrawerEditProduct = ({ DataEdit }: { DataEdit: IProduct }) => {
                       onResetSale()
                       setIsPercent(!isPercent)
                     }}
-                  />
+                  /> */}
                 </Space.Compact>
               </Form.Item>
               <Form form={form} onFinish={onFinish}>

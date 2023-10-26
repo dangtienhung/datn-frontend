@@ -7,17 +7,11 @@ import { useEffect } from 'react'
 import { useGetAllCategoryQuery } from '../../api/category'
 import useQueryConfig from '../../hook/useQueryConfig'
 
-// import { getAllCates } from '../../store/services/categories'
-
 const ProductsPage = () => {
   // const dispatch = useAppDispatch()
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
-  // const {
-  //   categories,
-  //   error: errorCategories,
-  //   isLoading: isLoadingCategories
-  // } = useAppSelector((state: RootState) => state.persistedReducer.category)
+
   const { data: datacate, error: errorCategories, isLoading: isLoadingCategories } = useGetAllCategoryQuery()
   const categories = datacate?.docs
   const {
@@ -25,9 +19,6 @@ const ProductsPage = () => {
     error: errorProduct,
     isLoading: isLoadingProduct
   } = useAppSelector((state: RootState) => state.persistedReducer.products)
-  // useEffect(() => {
-  //   dispatch(getAllCates({ _page: queryConfig._page, _limit: queryConfig.limit }))
-  // }, [dispatch, queryConfig.limit, queryConfig._page])
 
   useEffect(() => {
     if (queryConfig.searchName != '' && ProductList?.docs?.length == 0) {
