@@ -10,7 +10,6 @@ import { RootState } from '../../store/store'
 const HeaderHomePage = () => {
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery()
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
-  console.log(user)
 
   useEffect(() => {
     fetchUser()

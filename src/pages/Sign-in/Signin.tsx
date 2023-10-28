@@ -93,22 +93,6 @@ const Signin = () => {
                 bgColorHover='#991b1b'
                 LoginIn='google'
               />
-              <CardSigin
-                bgColor='#0369a1'
-                color='#fafafa'
-                icon={<BiLogoFacebookSquare />}
-                colorHover='#fef2f2'
-                bgColorHover='#075985'
-                LoginIn='facebook'
-              />
-              <CardSigin
-                bgColor='#0891b2'
-                color='#fafafa'
-                icon={<BiLogoTwitter />}
-                colorHover='#fef2f2'
-                bgColorHover='#075985'
-                LoginIn='twitter'
-              />
             </div>
             <div className='gap-x-2 flex items-center justify-center my-5 text-sm'>
               <div>Bạn chưa có tài khoản?</div>

@@ -57,6 +57,7 @@ const middleware = [
   AnalyticsApi.middleware,
   NewBlogsApi.middleware
 ]
+
 export const store = configureStore({
   reducer: {
     persistedReducer,

@@ -29,9 +29,6 @@ const SlickArrowRight = ({ currentSlide, slideCount, ...props }: any) => (
 
 const Sliders = () => {
   const { data } = useGetAllBannersQuery()
-  useEffect(() => {
-    console.log(data)
-  })
   const settings = {
     dots: false,
     speed: 500,
