@@ -15,14 +15,15 @@
 .ant-radio-group-large .ant-radio-button-wrapper {
   font-size: 16px;
   line-height: 38px;
-  height: 180px;
-  width: 140px;
+  height: 120px;
+  width: 300px;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   border: 2px dashed #ccc;
   position: relative;
 }
+
 .ant-radio-group-large .ant-radio-button-wrapper::before,
 .ant-radio-group-large .ant-radio-button-wrapper::after {
   background: #ffffff;
@@ -50,4 +51,8 @@
 .ant-radio-group-large .ant-radio-button-wrapper:hover {
   color: #ffffff;
   background: #d8b979;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+  border-color: unset !important;
 }

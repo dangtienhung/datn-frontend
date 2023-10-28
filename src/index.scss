@@ -5,6 +5,9 @@
 @import 'flatpickr/dist/themes/material_green.css';
 
 @layer {
+  * {
+    font-family: 'Roboto', sans-serif;
+  }
   //signin, signup
   .background-container {
     display: flex;

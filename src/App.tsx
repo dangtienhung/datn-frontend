@@ -1,21 +1,23 @@
-'use client'
-
 import 'react-toastify/dist/ReactToastify.css'
 import { Flowbite } from 'flowbite-react'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, useLocation, useRoutes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import routes from './router'
 import theme from './flowbite-theme'
-import { useState } from 'react'
 import Loader from './components/Loader'
 import { pause } from './utils/pause'
+import { useState } from 'react'
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  pause(3000).then(() => {
-    setIsLoading(false)
-  })
-  if (isLoading) return <Loader />
+  // const [isLoading, setIsLoading] = useState(false)
+  // useRoutes(routes, {
+  //   onTransitionStart: () => {
+  //     setIsLoading(true) // Bắt đầu hiển thị hiệu ứng loading khi router thay đổi
+  //   },
+  //   onTransitionEnd: () => {
+  //     setIsLoading(false) // Tắt hiệu ứng loading khi router hoàn thành thay đổi
+  //   }
+  // })
   return (
     <Flowbite theme={{ theme }}>
       <RouterProvider router={routes} />

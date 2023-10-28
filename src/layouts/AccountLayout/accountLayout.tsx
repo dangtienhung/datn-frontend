@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useLogoutMutation } from '../../api/Auth'
 import { useState } from 'react'
+import Loader from '../../components/Loader'
 
 const AccountLayout = () => {
   const [logout] = useLogoutMutation()
@@ -41,6 +42,7 @@ const AccountLayout = () => {
   }
   return (
     <>
+      <Loader />
       <Header />
       <div className='container mx-auto p-[20px] grid grid-cols-[1fr,3fr]'>
         <div className='list-sidebar w-[250px] max-w-[250px] mr-[20px] flex-shrink-0'>
