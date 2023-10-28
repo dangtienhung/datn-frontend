@@ -84,29 +84,23 @@ export const UserCheckoutSchema = Yup.object({
     .trim()
     .required('Số điện thoại không được để trống')
     .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
-  shippingLocation: Yup.string().trim().required('Địa chỉ không được để trống'),
+  shippingLocation: Yup.string().required('Địa chỉ không được để trống'),
 
-  shippingNote: Yup.string().trim().default(' '),
-  paymentMethod: Yup.string().trim().required()
+  shippingNote: Yup.string().default(' '),
+  paymentMethod: Yup.string().required()
   // askRefer: Yup.boolean(),
 
   // nameOther: Yup.string()
-  //   .trim()
-
   //   .when('askRefer', {
   //     is: true,
   //     then: (schema) => schema.required()
   //   }),
   // phoneOther: Yup.string()
-  //   .trim()
-
   //   .when('askRefer', {
   //     is: true,
   //     then: (schema) => schema.required()
   //   }),
   // shippingLocationOther: Yup.string()
-  //   .trim()
-
   //   .when('askRefer', {
   //     is: true,
   //     then: (schema) => schema.required()

@@ -23,18 +23,20 @@ import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
 import ListStore from '../../interfaces/Map.type'
 import { message } from 'antd'
+import { useDeleteCartDBMutation } from '../../api/cartDB'
 
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
   const [orderAPIFn] = useCreateOrderMutation()
-  // const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
+
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
   const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
+  const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
@@ -155,7 +157,7 @@ const Checkout = () => {
           noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
         }
       }
-      // console.log(dataForm, '::::::dâtf')
+
       orderAPIFn(dataForm)
         .unwrap()
         .then((res) => {
@@ -163,10 +165,12 @@ const Checkout = () => {
             return toast.error('Đặt hàng thất bại' + res.error.data.error)
           } else {
             reset()
+            dataCartCheckout.items.length &&
+              dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
             dispatch(resetAllCart())
             toast.success('Bạn đặt hàng thành công')
             // alert(data.shippingNote)
-            // reset();
+
             // dispatch(resetAllCart());
             // navigate('http://localhost:4000/vnpay');
             if (data.paymentMethod == 'vnpay') {
@@ -188,6 +192,7 @@ const Checkout = () => {
     }
   })
 
+  console.log(errors.phone, errors.shippingLocation)
   return (
     <div className='w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto'>
       <div className='detail gap-y-10 lg:gap-y-0 lg:flex-row flex flex-col justify-between mt-6'>
@@ -228,6 +233,9 @@ const Checkout = () => {
                 <div id='geocoder' className='flex flex-row gap-3'>
                   <i className='fa-solid fa-location-dot'></i>
                 </div>
+                {errors.shippingLocation && (
+                  <span className='text-red-500 text-[13px] self-start'>Địa chỉ nhận hàng là bắt buộc</span>
+                )}
               </div>
               {/* <Input
                   prefix={<FaMapMarkerAlt />}
@@ -253,70 +261,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* <div className='title mb-[7px] px-5'>
-            <button type='button' className='py-[10px]   my-2   ' onClick={() => setBtnShipOrder(!btnShipOrder)}>
-              <label className='flex items-center gap-2' htmlFor='askRefer'>
-                <AiOutlinePlusCircle />
-                <span> {!btnShipOrder ? 'Thêm' : 'Xóa'} người nhận</span>
-              </label>
-            </button>
-            <input type='checkbox' id='askRefer' className='hidden' {...register('askRefer')} />
-          </div> */}
-
-          {/* <div className='mt-8'>
-
-            {btnShipOrder && (
-              <>
-                <div className='title mb-[7px] px-5'>
-                  <h2 className='font-semibold text-sm'>Thông tin người nhận mới</h2>
-                </div>
-                <div className=' shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] bg-white p-5'>
-                  <div className='py-[10px]'>
-                    <Input
-                      name='nameOther'
-                      register={register}
-                      error={errors.nameOther?.message}
-                      prefix={<BiSolidUser />}
-                      placeholder='Tên người nhận'
-                    />
-                  </div>
-                  <div className='py-[10px]'>
-                    <Input
-                      prefix={<FaPhoneAlt />}
-                      placeholder='Số điện thoại người nhận'
-                      name='phoneOther'
-                      register={register}
-                      error={errors.phoneOther?.message}
-                    />
-                  </div>
-
-                  <div className='location'>
-                    <div className='title pt-[10px] text-sm'>
-                      <h2>Giao đến</h2>
-                    </div>
-                    <div className='py-[10px]'>
-                      <Input
-                        prefix={<FaMapMarkerAlt />}
-                        placeholder='Địa chỉ người nhận'
-                        name='shippingLocationOther'
-                        error={errors.shippingLocationOther?.message}
-                        register={register}
-                      />
-                    </div>
-                  </div>
-                  <div className='py-[10px]'>
-                    <Input
-                      prefix={<FaStickyNote />}
-                      placeholder='Ghi chú địa chỉ...'
-                      name='shippingNoteOther'
-                      error={errors.shippingNoteOther?.message}
-                      register={register}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div> */}
           <div className=' mt-8'>
             <div className='title mb-[7px] px-5'>
               <h2 className='font-semibold text-sm'>Phương thức thanh toán</h2>

@@ -62,7 +62,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     if (product.sizes) {
       setPrice(product?.sizes[0]?.price ?? 0)
       setNameRadioInput(product?.sizes[0] ?? { name: '', price: 0 })
-      setSizes([...product?.sizes, ...product.customsizes])
+      setSizes([...product.sizes])
     }
     setQuantity(1)
     setTotalToppingPrice(0)
@@ -82,12 +82,10 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: (product.sale.isPercent
-        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale.value) / 100)
-        : nameRadioInput && nameRadioInput?.price - product.sale.value) as number,
-      total: product.sale.isPercent
-        ? price * ((100 - product.sale.value) / 100) * quantity
-        : (price - product.sale.value) * quantity,
+      price: (product.sale
+        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
+        : nameRadioInput && nameRadioInput?.price - product.sale) as number,
+      total: product.sale ? price * ((100 - product.sale) / 100) * quantity : (price - product.sale) * quantity,
       product: product._id
     }
 
@@ -136,11 +134,11 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className='price flex items-end mt-4'>
                   <span className='new-price pr-[10px] text-[#8a733f] font-semibold text-sm'>
-                    {product.sale.value > 0
+                    {product.sale > 0
                       ? formatCurrency(
-                          product.sale.isPercent
-                            ? price * ((100 - product.sale.value) / 100) * quantity
-                            : (price - product.sale.value) * quantity
+                          product.sale
+                            ? price * ((100 - product.sale) / 100) * quantity
+                            : (price - product.sale) * quantity
                         )
                       : formatCurrency(price * quantity)}
                   </span>
@@ -174,11 +172,11 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     className='cursor-auto btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
                   >
                     +
-                    {product.sale.value > 0
+                    {product.sale > 0
                       ? formatCurrency(
-                          product.sale.isPercent
-                            ? price * ((100 - product.sale.value) / 100) * quantity
-                            : (price - product.sale.value) * quantity
+                          product.sale
+                            ? price * ((100 - product.sale) / 100) * quantity
+                            : (price - product.sale) * quantity
                         )
                       : formatCurrency(price * quantity)}
                   </button>
@@ -194,28 +192,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               </div>
             </div>
             <div className={`customize h-1/2 overflow-y-scroll p-5 grow mb-5 ${styles.popup_body}`}>
-              {/* <div className="custom-type mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn loại</div>
-                  <div className="right">
-                    <FaAngleDown />
-                  </div>
-                </div>
-                <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded">
-                  <label className={`${styles.container_radio} block w-full group`}>
-                    <span>Lạnh</span>
-                    <input
-                      className="absolute opacity-0"
-                      defaultChecked
-                      type="radio"
-                      name="type"
-                      value="cold"
-                    />
-                    <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                  </label>
-                </div>
-              </div> */}
-
               <div className='custom-size mb-2'>
                 <div className='title flex items-center justify-between px-5 mb-2'>
                   <div className='left text-base font-semibold'>Chọn size</div>
@@ -250,30 +226,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     })}
                 </div>
               </div>
-
-              {/* <div className="custom-sugar mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn đường</div>
-                  <div className="right">
-                    <FaAngleDown />
-                  </div>
-                </div>
-                <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0_rgba(0,0,0,.05)] rounded">
-                  {[0, 1, 2, 3, 4, 5]?.map((_, index: number) => (
-                    <label key={index} className={`${styles.container_radio} block w-1/2 group`}>
-                      <span>Size 1 LÍT</span>
-                      <input
-                        className="absolute opacity-0"
-                        defaultChecked
-                        type="radio"
-                        name="sug"
-                        value="cold"
-                      />
-                      <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                    </label>
-                  ))}
-                </div>
-              </div> */}
 
               <div className='custom-topping'>
                 <div className='title flex items-center justify-between px-5 mb-2'>

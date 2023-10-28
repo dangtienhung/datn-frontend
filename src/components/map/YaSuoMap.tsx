@@ -207,41 +207,7 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
 
     document.body.appendChild(map.current)
   }, [lnglat])
-  return (
-    <>
-      {/* <div> */}
-      {/* {gapStore.map((item: any, index: number) => (
-          <div key={index}>
-            {item.name} {item.text}
-          </div>
-        ))} */}
-      {/* <input
-          type="text"
-          className="outline-none shadow-lg shadow-indigo-500/40 p-1"
-          placeholder="Search..."
-          onChange={onSearch}
-        />
-        {valueGeocoder.length > 0 ? (
-          <section className="absolute z-50 bg-[#fff] shadow-lg shadow-indigo-500/40 p-4 divide-y">
-            {valueGeocoder.map((item: any, index: number) => (
-              <div
-                key={index}
-                className="cursor-pointer hover:bg-slate-100 py-3 px-1"
-                onClick={() => onGetPlace(item.place_id)}
-              >
-                <h3 className="font-medium">
-                  {item.structured_formatting.main_text}
-                </h3>
-                <span className="text-[13px]">{item.description}</span>
-              </div>
-            ))}
-          </section>
-        ) : (
-          ""
-        )} */}
-      {/* </div> */}
-    </>
-  )
+  return <></>
 }
 
 export default YaSuoMap
