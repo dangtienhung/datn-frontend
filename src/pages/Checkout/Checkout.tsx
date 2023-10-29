@@ -64,7 +64,7 @@ const Checkout = () => {
     setValue('shippingLocation', address ?? '')
   }, [address, setValue])
   useEffect(() => {
-    dataCartCheckout.items.length < 1 && navigate('/products')
+    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
@@ -169,6 +169,7 @@ const Checkout = () => {
               dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
             dispatch(resetAllCart())
             toast.success('Bạn đặt hàng thành công')
+
             // alert(data.shippingNote)
 
             // dispatch(resetAllCart());

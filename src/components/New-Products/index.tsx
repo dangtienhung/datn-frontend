@@ -13,7 +13,7 @@ const NewProducts = () => {
   const { products } = useAppSelector((state: RootState) => state.persistedReducer.products)
 
   useEffect(() => {
-    dispatch(getAllProducts({ page: 1, limit: 4 }))
+    dispatch(getAllProducts({ page: 1, limit: 8 }))
   }, [dispatch])
   return (
     <section className='pt-[50px] pb-[60px] mx-auto sm:w-full  max-w-[1140px]'>
@@ -29,11 +29,11 @@ const NewProducts = () => {
         <div className='bg_title'></div>
       </div>
       <div className=' flex flex-col'>
-        {/* <div className='list mt-[50px] flex flex-wrap '>
+        <div className='list mt-[50px] flex flex-wrap '>
           {products &&
             products?.docs?.length > 0 &&
             products?.docs?.map((product: IProduct) => <NewProductItem key={product._id} product={product} />)}
-        </div> */}
+        </div>
         <div className='self-center mt-4'>
           <Link to='/products'>
             <Button size='medium' shape='square' style='border border-[#d3b673] hover:text-[#d3b673] hover:bg-white'>

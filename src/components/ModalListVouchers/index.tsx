@@ -64,7 +64,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
         ]
       }
     >
-      <Row className='flex items-center justify-center md:justify-start gap-3 max-h-[450px] overflow-y-auto hidden-scroll-bar'>
+      <Row className='list-voucher flex items-center justify-center md:justify-start gap-3 max-h-[450px] overflow-y-auto hidden-scroll-bar'>
         {vouchers && vouchers?.data?.docs.length > 0 ? (
           vouchers?.data?.docs?.map((voucher) => (
             <Radio.Group

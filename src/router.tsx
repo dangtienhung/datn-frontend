@@ -19,6 +19,7 @@ import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 import ChangePassword from './components/ChangePassword/ChangePassword'
+import PaymentResult from './pages/PaymentResult/PaymentResult'
 
 const routes = createBrowserRouter([
   {
@@ -48,9 +49,14 @@ const routes = createBrowserRouter([
       {
         path: 'checkout',
         element: <Checkout />
+      },
+      {
+        path: 'checkout/payment-result',
+        element: <PaymentResult />
       }
     ]
   },
+
   {
     path: 'about',
     element: <Introduce />
@@ -86,7 +92,8 @@ const routes = createBrowserRouter([
       { path: 'my-order', element: <MyOrder /> },
       { path: 'my-voucher', element: <MyVoucher /> },
       { path: 'my-address', element: <MyAddress /> },
-      { path: 'change-password', element: <ChangePassword /> }
+      { path: 'change-password', element: <ChangePassword /> },
+      { path: 'my-order/:id', element: 'My order detail' }
     ]
   },
   // {
