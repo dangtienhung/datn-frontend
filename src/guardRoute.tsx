@@ -11,14 +11,7 @@ interface Props {
 
 export const GuardSign = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (['admin', 'shipper', 'staff'].includes(toLower(user.role)) && user.role) {
-      navigate(`/${toLower(user.role)}`)
-    } else if (user.role === 'customer') {
-      navigate('/')
-    }
-  }, [navigate, user])
+
   return !user.role ? <JSX /> : <Navigate to={'/'} />
 }
 
