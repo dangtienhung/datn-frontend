@@ -230,7 +230,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nam</span>
+                        <span>Nam</span>
                       </label>
                       <label htmlFor='' className='flex items-center'>
                         <input
@@ -241,7 +241,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nữ</span>
+                        <span>Nữ</span>
                       </label>
                       <label htmlFor='' className='flex items-center'>
                         <input
@@ -252,7 +252,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Khác</span>
+                        <span>Khác</span>
                       </label>
                     </div>
                     <span className='text-red-500'>{errors.gender && errors.gender.message}</span>
