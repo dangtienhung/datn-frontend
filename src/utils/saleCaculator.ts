@@ -1,4 +1,4 @@
-import { formatPriceCompact } from './formatCurrency'
+// import { formatPriceCompact } from './formatCurrency'
 
 export const saleCaculator = (sale: number, originPrice: number) => {
   // const percent = sale.isPercent ? sale.value : Math.round((sale.value / price) * 100)

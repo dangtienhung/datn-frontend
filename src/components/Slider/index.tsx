@@ -6,7 +6,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
 import styles from './Slider.module.scss'
-import { useGetAllBannersQuery, useGetAllBannerActiveTrueQuery } from '../../api/banner'
+import { useGetAllBannerActiveTrueQuery } from '../../api/banner'
 import { v4 as uuidv4 } from 'uuid'
 
 const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (

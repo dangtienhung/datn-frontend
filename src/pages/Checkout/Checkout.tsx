@@ -193,7 +193,6 @@ const Checkout = () => {
     }
   })
 
-  console.log(errors.phone, errors.shippingLocation)
   return (
     <div className='w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto'>
       <div className='detail gap-y-10 lg:gap-y-0 lg:flex-row flex flex-col justify-between mt-6'>

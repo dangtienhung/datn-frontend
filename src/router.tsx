@@ -1,5 +1,5 @@
 import { MyInfor, MyOrder, MyVoucher } from './components'
-import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
+import { GuardAccount, GuardSign } from './guardRoute'
 
 import Achievement from './components/Achievement/Achievement'
 import BrandStory from './components/Blogs/BrandStory/BrandStory'
@@ -96,82 +96,6 @@ const routes = createBrowserRouter([
       { path: 'my-order/:id', element: 'My order detail' }
     ]
   },
-  // {
-  //   path: '/admin',
-  //   // element: <GuardAuth />,
-  //   children: [
-  //     {
-  //       element: <AdminLayout />,
-  //       children: [
-  //         {
-  //           index: true,
-  //           element: <Dashboard />
-  //         },
-  //         {
-  //           path: 'users',
-  //           element: <UserList />
-  //         },
-
-  //         {
-  //           path: 'orders',
-  //           element: <Orders />
-  //         },
-  //         {
-  //           path: 'orders/:id',
-  //           element: <OrderDetail />
-  //         },
-
-  //         {
-  //           path: 'manage',
-  //           element: <Manager />,
-  //           children: [
-  //             {
-  //               path: 'products',
-  //               element: <ProductsList />
-  //             },
-  //             {
-  //               path: 'toppings',
-  //               element: <Topping />
-  //             },
-  //             {
-  //               path: 'size',
-  //               element: <SizeList />
-  //             },
-  //             {
-  //               path: 'categories',
-  //               element: <Categories />
-  //             },
-  //             // {
-  //             //   path: 'staff',
-  //             //   element: <Staff />
-  //             // },
-  //             // {
-  //             //   path: 'shipper',
-  //             //   element: <Shipper />
-  //             // },
-  //             {
-  //               path: 'blogs',
-  //               element: <Blogs />
-  //             }
-  //           ]
-  //         },
-
-  //         {
-  //           path: 'voucher',
-  //           element: <Voucher />
-  //         },
-  //         {
-  //           path: 'banners',
-  //           element: <Banner />
-  //         },
-  //         {
-  //           path: 'trash-can',
-  //           element: <TrashCan />
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // },
 
   {
     path: '*',
