@@ -82,9 +82,13 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       quantity,
       image: product.images[0]?.url ?? '',
       price: (product.sale
-        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
-        : nameRadioInput && nameRadioInput?.price - product.sale) as number,
-      total: product.sale ? price * ((100 - product.sale) / 100) * quantity : (price - product.sale) * quantity,
+        ? // ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
+          nameRadioInput && nameRadioInput?.price - product.sale
+        : nameRadioInput?.price) as number,
+      total: product.sale
+        ? // ? price * ((100 - product.sale) / 100) * quantity
+          (price - product.sale) * quantity
+        : price,
       product: product._id
     }
 
