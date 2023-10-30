@@ -221,7 +221,7 @@ const MyInfor = () => {
                   <div className='item-profile w-[50%] my-3'>
                     <label className='block py-2 text-[#959393]'>Giới tính</label>
                     <div className='w-full h-[2.25rem] flex justify-center items-center gap-4 g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'>
-                      <label htmlFor='' className='flex items-center'>
+                      <label htmlFor='' className='flex items-center gap-x-1'>
                         <input
                           type='radio'
                           value='male'
@@ -230,9 +230,9 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nam</span>
+                        <span>Nam</span>
                       </label>
-                      <label htmlFor='' className='flex items-center'>
+                      <label htmlFor='' className='flex items-center gap-x-1'>
                         <input
                           type='radio'
                           value='female'
@@ -241,9 +241,9 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nữ</span>
+                        <span>Nữ</span>
                       </label>
-                      <label htmlFor='' className='flex items-center'>
+                      <label htmlFor='' className='flex items-center gap-x-1'>
                         <input
                           type='radio'
                           value='other'
@@ -252,7 +252,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Khác</span>
+                        <span>Khác</span>
                       </label>
                     </div>
                     <span className='text-red-500'>{errors.gender && errors.gender.message}</span>

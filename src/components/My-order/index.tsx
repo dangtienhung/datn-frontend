@@ -9,6 +9,7 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import './MyOrder.scss'
 import { pause } from '../../utils/pause'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 enum STATUS_ORDER {
   ALL = 0,
@@ -18,6 +19,7 @@ enum STATUS_ORDER {
   CANCELED = 4
 }
 const MyOrder = () => {
+  const navigate = useNavigate()
   const [seletedTab, setSelectedTab] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [idOrder, setIdOrder] = useState('')
@@ -122,7 +124,10 @@ const MyOrder = () => {
               alt=''
               className='max-w-[150px]'
             />
-            <h4 className='mt-2 text-lg'>Chưa có đơn hàng nào!</h4>
+            <h4 className='mt-2 mb-2 text-lg'>Chưa có đơn hàng nào!</h4>
+            <Button size='medium' shape='round' onClick={() => navigate('/products')}>
+              Đặt mua ngay
+            </Button>
           </div>
         ) : (
           orderUser &&
@@ -145,23 +150,24 @@ const MyOrder = () => {
                         <img className='w-full object-cover' src={item.image} alt='' />
                       </div>
                       <div className='title pl-3 flex flex-col'>
-                        <h3
-                          title=' Bàn làm việc gỗ, Bàn kệ lửng chân sắt dùng cho văn phòng, học bài, để máy tính cho học sinh, sinh viên
-              GIÁ XƯỞNG'
-                          className='line-clamp-2 text-[16px] font-semibold uppercase '
-                        >
-                          Cà Phê Sữa Đá
+                        <h3 title={item?.product?.name} className='line-clamp-2 text-[16px] font-semibold uppercase '>
+                          {item?.product.name}
                         </h3>
-                        <div className='category'>
+                        {/* <div className='category'>
                           <span className='text-sm text-[#866312]'>Danh mục: Cà phê</span>
-                        </div>
+                        </div> */}
                         <div>
                           <div className='size'>
                             <span className='text-sm text-[#866312]'>Size: {item.size.name}</span>
                           </div>
                           <div className={`topping ${item.toppings.length > 0 ? '' : 'hidden'}`}>
                             <span className='text-sm text-[#866312]'>
-                              Toppings: {item.toppings.map((topping: ITopping) => topping.name)}
+                              Toppings:{' '}
+                              {item.toppings.map((topping: ITopping) =>
+                                item.toppings[item.toppings.length - 1].name === topping.name
+                                  ? topping.name + '.'
+                                  : topping.name + ', '
+                              )}
                             </span>
                           </div>
                         </div>
@@ -186,13 +192,19 @@ const MyOrder = () => {
                 </div>
               </div>
               <div className='bottom flex items-center justify-end py-4 px-6 shadow rounded-md'>
-                {order.status === 'canceled' && (
-                  <div className='note flex-1 '>
-                    <span className='text-sm block w-[400px] max-w-[400px] text-left text-gray-500 '>
-                      <strong>Lý do hủy:</strong> {order?.reasonCancelOrder}
-                    </span>
-                  </div>
-                )}
+                <div className='note flex-1 '>
+                  <span className='text-sm block w-[400px] max-w-[400px] text-left text-gray-500 '>
+                    {order.status === 'canceled' && (
+                      <>
+                        <strong>Lý do hủy: </strong> {order?.reasonCancelOrder}
+                      </>
+                    )}
+                    {order.status === 'pending' && 'Đơn hàng đang chờ được xác nhận'}
+                    {order.status === 'confirmed' && 'Đơn hàng đang được giao đến bạn'}
+                    {order.status === 'done' && ' Đơn hàng đã hoàn thành'}
+                  </span>
+                </div>
+
                 <div className='confirm-button flex gap-x-3 items-center'>
                   <Button onClick={() => alert('clicked')} size='medium' shape='round'>
                     Chi tiết đơn hàng
