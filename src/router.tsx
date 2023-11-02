@@ -20,6 +20,7 @@ import Signup from './pages/Sign-up/Signup'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import PaymentResult from './pages/PaymentResult/PaymentResult'
+import Bot from './Bot'
 
 const routes = createBrowserRouter([
   {
@@ -100,6 +101,11 @@ const routes = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />
+  }
+  ,
+  {
+    path: '/bot',
+    element: <Bot />
   }
 ])
 
