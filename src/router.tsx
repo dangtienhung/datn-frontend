@@ -101,8 +101,7 @@ const routes = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />
-  }
-  ,
+  },
   {
     path: '/bot',
     element: <Bot />
