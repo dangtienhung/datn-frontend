@@ -17,7 +17,11 @@ const MyCart = () => {
 
   const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
 
-  const getAllCart = useGetAllCartDBQuery()
+  ;(() => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const getAllCart = user && user.accessToken ? useGetAllCartDBQuery() : null
+    return getAllCart
+  })()
 
   /* Tính tổng tiền và tổng số lượng quantity */
   const { total, quantity } = items.reduce(
