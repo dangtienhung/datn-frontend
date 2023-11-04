@@ -5,7 +5,7 @@ import { RootState } from '../../store/store'
 import Swal from 'sweetalert2'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { resetAllCart } from '../../store/slices/cart.slice'
-import { useDeleteCartDBMutation } from '../../api/cartDB'
+import { useDeleteCartDBMutation, useGetAllCartDBQuery } from '../../api/cartDB'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -17,7 +17,11 @@ const MyCart = () => {
 
   const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
 
-  // const getAllCart = useGetAllCartDBQuery()
+  ;(() => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const getAllCart = user && user.accessToken ? useGetAllCartDBQuery() : null
+    return getAllCart
+  })()
 
   /* Tính tổng tiền và tổng số lượng quantity */
   const { total, quantity } = items.reduce(

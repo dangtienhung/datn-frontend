@@ -6,7 +6,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
 import styles from './Slider.module.scss'
-import { useGetAllBannersQuery } from '../../api/banner'
+import { useGetAllBannerActiveTrueQuery } from '../../api/banner'
 import { v4 as uuidv4 } from 'uuid'
 import { useEffect } from 'react'
 
@@ -28,7 +28,7 @@ const SlickArrowRight = ({ currentSlide, slideCount, ...props }: any) => (
 )
 
 const Sliders = () => {
-  const { data } = useGetAllBannersQuery()
+  const { data } = useGetAllBannerActiveTrueQuery()
   const settings = {
     dots: false,
     speed: 500,
@@ -49,7 +49,7 @@ const Sliders = () => {
               <div className={`${styles.overlay}`}></div>
               <img
                 src={banner.url}
-                className='block w-[414px] h-[276px] md:w-[820px] md:h-[546px] lg:w-full lg:h-[864px] lg:max-h-[864px] object-cover'
+                className='block h-[276px] w-full lg:h-[864px] lg:max-h-[864px] object-cover'
                 alt='banner'
               />
               <div className='slide-content center-slider text-center'>

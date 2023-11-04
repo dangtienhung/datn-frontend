@@ -24,7 +24,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
   const [addCartDbFn] = useCreateCartDBMutation()
   const [sizes, setSizes] = useState<{ name: string; price: number }[]>([])
-  console.log(product, ':rpoduct')
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<{
@@ -83,9 +82,13 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       quantity,
       image: product.images[0]?.url ?? '',
       price: (product.sale
-        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
-        : nameRadioInput && nameRadioInput?.price - product.sale) as number,
-      total: product.sale ? price * ((100 - product.sale) / 100) * quantity : (price - product.sale) * quantity,
+        ? // ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
+          nameRadioInput && nameRadioInput?.price - product.sale
+        : nameRadioInput?.price) as number,
+      total: product.sale
+        ? // ? price * ((100 - product.sale) / 100) * quantity
+          (price - product.sale) * quantity
+        : price,
       product: product._id
     }
 
@@ -136,9 +139,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   <span className='new-price pr-[10px] text-[#8a733f] font-semibold text-sm'>
                     {product.sale > 0
                       ? formatCurrency(
-                          product.sale
-                            ? price * ((100 - product.sale) / 100) * quantity
-                            : (price - product.sale) * quantity
+                          product.sale &&
+                            // ? price * ((100 - product.sale) / 100) * quantity
+                            (price - product.sale) * quantity
                         )
                       : formatCurrency(price * quantity)}
                   </span>
@@ -153,14 +156,14 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   <div className='change-quantity flex'>
                     <div
                       onClick={() => (quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1))}
-                      className='decrease text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[15px] text-[26px] font-semibold text-center cursor-pointer select-none'
+                      className='decrease text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[19px] text-[26px] font-semibold  text-center cursor-pointer select-none '
                     >
                       -
                     </div>
                     <div className='amount select-none px-[10px] text-sm'>{quantity}</div>
                     <div
                       onClick={() => setQuantity((prev) => prev + 1)}
-                      className='increase text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[15px] text-[26px] font-semibold text-center cursor-pointer select-none'
+                      className='increase text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[20px] text-[26px] font-semibold  text-center cursor-pointer select-none'
                     >
                       +
                     </div>
@@ -174,9 +177,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     +
                     {product.sale > 0
                       ? formatCurrency(
-                          product.sale
-                            ? price * ((100 - product.sale) / 100) * quantity
-                            : (price - product.sale) * quantity
+                          product.sale &&
+                            // ? price * ((100 - product.sale) / 100) * quantity
+                            (price - product.sale) * quantity
                         )
                       : formatCurrency(price * quantity)}
                   </button>

@@ -110,18 +110,12 @@ const ProductsTable = function () {
                     </ul>
                   ))}
                 </Table.Cell>
-                {/* <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatCurrency(product.price)}
-                </Table.Cell> */}
+
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   <img src={product.images[0]?.url} alt='' className='w-20 h-20' />
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap p-4 space-x-2'>
                   <div className='gap-x-3 flex items-center'>
-                    {/* <Button color="primary" onClick={() => setOpenModalEdit(!isOpenModalEdit)}>
-                      <FaPlus className="mr-3 text-sm" />
-                      Edit product
-                    </Button> */}
                     <ShowProduct product={product} />
 
                     {/* <EditProductModal DataEdit={product} /> */}

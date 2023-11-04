@@ -89,11 +89,20 @@ export const ApiUser = createApi({
         method: 'DELETE',
         body: id
       })
+    }),
+    // update password
+    updatePassword: builder.mutation<{ message: string }, { password: string; passwordNew: string }>({
+      query: (data) => ({
+        url: '/api/user/updatePassword',
+        method: 'PATCH',
+        body: data
+      })
     })
   })
 })
 
 export const {
+  useUpdatePasswordMutation,
   useFetchUserQuery,
   useGetAllUsersQuery,
   useDeleteUserMutation,
