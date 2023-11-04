@@ -44,9 +44,9 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
           <span className='text-[#8a733f] text-sm font-[700] '>
             {product.sale && product.sizes
               ? formatCurrency(
-                  product.sale
-                    ? product?.sizes[0]?.price * ((100 - product.sale) / 100)
-                    : product?.sizes[0]?.price - product.sale
+                  product.sale &&
+                    // ? product?.sizes[0]?.price * ((100 - product.sale) / 100)
+                    product?.sizes[0]?.price - product.sale
                 )
               : formatCurrency(product.sizes && product.sizes[0].price)}
           </span>

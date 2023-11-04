@@ -21,6 +21,7 @@ import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import PaymentResult from './pages/PaymentResult/PaymentResult'
 import Bot from './Bot'
+import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
 
 const routes = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ const routes = createBrowserRouter([
       {
         path: 'su-kien',
         element: <Events />
+      },
+      {
+        path: ':id',
+        element: <BlogDetail />
       }
     ]
   },
@@ -101,8 +106,7 @@ const routes = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />
-  }
-  ,
+  },
   {
     path: '/bot',
     element: <Bot />
