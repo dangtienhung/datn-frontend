@@ -14,6 +14,10 @@ const baseQuery = fetchBaseQuery({
 
     if (accessToken) {
       headers.set('authorization', `Bearer ${accessToken}`)
+      // headers: {
+      //   "Access-control-Allow-Origin": origin || "*",
+      //   "Content-type": "text/plain",
+      // },
     }
     return headers
   }
