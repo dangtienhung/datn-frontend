@@ -26,8 +26,8 @@ const ButtonDelivery = () => {
           className={`${styles.btn_delivery_img} object-cover h-full w-full rounded-full`}
           alt=''
         />
-        <SupportBot open={open} onClose={onClose} />
       </Button>
+      <SupportBot open={open} onClose={onClose} />
     </div>
   )
 }

@@ -23,7 +23,7 @@ export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
   }
 
   return (
-    <div className='w-100 rounded-bl-xl rounded-br-xla absolute bottom-0 left-0 right-0 py-3 overflow-hidden bg-white'>
+    <div className='w-100 rounded-bl-xl rounded-br-xla py-3 overflow-hidden bg-white'>
       <div className='flex flex-row items-center space-x-5'>
         <DebouncedInput value={newMessage ?? ''} debounce={100} onChange={(value) => setNewMessage(String(value))} />
         <button
