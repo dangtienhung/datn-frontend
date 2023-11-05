@@ -24,6 +24,7 @@ import YasuoGap from '../../components/map/YasuoGap'
 import ListStore from '../../interfaces/Map.type'
 import { message } from 'antd'
 import { useDeleteCartDBMutation } from '../../api/cartDB'
+import { ClientSocket } from '../../socket'
 
 //
 const Checkout = () => {
@@ -106,9 +107,7 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return (pickGapStore.value - 2000) * 2
-    } else if ((gapStore[0]?.value as number) > 0) {
-      return ((gapStore[0]?.value as number) - 2000) * 2
+      return pickGapStore.value > 30000 || pickGapStore.value <= 2000 ? 0 : (pickGapStore.value - 2000) * 2
     }
     return 0
   }, [gapStore, pickGapStore])
@@ -143,53 +142,62 @@ const Checkout = () => {
     if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
       return navigate('/signin')
     } else {
-      const dataForm: IOrderCheckout = {
-        user: dataInfoUser.user._id as string,
-        items: getData('list'),
-        total: totalAllMoneyCheckOut,
-        priceShipping: moneyShipping,
-        noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
-        paymentMethodId: data.paymentMethod,
-        inforOrderShipping: {
-          name: data.name,
-          phone: data.phone,
-          address: data.shippingLocation,
-          noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
-        }
-      }
-
-      orderAPIFn(dataForm)
-        .unwrap()
-        .then((res) => {
-          if (res.error) {
-            return toast.error('Đặt hàng thất bại' + res.error.data.error)
-          } else {
-            reset()
-            dataCartCheckout.items.length &&
-              dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
-            dispatch(resetAllCart())
-            toast.success('Bạn đặt hàng thành công')
-
-            // alert(data.shippingNote)
-
-            // dispatch(resetAllCart());
-            // navigate('http://localhost:4000/vnpay');
-            if (data.paymentMethod == 'vnpay') {
-              const returnUrl = 'http://localhost:5173' // url trả về
-              window.location.href =
-                'http://ketquaday99.com/vnpay/fast?amount=' +
-                dataForm.total +
-                '&txt_inv_mobile=' +
-                data.phone +
-                '&txt_billing_fullname=' +
-                data.name +
-                '&txt_ship_addr1=' +
-                data.shippingLocation +
-                '&returnUrl=' +
-                returnUrl
-            }
+      if (Number(pickGapStore.value) > 30000) {
+        message.error('Khoảng cách quá xa không thể giao hàng', 2)
+      } else {
+        const dataForm: IOrderCheckout = {
+          user: dataInfoUser.user._id as string,
+          items: getData('list'),
+          total: totalAllMoneyCheckOut,
+          priceShipping: moneyShipping,
+          noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
+          paymentMethodId: data.paymentMethod,
+          inforOrderShipping: {
+            name: data.name,
+            phone: data.phone,
+            address: data.shippingLocation,
+            noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
           }
-        })
+        }
+
+        ClientSocket.createOrder(dataForm)
+        dataCartCheckout.items.length &&
+          dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
+        dispatch(resetAllCart())
+        toast.success('Bạn đặt hàng thành công')
+
+        // orderAPIFn(dataForm)
+        //   .unwrap()
+        //   .then((res) => {
+        //     if (res.error) {
+        //       return toast.error('Đặt hàng thất bại' + res.error.data.error)
+        //     } else {
+        //       reset()
+        //       dataCartCheckout.items.length &&
+        //         dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
+        //       dispatch(resetAllCart())
+        //       toast.success('Bạn đặt hàng thành công')
+
+        //       // alert(data.shippingNote)=
+        //       // dispatch(resetAllCart());
+        //       // navigate('http://localhost:4000/vnpay');
+        //       if (data.paymentMethod == 'vnpay') {
+        //         const returnUrl = 'http://localhost:5173' // url trả về
+        //         window.location.href =
+        //           'http://ketquaday99.com/vnpay/fast?amount=' +
+        //           dataForm.total +
+        //           '&txt_inv_mobile=' +
+        //           data.phone +
+        //           '&txt_billing_fullname=' +
+        //           data.name +
+        //           '&txt_ship_addr1=' +
+        //           data.shippingLocation +
+        //           '&returnUrl=' +
+        //           returnUrl
+        //       }
+        //     }
+        //   })
+      }
     }
   })
 
@@ -256,7 +264,7 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} />
+              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} setPickGapStore={setPickGapStore} />
               <div id='map'></div>
             </div>
           </div>
@@ -321,14 +329,10 @@ const Checkout = () => {
               >
                 <div className='gap-x-2 flex items-center'>
                   <FaStore />
-                  <span className='text-sm'>
-                    {pickGapStore.highName ? pickGapStore.highName : gapStore[0]?.highName}
-                  </span>
+                  <span className='text-sm'>{pickGapStore.highName}</span>
                 </div>
                 <div className='gap-x-2 flex items-center'>
-                  <span className='text-sm'>
-                    {pickGapStore.text ? pickGapStore.text : gapStore.length > 0 && gapStore[0].text}
-                  </span>
+                  <span className='text-sm'>{pickGapStore.text}</span>
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>
