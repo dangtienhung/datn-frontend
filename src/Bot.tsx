@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-
 const Bot = () => {
   const [messages, setMessages] = useState<string[]>([])
   const [inputMessage, setInputMessage] = useState<string>('')
-
   const sendMessage = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/ask?query=${inputMessage}`)
+      const response = await fetch(`http://localhost:3333/ask?query=${inputMessage}`)
       const data = await response.json()
+      console.log(data)
       setMessages((prevMessages) => [...prevMessages, data.answer])
       setInputMessage('')
       console.log(data)
@@ -16,11 +15,9 @@ const Bot = () => {
       console.error('Error fetching response:', error)
     }
   }
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputMessage(event.target.value)
   }
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     sendMessage()
