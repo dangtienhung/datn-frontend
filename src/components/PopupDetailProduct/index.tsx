@@ -112,7 +112,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
 
   return (
     <div
-      className={`transition-opacity ease-in-out duration-[400ms] ${
+      className={`transition-opacity ease-in-out duration-[400ms] z-[11] ${
         showPopup ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
