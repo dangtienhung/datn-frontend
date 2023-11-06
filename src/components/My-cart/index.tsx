@@ -47,7 +47,7 @@ const MyCart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Xóa!', 'Đã xóa xong.', 'success')
-        user.accessToken === '' && user._id === ''
+        user.accessToken === ''
           ? dispatch(resetAllCart())
           : items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
       }

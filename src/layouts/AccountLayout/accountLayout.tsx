@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { useLogoutMutation } from '../../api/Auth'
 import { useState } from 'react'
 import Loader from '../../components/Loader'
+import { ClientSocket } from '../../socket'
 
 const AccountLayout = () => {
   const [logout] = useLogoutMutation()
@@ -24,6 +25,7 @@ const AccountLayout = () => {
           .unwrap()
           .then(() => {
             navigate('/', { replace: true, relative: 'path' })
+            ClientSocket.Disconnect()
             toast.success('Đăng xuất thành công')
           })
           .catch(() => toast.error('Đăng xuất thất bại'))
