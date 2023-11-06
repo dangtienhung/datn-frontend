@@ -20,7 +20,7 @@ export const messages: Message[] = [
     isChatOwner: true
   },
   {
-    text: 'tớ ăn cứt!',
+    text: 'tớ!',
     sentBy: 'hưng đẹp trai',
     sentAt: new Date('2023-03-02T09:03:00Z'),
     isChatOwner: false

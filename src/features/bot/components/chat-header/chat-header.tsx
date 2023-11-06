@@ -5,7 +5,7 @@ interface ChatHeaderProps {
 
 export const ChatHeader = ({ name, numberOfMessages = 0 }: ChatHeaderProps) => {
   return (
-    <div className='border-b-gray-200 flex flex-row items-center justify-between py-3 border-b-2'>
+    <div className='border-b-gray-200 flex flex-row items-center justify-between py-3 px-5 border-b-2'>
       <div className='flex flex-row items-center space-x-1.5'>
         {/* avata */}
         <div className='relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full'>

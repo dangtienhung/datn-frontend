@@ -6,7 +6,7 @@ interface ChatContentProps {
 
 export const ChatContent = ({ messages }: ChatContentProps) => {
   return (
-    <div className='flex-1 h-full py-1 overflow-auto'>
+    <div className='flex-1 h-full py-1 overflow-auto px-5'>
       {messages.map((message: Message, index: number) => (
         <div
           key={index}
@@ -30,7 +30,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
             </div>
           </div>
           <div
-            className={`px-2 w-fit py-3 flex flex-col bg-purple-500 rounded-lg text-white ${
+            className={`px-2 w-fit py-3 flex flex-col bg-[#D3B673] items-start rounded-lg text-white ${
               message.isChatOwner ? 'order-1 mr-2' : 'order-2 ml-2'
             }`}
           >

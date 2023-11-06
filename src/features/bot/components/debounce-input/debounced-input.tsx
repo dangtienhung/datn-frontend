@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, useEffect, useState } from 'react'
+
 import { AiOutlineSend } from 'react-icons/ai'
 
 interface DebouncedInputProps {
@@ -33,7 +34,7 @@ export const DebouncedInput = ({
       </div>
       <input
         type='text'
-        className='w-full block p-1.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500'
+        className='w-full block p-1.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-[#D3B673] focus:border-[#D3B673]'
         id='message-box'
         {...props}
         value={value}

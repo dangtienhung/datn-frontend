@@ -1,17 +1,12 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { ChatContent } from './chat-content'
 import { ChatHeader } from './chat-header'
+import { ChatInputBox } from './chat-input'
 import { Message } from '../types'
 import { useGetMessages } from '../hooks'
-import { ChatContent } from './chat-content'
-import { ChatInputBox } from './chat-input'
-import { Drawer } from 'antd'
+import { useState } from 'react'
 
-interface SupportBotProps {
-  open: boolean
-  onClose: () => void
-}
-
-export const SupportBot = ({ open, onClose }: SupportBotProps) => {
+export const SupportBot = () => {
+  const [textMessage, setTextMessage] = useState<string>('')
   /* fake data nha */
   const {
     messages: { data }
@@ -26,12 +21,10 @@ export const SupportBot = ({ open, onClose }: SupportBotProps) => {
     setChatMessages(data)
   }
   return (
-    <Drawer title='Basic Drawer' width={500} placement='right' onClose={onClose} open={open}>
-      <div className='rounded-3xl relative bottom-0 flex flex-col w-full bg-white'>
-        <ChatHeader name={'tên khách hàng'} numberOfMessages={chatMessages.length} />
-        <ChatContent messages={chatMessages} />
-        <ChatInputBox sendANewMessage={sendANewMessage} />
-      </div>
-    </Drawer>
+    <div className='rounded-xl fixed bottom-[30px] right-24 w-full max-w-lg h-full max-h-[80vh] flex flex-col bg-white'>
+      {/* <ChatHeader name={'tên khách hàng'} numberOfMessages={chatMessages.length} /> */}
+      <ChatContent messages={chatMessages} />
+      <ChatInputBox sendANewMessage={sendANewMessage} />
+    </div>
   )
 }
