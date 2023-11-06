@@ -69,7 +69,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
 
   return (
     <>
-      <div className='grow rounded-sm'>
+      <div className='grow rounded-sm max-h-[100vh] overflow-y-auto hidden-scroll-bar'>
         <div className='pb-[160px]'>
           <div className='category '>
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>

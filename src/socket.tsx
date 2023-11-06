@@ -27,11 +27,7 @@ export const ClientSocket = {
   getOrderUser: (setOrderUser: React.Dispatch<any>, options: Options) => {
     socket.emit('client:requestOrderUser', options)
     socket.on('server:loadOrderUser', (data) => {
-      if (options.status) {
-        setOrderUser(data.docs.filter((item: any) => item.status === options.status))
-      } else {
-        setOrderUser(data.docs)
-      }
+      setOrderUser(data.filter((item: any) => item.status === options.status))
     })
     return () => {
       socket.disconnect()

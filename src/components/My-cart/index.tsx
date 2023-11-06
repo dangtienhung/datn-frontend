@@ -95,7 +95,9 @@ const MyCart = () => {
             <button
               disabled={items.length > 0 ? false : true}
               onClick={handleCheckUser}
-              className='bg-[#d8b979] text-white text-center rounded-xl py-1 w-full'
+              className={`bg-[#d8b979] text-white text-center rounded-xl py-1 w-full ${
+                items.length <= 0 && 'bg-opacity-50'
+              }`}
             >
               Thanh toán
             </button>
