@@ -10,6 +10,7 @@ import './MyOrder.scss'
 import { pause } from '../../utils/pause'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { ClientSocket } from '../../socket'
 
 enum STATUS_ORDER {
   ALL = 0,
@@ -18,6 +19,7 @@ enum STATUS_ORDER {
   DONE = 3,
   CANCELED = 4
 }
+
 const MyOrder = () => {
   const navigate = useNavigate()
   const [seletedTab, setSelectedTab] = useState(0)
@@ -28,7 +30,7 @@ const MyOrder = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
   const [orderUser, setOrderUser] = useState<any>([])
   const tabs = ['Tất cả', 'Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
-  const [getDataOrderUser] = OrderAPI.endpoints.getOrderUserByid.useLazyQuery()
+  // const [getDataOrderUser] = OrderAPI.endpoints.getOrderUserByid.useLazyQuery()
   const [cancelOrder] = useCanceledOrderMutation()
 
   const reasonChange = (e: CheckboxChangeEvent) => {
@@ -55,6 +57,7 @@ const MyOrder = () => {
     cancelOrder({ id: idOrder, reasonCancelOrder: reason })
       .unwrap()
       .then(() => {
+        ClientSocket.cancelOrder(idOrder)
         toast.success('Hủy đơn hàng thành công')
       })
       .catch(() => {
@@ -70,25 +73,23 @@ const MyOrder = () => {
 
   useEffect(() => {
     ;(async () => {
-      const { data } = await getDataOrderUser(user._id!)
       if (seletedTab === STATUS_ORDER.ALL) {
-        setOrderUser(data?.docs)
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id })
       }
       if (seletedTab === STATUS_ORDER.PENDING) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'pending'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'pending' })
       }
       if (seletedTab === STATUS_ORDER.CANCELED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'canceled'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'canceled' })
       }
       if (seletedTab === STATUS_ORDER.DONE) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'done'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'done' })
       }
       if (seletedTab === STATUS_ORDER.CONFIRMED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'confirmed'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'confirmed' })
       }
     })()
   }, [seletedTab, isModalOpen])
-  // console.log(orderUser)
 
   return (
     <div className='layout-container w-full'>
