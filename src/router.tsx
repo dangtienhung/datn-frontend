@@ -22,6 +22,7 @@ import ChangePassword from './components/ChangePassword/ChangePassword'
 import PaymentResult from './pages/PaymentResult/PaymentResult'
 import Bot from './Bot'
 import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
+import ResetForgotPassword from './pages/Forgot-password/ResetForgotPassword'
 
 const routes = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const routes = createBrowserRouter([
   {
     path: '/forgot-password',
     element: <ForgotPassword />
+  },
+  {
+    path: '/reset-forgot-password/:token',
+    element: <ResetForgotPassword />
   },
   {
     path: '/products',

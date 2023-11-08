@@ -42,13 +42,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         </div>
         <div className='flex items-center mt-6 item-price gap-x-2'>
           <span className='text-[#8a733f] text-sm font-[700] '>
-            {product.sale && product.sale < 100 && product.sizes
-              ? formatCurrency(
-                  product.sale &&
-                    // ? product?.sizes[0]?.price * ((100 - product.sale) / 100)
-                    product?.sizes[0]?.price - product.sale
-                )
-              : formatCurrency(product.sizes && product.sizes[0].price)}
+            {product.sale && formatCurrency(product?.sizes[0]?.price - product.sale)}
           </span>
           {product?.sale !== 0 && (
             <span className='text-[#bebebe] text-sm line-through'>

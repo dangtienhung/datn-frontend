@@ -2,16 +2,16 @@ import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typograph
 import { Fragment, useState } from 'react'
 import { Link, createSearchParams } from 'react-router-dom'
 
-import { FaBars } from 'react-icons/fa'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { ICategory } from '../../interfaces/category.type'
-import { IQueryConfig } from '../../hook/useQueryConfig'
-import NotFound from '../../pages/Not-Found/NotFound'
-import SKProduct from '../Skeleton/SKProduct'
 import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { FaBars } from 'react-icons/fa'
+import { IQueryConfig } from '../../hook/useQueryConfig'
+import { ICategory } from '../../interfaces/category.type'
+import NotFound from '../../pages/Not-Found/NotFound'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
-import { useAppDispatch } from '../../store/hooks'
+import SKProduct from '../Skeleton/SKProduct'
 
 interface SidebarCateProps {
   categories: ICategory[] | undefined
@@ -23,6 +23,8 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
+
+  const { products } = useAppSelector((state) => state.persistedReducer.products)
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -86,7 +88,9 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
                   className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
                 >
                   <div className='cat-name capitalize'>{category.name}</div>
-                  <div className='cat-amount text-[#8a733f]'>{category.products?.length}</div>
+                  <div className='cat-amount text-[#8a733f]'>
+                    {products && products.docs.filter((item) => item.category._id == category._id).length}
+                  </div>
                 </div>
               </Link>
             ))}
@@ -138,7 +142,7 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
                         color='text.primary'
                         fontSize={13}
                       >
-                        All
+                        Tất cả
                       </Typography>
                     </Fragment>
                   }
