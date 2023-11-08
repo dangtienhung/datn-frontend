@@ -11,6 +11,7 @@ import { getAllProducts } from '../../store/services/product.service'
 import { useForm } from 'react-hook-form'
 import { RoleSchema } from '../../validate/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import './Header.scss'
 
 const Header = () => {
   const dispatch = useAppDispatch()
@@ -48,7 +49,7 @@ const Header = () => {
   }, [dispatch, queryConfig._page, queryConfig.c, queryConfig.limit, queryConfig.searchName])
 
   return (
-    <div className='header flex items-center justify-between gap-2 px-4 py-2 select-none'>
+    <div className='header flex items-center justify-between gap-2 px-4 py-2 select-none sticky top-0 w-full bg-white z-10'>
       <div className='logo lg:block hidden'>
         <Link to={'/'}>
           <img src='/logo_removebg.png' alt='' className='object-cover w-10 h-10' />
@@ -68,25 +69,28 @@ const Header = () => {
         </div>
       </form>
       {user?.avatar ? (
-        <div className='flex items-center gap-x-5'>
-          <Tooltip title='Thông báo' arrow={false} zIndex={1}>
+        <div className='info_notifi flex items-center gap-x-5'>
+          <Tooltip title='Thông báo' arrow={false} zIndex={11}>
             <Popover
-              className='cursor-pointer'
+              className='notification cursor-pointer'
               title='Thông báo'
               placement='bottomRight'
               trigger='click'
+              getPopupContainer={(trigger: any) => trigger?.parentNode}
               content={
                 <>
-                  <div>
-                    <a target='_blank' rel='noopener noreferrer' href='https://www.aliyun.com'>
-                      Đơn hàng "ABCXYZ" của bạn đã được xác nhận
-                    </a>
-                  </div>
-                  <div>
-                    <a target='_blank' rel='noopener noreferrer' href='https://www.aliyun.com'>
-                      Đơn hàng "ABCXYZ" của bạn đã được xác nhận
-                    </a>
-                  </div>
+                  {[1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].map((_, index) => (
+                    <div key={index} className='py-2 px-2 group hover:bg-[#d3b673] rounded'>
+                      <a
+                        className='group-hover:!text-white'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        href='https://www.aliyun.com'
+                      >
+                        Đơn hàng "ABCXYZ" của bạn đã được xác nhận
+                      </a>
+                    </div>
+                  ))}
                 </>
               }
             >

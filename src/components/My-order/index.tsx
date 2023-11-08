@@ -4,20 +4,21 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Button } from '..'
 import { ITopping } from '../../interfaces/topping.type'
 import { useAppSelector } from '../../store/hooks'
-import { OrderAPI, useCanceledOrderMutation } from '../../store/slices/order'
+import { useCanceledOrderMutation } from '../../store/slices/order'
 import { formatCurrency } from '../../utils/formatCurrency'
 import './MyOrder.scss'
 import { pause } from '../../utils/pause'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { ClientSocket } from '../../socket'
 
 enum STATUS_ORDER {
-  ALL = 0,
-  PENDING = 1,
-  CONFIRMED = 2,
-  DONE = 3,
-  CANCELED = 4
+  PENDING = 0,
+  CONFIRMED = 1,
+  DONE = 2,
+  CANCELED = 3
 }
+
 const MyOrder = () => {
   const navigate = useNavigate()
   const [seletedTab, setSelectedTab] = useState(0)
@@ -27,8 +28,7 @@ const MyOrder = () => {
 
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
   const [orderUser, setOrderUser] = useState<any>([])
-  const tabs = ['Tất cả', 'Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
-  const [getDataOrderUser] = OrderAPI.endpoints.getOrderUserByid.useLazyQuery()
+  const tabs = ['Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
   const [cancelOrder] = useCanceledOrderMutation()
 
   const reasonChange = (e: CheckboxChangeEvent) => {
@@ -55,6 +55,7 @@ const MyOrder = () => {
     cancelOrder({ id: idOrder, reasonCancelOrder: reason })
       .unwrap()
       .then(() => {
+        ClientSocket.cancelOrder(idOrder)
         toast.success('Hủy đơn hàng thành công')
       })
       .catch(() => {
@@ -70,30 +71,25 @@ const MyOrder = () => {
 
   useEffect(() => {
     ;(async () => {
-      const { data } = await getDataOrderUser(user._id!)
-      if (seletedTab === STATUS_ORDER.ALL) {
-        setOrderUser(data?.docs)
-      }
       if (seletedTab === STATUS_ORDER.PENDING) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'pending'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'pending' })
       }
       if (seletedTab === STATUS_ORDER.CANCELED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'canceled'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'canceled' })
       }
       if (seletedTab === STATUS_ORDER.DONE) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'done'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'done' })
       }
       if (seletedTab === STATUS_ORDER.CONFIRMED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'confirmed'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'confirmed' })
       }
     })()
   }, [seletedTab, isModalOpen])
-  // console.log(orderUser)
 
   return (
     <div className='layout-container w-full'>
       <h2 className='title text-[#333] text-lg font-medium mb-5'>Đơn hàng của tôi</h2>
-      <div className='tab-order mb-5 relative'>
+      <div className='tab-order mb-5 sticky top-[56px] bg-white'>
         <ul className='flex w-full text-center shadow-lg '>
           {tabs.map((tab: string, index: number) => (
             <li
