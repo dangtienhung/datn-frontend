@@ -69,13 +69,14 @@ const Header = () => {
         </div>
       </form>
       {user?.avatar ? (
-        <div className='flex items-center gap-x-5'>
+        <div className='info_notifi flex items-center gap-x-5'>
           <Tooltip title='Thông báo' arrow={false} zIndex={11}>
             <Popover
-              className='cursor-pointer'
+              className='notification cursor-pointer'
               title='Thông báo'
               placement='bottomRight'
               trigger='click'
+              getPopupContainer={(trigger: any) => trigger?.parentNode}
               content={
                 <>
                   {[1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].map((_, index) => (

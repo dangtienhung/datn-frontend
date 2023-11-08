@@ -148,7 +148,7 @@ const MyInfor = () => {
               ) : (
                 <div className='flex flex-wrap'>
                   <div className='item-profile w-[50%] my-3 '>
-                    <label className='block py-2 text-[#959393] '>Mã thành viên</label>
+                    <label className='block py-2 text-[#959393]'>Mã thành viên</label>
                     <input
                       className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
                       type='text'

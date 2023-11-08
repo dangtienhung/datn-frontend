@@ -60,7 +60,7 @@ const News = () => {
             </div>
           </div>
           {blogData &&
-            blogData?.docs?.slice(1).map((blog, index: number) => (
+            blogData?.docs?.slice(1, 5).map((blog, index: number) => (
               <div
                 onClick={() => handleNavigateBlogDeatail(blog)}
                 key={index + blog.name}
