@@ -1,4 +1,3 @@
-import { Button } from 'antd'
 import { Link } from 'react-router-dom'
 import { SupportBot } from '../../features'
 import styles from './Button-Delivery.module.scss'
@@ -8,26 +7,22 @@ const ButtonDelivery = () => {
   const [open, setOpen] = useState(false)
 
   const showDrawer = () => {
-    setOpen(true)
-  }
-
-  const onClose = () => {
-    setOpen(false)
+    setOpen(!open)
   }
 
   return (
-    <div className=''>
+    <div className='fixed right-2 bottom-4 flex flex-col items-center gap-4'>
       <div className=''>
-        <Button className={`${styles.btn_bot}`} onClick={showDrawer}>
+        <button onClick={showDrawer}>
           <img
-            src='https://media4.giphy.com/media/h59kTCNfi8IJnteCfI/giphy.gif?cid=6c09b952xmtkbm0w0xsd0zzhbl9nb5c6wq5i4r926dc8utgr&ep=v1_gifs_search&rid=giphy.gif&ct=g'
+            src='https://cdn.dribbble.com/users/464600/screenshots/2863054/bot-emotions-principle.gif'
             className={`${styles.btn_delivery_img} object-cover h-full w-full rounded-full`}
             alt=''
           />
-          <SupportBot open={open} onClose={onClose} />
-        </Button>
+        </button>
+        {open && <SupportBot showDrawer={showDrawer} />}
       </div>
-      <Link to='/products' className={`${styles.btn_delivery}`}>
+      <Link to='/products'>
         <img src='/button_delivery.png' className={`${styles.btn_delivery_img}`} alt='' />
       </Link>
     </div>

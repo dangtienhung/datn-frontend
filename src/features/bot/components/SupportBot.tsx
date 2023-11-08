@@ -2,27 +2,22 @@ import { ChatContent } from './chat-content'
 import { ChatHeader } from './chat-header'
 import { ChatInputBox } from './chat-input'
 import { Message } from '../types'
-import { useGetMessages } from '../hooks'
 import { useState } from 'react'
 
-export const SupportBot = () => {
-  const [textMessage, setTextMessage] = useState<string>('')
-  /* fake data nha */
-  const {
-    messages: { data }
-  } = useGetMessages()
-  const [chatMessages, setChatMessages] = useState<Message[]>(data)
+type SupportBotProps = {
+  showDrawer: () => void
+}
+
+export const SupportBot = ({ showDrawer }: SupportBotProps) => {
+  const [chatMessages, setChatMessages] = useState<Message[]>([])
 
   const sendANewMessage = (message: Message) => {
     setChatMessages((prevMessages) => [...prevMessages, message])
   }
 
-  const resetChat = () => {
-    setChatMessages(data)
-  }
   return (
-    <div className='rounded-xl fixed bottom-[30px] right-24 w-full max-w-lg h-full max-h-[80vh] flex flex-col bg-white'>
-      {/* <ChatHeader name={'tên khách hàng'} numberOfMessages={chatMessages.length} /> */}
+    <div className='rounded-xl fixed bottom-4 shadow border border-gray-100 z-[10000] right-20 w-full max-w-lg h-full max-h-[80vh] flex flex-col bg-white'>
+      <ChatHeader name={'Tư vấn khách hàng'} numberOfMessages={chatMessages.length} showDrawer={showDrawer} />
       <ChatContent messages={chatMessages} />
       <ChatInputBox sendANewMessage={sendANewMessage} />
     </div>

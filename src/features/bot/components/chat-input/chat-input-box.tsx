@@ -1,5 +1,8 @@
 import { DebouncedInput } from '../debounce-input'
+import { IUser } from '../../../../interfaces/user.type'
 import { Message } from '../../types'
+import { sendMessage } from '../../api'
+import { useAppSelector } from '../../../../store/hooks'
 import { useState } from 'react'
 
 interface ChatInputBoxProps {
@@ -7,18 +10,32 @@ interface ChatInputBoxProps {
 }
 
 export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
-  console.log('🚀 ~ file: chat-input-box.tsx:10 ~ ChatInputBox ~ sendANewMessage:', sendANewMessage)
   const [newMessage, setNewMessage] = useState<string>('')
 
-  const doSendMessage = () => {
+  // const dispatch = useDispatch()
+  const { user: userInfo } = useAppSelector((state) => state.persistedReducer.auth)
+  console.log('🚀 ~ file: chat-input-box.tsx:22 ~ ChatInputBox ~ userInfo:', userInfo)
+
+  const doSendMessage = async () => {
     if (newMessage && newMessage.length > 0) {
-      const newMessagePayload: Message = {
-        sentAt: new Date(),
-        sentBy: 'devlazar',
-        isChatOwner: true,
-        text: newMessage
+      /* call api */
+      const data = await sendMessage(newMessage, userInfo ? userInfo._id : '')
+      if (data) {
+        const newMessageUser: Message = {
+          sentAt: new Date(),
+          sentBy: (userInfo as IUser)?.username || 'customer',
+          isChatOwner: true,
+          text: newMessage
+        }
+        sendANewMessage(newMessageUser)
+        const newMessageBot: Message = {
+          sentAt: new Date(),
+          sentBy: 'Tôi là bot',
+          isChatOwner: false,
+          text: data?.answer || 'Chúng tôi sẽ liên lạc với bạn sớm nhất có thể'
+        }
+        sendANewMessage(newMessageBot)
       }
-      sendANewMessage(newMessagePayload)
       setNewMessage('')
     }
   }

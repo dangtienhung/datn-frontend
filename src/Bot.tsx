@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 interface Message {
-  user: string;
-  bot: string;
+  user: string
+  bot: string
 }
 
 const Bot = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([])
+  const [inputMessage, setInputMessage] = useState<string>('')
 
   const sendMessage = async () => {
     try {
-      const response = await fetch(`http://localhost:3333/ask?query=${inputMessage}`);
-      const data = await response.json();
-      console.log(data);
-      setMessages(prevMessages => [...prevMessages, { user: inputMessage, bot: data.answer }]);
-      setInputMessage('');
+      const response = await fetch(`http://localhost:3333/ask?query=${inputMessage}`)
+      const data = await response.json()
+      console.log(data)
+      setMessages((prevMessages) => [...prevMessages, { user: inputMessage, bot: data.answer }])
+      setInputMessage('')
     } catch (error) {
-      console.error('Error fetching response:', error);
+      console.error('Error fetching response:', error)
     }
-  };
+  }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputMessage(event.target.value);
-  };
+    setInputMessage(event.target.value)
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    sendMessage();
-  };
+    event.preventDefault()
+    sendMessage()
+  }
 
   return (
     <div className='mt-10'>
@@ -45,7 +45,7 @@ const Bot = () => {
         <button type='submit'>Submit</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default Bot;
+export default Bot
