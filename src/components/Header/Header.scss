@@ -1,7 +1,10 @@
-.ant-popover-inner-content {
-  max-height: 350px !important;
-  overflow-y: auto !important;
-}
-.ant-popover-inner-content::-webkit-scrollbar {
-  display: none !important;
+.info_notifi {
+  .ant-popover-inner-content {
+    max-height: 350px !important;
+    overflow-y: auto !important;
+  }
+
+  .ant-popover-inner-content::-webkit-scrollbar {
+    display: none !important;
+  }
 }
