@@ -54,15 +54,8 @@ const MyCart = () => {
     })
   }
 
-  // check user login when click
-  // console.log('auth ', user)
   const handleCheckUser = () => {
-    if (!user.accessToken && !user._id) {
-      navigate('/signin')
-      return
-    } else {
-      navigate('/products/checkout')
-    }
+    navigate('/products/checkout')
   }
   return (
     <div className='sidebar shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>

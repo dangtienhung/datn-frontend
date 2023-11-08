@@ -1,22 +1,23 @@
 import { Button, Result } from 'antd'
 import { useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import NewProductItem from '../../components/New-ProductItem'
+import { IProduct } from '../../interfaces/products.type'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getAllProducts } from '../../store/services/product.service'
 import { RootState } from '../../store/store'
-import NewProductItem from '../../components/New-ProductItem'
-import { IProduct } from '../../interfaces/products.type'
+
 const PaymentResult = () => {
   const [second, setSecond] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const navigate = useNavigate()
   const { state } = useLocation()
   const dispatch = useAppDispatch()
-  const { products } = useAppSelector((state: RootState) => {
+  const { auth, products } = useAppSelector((state: RootState) => {
     console.log(state)
 
-    return state.persistedReducer.products
+    return state.persistedReducer
   })
   const handleWindowResize = () => {
     setWindowWidth(window.innerWidth)
@@ -56,15 +57,17 @@ const PaymentResult = () => {
                 title='Chúc mừng bạn đã đặt hàng thành công 🎉'
                 subTitle='Đơn hàng đang được xử lý.Quá trình này sẽ mất 1 chút thời gian,bạn vui lòng đợi nhé!'
                 extra={[
-                  <Button
-                    size='large'
-                    className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
-                    type='primary'
-                    key='console'
-                    onClick={() => navigate('/account-layout/my-order')}
-                  >
-                    Xem đơn hàng
-                  </Button>,
+                  auth && auth.user.accessToken && (
+                    <Button
+                      size='large'
+                      className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
+                      type='primary'
+                      key='console'
+                      onClick={() => navigate('/account-layout/my-order')}
+                    >
+                      Xem đơn hàng
+                    </Button>
+                  ),
                   <Button
                     size='large'
                     key='buy'
@@ -90,9 +93,9 @@ const PaymentResult = () => {
                 <div className='bg_title'></div>
               </div>
               <div className='list mt-[50px] flex flex-wrap '>
-                {products &&
-                  products?.docs?.length > 0 &&
-                  products?.docs
+                {products.products &&
+                  products.products?.docs?.length > 0 &&
+                  products.products?.docs
                     .slice(0, 4)
                     ?.map((product: IProduct) => <NewProductItem key={product._id} product={product} />)}
               </div>
