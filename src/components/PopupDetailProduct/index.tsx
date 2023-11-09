@@ -109,6 +109,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       dispatch(addToCart(data as CartItem))
     }
   }
+  if (!product) return null
+  console.log('🚀 ~ file: index.tsx:113 ~ PopupDetailProduct ~ product:', product)
 
   return (
     <div
@@ -127,7 +129,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               <div className='left flex-1 md:flex-none w-[150px] h-[150px] md:w-[180px] md:h-[180px]'>
                 <img
                   className='w-full h-full rounded-md max-w-[150px] max-h-[150px] md:max-w-[180px] md:max-h-[180px]'
-                  src={product.images[0]?.url}
+                  src={product?.images[0]?.url}
                   alt='product image'
                 />
               </div>

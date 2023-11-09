@@ -32,7 +32,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
       <div className='img md:h-[255px] md:w-[255px]'>
         <img
           className='transition-all group-hover:scale-[1.2] h-full w-full object-cover'
-          src={product.images[0]?.url}
+          src={product?.images[0]?.url}
           alt={product?.name}
         />
       </div>

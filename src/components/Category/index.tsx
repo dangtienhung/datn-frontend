@@ -1,17 +1,17 @@
 import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
 import { Link, createSearchParams } from 'react-router-dom'
-
-import { SerializedError } from '@reduxjs/toolkit'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { FaBars } from 'react-icons/fa'
-import { IQueryConfig } from '../../hook/useQueryConfig'
-import { ICategory } from '../../interfaces/category.type'
-import NotFound from '../../pages/Not-Found/NotFound'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
+
+import { FaBars } from 'react-icons/fa'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { ICategory } from '../../interfaces/category.type'
+import { IQueryConfig } from '../../hook/useQueryConfig'
+import NotFound from '../../pages/Not-Found/NotFound'
+import SKProduct from '../Skeleton/SKProduct'
+import { SerializedError } from '@reduxjs/toolkit'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
-import SKProduct from '../Skeleton/SKProduct'
 
 interface SidebarCateProps {
   categories: ICategory[] | undefined
@@ -47,38 +47,38 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
       <div className='sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
         <div className='border border-transparent border-b-[#f1f1f1] uppercase px-4 py-2'>Danh mục</div>
         <div className=''>
-          <Link
+          <div
             className='block'
-            to={{
-              pathname: '/products',
-              search: createSearchParams({
-                ...queryConfig,
-                searchName: '',
-                c: 'all'
-              }).toString()
-            }}
+            // to={{
+            //   pathname: '/products',
+            //   search: createSearchParams({
+            //     ...queryConfig,
+            //     searchName: '',
+            //     c: 'all'
+            //   }).toString()
+            // }}
           >
             <div
               onClick={() => dispatch(getIdCate(''))}
               className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
             >
-              <div className='cat-name capitalize'>All</div>
+              <div className='cat-name capitalize'>Tất cả sản phẩm</div>
             </div>
-          </Link>
+          </div>
           {categories &&
             Array.isArray(categories) &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
-              <Link
+              <div
                 key={category._id}
                 className='block'
-                to={{
-                  pathname: '/products',
-                  search: createSearchParams({
-                    ...queryConfig,
-                    c: category._id as string
-                  }).toString()
-                }}
+                // to={{
+                //   pathname: '/products',
+                //   search: createSearchParams({
+                //     ...queryConfig,
+                //     c: category._id as string
+                //   }).toString()
+                // }}
               >
                 <div
                   onClick={() => {
@@ -89,10 +89,10 @@ const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateP
                 >
                   <div className='cat-name capitalize'>{category.name}</div>
                   <div className='cat-amount text-[#8a733f]'>
-                    {products && products.docs.filter((item) => item.category._id == category._id).length}
+                    {products && products?.docs?.filter((item) => item.category._id == category._id).length}
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
         </div>
       </div>
