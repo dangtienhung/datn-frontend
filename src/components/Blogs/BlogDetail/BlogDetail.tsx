@@ -1,15 +1,18 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import formatDate from '../../../utils/formatDate'
 import './BlogDetail.scss'
 import Loader from '../../Loader'
+import { useGetBlogDetailQuery } from '../../../api/NewBlogs'
 
 const BlogDetail = () => {
-  const { state: blog } = useLocation()
+  const { id } = useParams()
+  const { data: blog, isError } = useGetBlogDetailQuery(id!)
+
   const navigate = useNavigate()
-  useEffect(() => {
-    if (!blog) navigate('/blogs')
-  }, [])
+
+  if (isError) {
+    navigate(-1)
+  }
   return (
     <>
       <Loader />

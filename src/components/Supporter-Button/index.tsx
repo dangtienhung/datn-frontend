@@ -34,13 +34,6 @@ const SupporterBtn = () => {
               <QuestionCircleFilled className='text-white text-2xl' />
             )}
           </div>
-          {/* <iframe
-            className='w-[1200px]'
-            src='http://localhost:4001/hotro'
-            title='Embedded Web Page'
-            width='100%'
-            height='500'
-          ></iframe> */}
         </Popover>
       </Tooltip>
     </>
