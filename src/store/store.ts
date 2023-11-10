@@ -19,6 +19,7 @@ import SizeApi from './slices/size.slice'
 import BannerApi from '../api/banner'
 import AnalyticsApi from '../api/analytics'
 import NewBlogsApi from '../api/NewBlogs'
+import StripeApi from '../api/paymentstripe'
 
 const persistConfig = {
   key: 'root',
@@ -55,7 +56,8 @@ const middleware = [
   SizeApi.middleware,
   BannerApi.middleware,
   AnalyticsApi.middleware,
-  NewBlogsApi.middleware
+  NewBlogsApi.middleware,
+  StripeApi.middleware
 ]
 
 export const store = configureStore({
@@ -73,6 +75,7 @@ export const store = configureStore({
     [SizeApi.reducerPath]: SizeApi.reducer,
     [BannerApi.reducerPath]: BannerApi.reducer,
     [AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
+    [StripeApi.reducerPath]: StripeApi.reducer,
     [NewBlogsApi.reducerPath]: NewBlogsApi.reducer
   },
   middleware: (getDefaultMiddleware) =>

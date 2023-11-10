@@ -25,18 +25,20 @@ import ListStore from '../../interfaces/Map.type'
 import { message } from 'antd'
 import { useDeleteCartDBMutation } from '../../api/cartDB'
 import { ClientSocket } from '../../socket'
+import { useStripePaymentMutation } from '../../api/paymentstripe'
 
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-  const [orderAPIFn] = useCreateOrderMutation()
+  const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
   const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
+  const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
@@ -83,6 +85,8 @@ const Checkout = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
+            console.log(data)
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push(rest)
@@ -160,11 +164,32 @@ const Checkout = () => {
           }
         }
 
-        ClientSocket.createOrder(dataForm)
-        dataCartCheckout.items.length &&
-          dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
-        dispatch(resetAllCart())
-        toast.success('Bạn đặt hàng thành công')
+        console.log(dataForm)
+
+        // dataCartCheckout.items.length &&
+        //   dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
+        // dispatch(resetAllCart())
+        // toast.success('Bạn đặt hàng thành công')
+        if (data.paymentMethod == 'cod') {
+          orderAPIFn(dataForm)
+            .unwrap()
+            .then((res) => {
+              console.log(res)
+
+              if (res.error) {
+                return toast.error('Đặt hàng thất bại' + res.error.data.error)
+              } else {
+                ClientSocket.createOrder(res.order.orderNew.user)
+                window.location.href = res.order.url
+              }
+            })
+
+          // ClientSocket.createOrder(dataForm)
+        } else if (data.paymentMethod == 'stripe') {
+          stripePayment(dataForm).then(({ data: { url } }: any) => {
+            window.location.href = url
+          })
+        }
 
         // orderAPIFn(dataForm)
         //   .unwrap()
@@ -296,6 +321,17 @@ const Checkout = () => {
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
+              <label className={` ${styles.container_radio} cod-payment block group`}>
+                <span className='text-sm'>Thanh toán qua Stripe</span>
+                <input
+                  className='absolute opacity-0'
+                  defaultChecked
+                  type='radio'
+                  value='stripe'
+                  {...register('paymentMethod')}
+                />
+                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
+              </label>
               {/* <label className={` ${styles.container_radio} momo-payment block group`}>
                 <span className='text-sm'>Thanh toán qua Ví MoMo</span>
                 <input className='opacity-0 absolute' type='radio' value='momo' {...register('paymentMethod')} />
@@ -390,7 +426,7 @@ const Checkout = () => {
               ></textarea>
             </div>
             <div className=''>
-              <Button type='checkout' size='large' shape='circle'>
+              <Button type='checkout' style={cod || stripe ? 'bg-gray-500' : ''} size='large' shape='circle'>
                 <span className='block' onClick={handleFormInfoCheckout}>
                   Đặt hàng
                 </span>

@@ -1,23 +1,38 @@
 import { Button, Result } from 'antd'
 import { useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getAllProducts } from '../../store/services/product.service'
 import { RootState } from '../../store/store'
 import NewProductItem from '../../components/New-ProductItem'
 import { IProduct } from '../../interfaces/products.type'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { useBillingPaymentQuery } from '../../api/paymentstripe'
+import { ClientSocket } from '../../socket'
+import { toast } from 'react-toastify'
+import { useCreateOrderMutation } from '../../store/slices/order'
+
+interface Payload extends JwtPayload {
+  noteOrder?: string
+  noteShipping?: string
+}
+
 const PaymentResult = () => {
   const [second, setSecond] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const navigate = useNavigate()
   const { state } = useLocation()
   const dispatch = useAppDispatch()
+  const { data } = useBillingPaymentQuery()
+  const [orderAPIFn] = useCreateOrderMutation()
   const { products } = useAppSelector((state: RootState) => {
-    console.log(state)
+    // console.log(state)
 
     return state.persistedReducer.products
   })
+  const [searchParams] = useSearchParams()
+
   const handleWindowResize = () => {
     setWindowWidth(window.innerWidth)
   }
@@ -27,17 +42,41 @@ const PaymentResult = () => {
   }, [dispatch])
 
   useEffect(() => {
-    window.onresize = () => handleWindowResize()
-    if (!state) {
-      navigate(-1)
-    }
-    const intervalId = setInterval(() => {
-      if (second === 0) return
-      setSecond((prev) => prev - 1)
-    }, 1000)
+    console.log(data)
 
-    return () => clearInterval(intervalId)
-  }, [second, windowWidth])
+    let date = new Date()
+    let decodedToken: Payload = {}
+    if (searchParams.get('encode')) {
+      decodedToken = jwtDecode(searchParams.get('encode')!)
+      if (data) {
+        orderAPIFn(data.invoice)
+          .unwrap()
+          .then((res) => {
+            console.log(res)
+
+            if (res.error) {
+              return toast.error('Đặt hàng thất bại' + res.error.data.error)
+            } else {
+              ClientSocket.createOrder(res.order.orderNew.user)
+            }
+          })
+      }
+    }
+
+    window.onresize = () => handleWindowResize()
+    if (Object.values(decodedToken).length <= 0 || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
+      navigate('/')
+    }
+    // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
+    //   navigate(-1)
+    // }
+    // const intervalId = setInterval(() => {
+    //   if (second === 0) return
+    //   setSecond((prev) => prev - 1)
+    // }, 1000)
+
+    // return () => clearInterval(intervalId)
+  }, [second, windowWidth, data])
 
   return (
     <>
