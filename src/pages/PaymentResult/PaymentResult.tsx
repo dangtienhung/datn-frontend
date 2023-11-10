@@ -12,6 +12,7 @@ import { useBillingPaymentQuery } from '../../api/paymentstripe'
 import { ClientSocket } from '../../socket'
 import { toast } from 'react-toastify'
 import { useCreateOrderMutation } from '../../store/slices/order'
+import { resetAllCart } from '../../store/slices/cart.slice'
 
 interface Payload extends JwtPayload {
   noteOrder?: string
@@ -26,10 +27,11 @@ const PaymentResult = () => {
   const dispatch = useAppDispatch()
   const { data } = useBillingPaymentQuery()
   const [orderAPIFn] = useCreateOrderMutation()
-  const { products } = useAppSelector((state: RootState) => {
-    // console.log(state)
+  // console.log(state)
+  const { auth, products } = useAppSelector((state: RootState) => {
+    console.log(state)
 
-    return state.persistedReducer.products
+    return state.persistedReducer
   })
   const [searchParams] = useSearchParams()
 
@@ -48,6 +50,7 @@ const PaymentResult = () => {
     let decodedToken: Payload = {}
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode')!)
+      dispatch(resetAllCart())
       if (data) {
         orderAPIFn(data.invoice)
           .unwrap()
@@ -95,15 +98,17 @@ const PaymentResult = () => {
                 title='Chúc mừng bạn đã đặt hàng thành công 🎉'
                 subTitle='Đơn hàng đang được xử lý.Quá trình này sẽ mất 1 chút thời gian,bạn vui lòng đợi nhé!'
                 extra={[
-                  <Button
-                    size='large'
-                    className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
-                    type='primary'
-                    key='console'
-                    onClick={() => navigate('/account-layout/my-order')}
-                  >
-                    Xem đơn hàng
-                  </Button>,
+                  auth && auth.user.accessToken && (
+                    <Button
+                      size='large'
+                      className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
+                      type='primary'
+                      key='console'
+                      onClick={() => navigate('/account-layout/my-order')}
+                    >
+                      Xem đơn hàng
+                    </Button>
+                  ),
                   <Button
                     size='large'
                     key='buy'
@@ -129,9 +134,9 @@ const PaymentResult = () => {
                 <div className='bg_title'></div>
               </div>
               <div className='list mt-[50px] flex flex-wrap '>
-                {products &&
-                  products?.docs?.length > 0 &&
-                  products?.docs
+                {products.products &&
+                  products.products?.docs?.length > 0 &&
+                  products.products?.docs
                     .slice(0, 4)
                     ?.map((product: IProduct) => <NewProductItem key={product._id} product={product} />)}
               </div>

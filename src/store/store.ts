@@ -1,25 +1,27 @@
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-// import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
+import AnalyticsApi from '../api/analytics'
 import { ApiProducts } from '../api/Product'
 import { ApiUser } from '../api/User'
 import ApiVoucher from '../api/voucher'
 import { Auth } from '../api/Auth'
 import AuthReducer from './slices/Auth.slice'
+import BannerApi from '../api/banner'
+import { CartDBAPI } from '../api/cartDB'
+import CategoryApi from '../api/category'
+import NewBlogsApi from '../api/NewBlogs'
+import { OrderAPI } from './slices/order'
+import SizeApi from './slices/size.slice'
 import { ToppingAPI } from '../api/topping'
+import { addressApi } from './services'
 import cartReducer from './slices/cart.slice'
 import { categoriesReducer } from './slices/categories'
 import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
-import CategoryApi from '../api/category'
-import { OrderAPI } from './slices/order'
-import { CartDBAPI } from '../api/cartDB'
-import SizeApi from './slices/size.slice'
-import BannerApi from '../api/banner'
-import AnalyticsApi from '../api/analytics'
-import NewBlogsApi from '../api/NewBlogs'
 import StripeApi from '../api/paymentstripe'
+
+// import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
 const persistConfig = {
   key: 'root',
@@ -57,7 +59,8 @@ const middleware = [
   BannerApi.middleware,
   AnalyticsApi.middleware,
   NewBlogsApi.middleware,
-  StripeApi.middleware
+  StripeApi.middleware,
+  addressApi.middleware
 ]
 
 export const store = configureStore({
@@ -76,7 +79,8 @@ export const store = configureStore({
     [BannerApi.reducerPath]: BannerApi.reducer,
     [AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
     [StripeApi.reducerPath]: StripeApi.reducer,
-    [NewBlogsApi.reducerPath]: NewBlogsApi.reducer
+    [NewBlogsApi.reducerPath]: NewBlogsApi.reducer,
+    [addressApi.reducerPath]: addressApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

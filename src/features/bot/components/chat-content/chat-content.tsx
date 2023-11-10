@@ -1,12 +1,16 @@
 import { Message } from '../../types'
+import parse from 'html-react-parser'
+import { useAppSelector } from '../../../../store/hooks'
 
 interface ChatContentProps {
   messages: Message[]
 }
 
 export const ChatContent = ({ messages }: ChatContentProps) => {
+  const { user: userData } = useAppSelector((state) => state.persistedReducer.auth)
+
   return (
-    <div className='flex-1 h-full py-1 overflow-auto'>
+    <div className='flex-1 h-full py-1 overflow-auto px-5 scrollbar-none'>
       {messages.map((message: Message, index: number) => (
         <div
           key={index}
@@ -15,22 +19,28 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
           <div className={`${message.isChatOwner ? 'order-2' : 'order-1'}`}>
             {/* avata */}
             <div className='relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full'>
-              <svg
-                className='-left-1 absolute w-12 h-12 text-gray-400'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'
-                  clipRule='evenodd'
-                ></path>
-              </svg>
+              {message.isChatOwner && (
+                <img
+                  src={
+                    userData
+                      ? userData.avatar
+                      : 'https://png.pngtree.com/png-vector/20191027/ourlarge/pngtree-avatar-vector-icon-white-background-png-image_1884971.jpg'
+                  }
+                  className='w-12 object-cover h-12 text-gray-400'
+                  alt='bot'
+                />
+              )}
+              {!message.isChatOwner && (
+                <img
+                  src={'https://cdn.dribbble.com/users/464600/screenshots/2863054/bot-emotions-principle.gif'}
+                  className='w-12 object-cover h-12 text-gray-400'
+                  alt='bot'
+                />
+              )}
             </div>
           </div>
           <div
-            className={`px-2 w-fit py-3 flex flex-col bg-purple-500 rounded-lg text-white ${
+            className={`px-2 w-fit py-3 flex flex-col bg-[#D3B673] items-start rounded-lg text-white ${
               message.isChatOwner ? 'order-1 mr-2' : 'order-2 ml-2'
             }`}
           >
@@ -41,7 +51,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
                 minute: '2-digit'
               })}
             </span>
-            <span className='text-md'>{message.text}</span>
+            <span className='text-md'>{parse(message.text)}</span>
           </div>
         </div>
       ))}
