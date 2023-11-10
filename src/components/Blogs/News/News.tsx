@@ -1,20 +1,34 @@
-import { Avatar, Button, Card } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Avatar, Button, Card, Empty } from 'antd'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useGetAllBlogsQuery } from '../../../api/NewBlogs'
 import './New.module.scss'
 import ReactHtmlParser from 'html-react-parser'
 const { Meta } = Card
 
 const News = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
   const { data: dataBlog } = useGetAllBlogsQuery()
+  const listBlogsByIdCate = dataBlog && dataBlog?.docs?.filter((item) => item.category._id === id)
 
+  if (listBlogsByIdCate && listBlogsByIdCate.length <= 0) {
+    return (
+      <div className='flex items-center justify-center w-full py-4'>
+        <Empty
+          className='flex items-center flex-col'
+          image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
+          imageStyle={{ height: 200 }}
+          description={<span>Hiện tại chưa có bài viết nào!</span>}
+        />
+      </div>
+    )
+  }
   return (
     <>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-x-[20px] gap-y-[30px] my-[30px]'>
-        {dataBlog?.docs?.map((item) => (
+        {listBlogsByIdCate?.map((item) => (
           <Card
-            onClick={() => navigate(`/blogs/${item._id}`, { state: item })}
+            onClick={() => navigate(`/blogs/${item._id}`)}
             key={item._id}
             hoverable
             className='w-[calc(50% - 8px)] bg-[#f5f5f5] hover:bg-[#fff]'

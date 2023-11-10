@@ -76,22 +76,26 @@ const routes = createBrowserRouter([
     path: 'blogs',
     element: <LayoutBlog />,
     children: [
-      {
-        index: true,
-        path: 'tin-tuc-khuyen-mai',
-        element: <News />
-      },
-      {
-        path: 'cau-chuyen-thuong-hieu',
-        element: <BrandStory />
-      },
-      {
-        path: 'su-kien',
-        element: <Events />
-      },
+      // {
+      //   index: true,
+      //   path: 'tin-tuc-khuyen-mai',
+      //   element: <News />
+      // },
+      // {
+      //   path: 'cau-chuyen-thuong-hieu',
+      //   element: <BrandStory />
+      // },
+      // {
+      //   path: 'su-kien',
+      //   element: <Events />
+      // },
       {
         path: ':id',
         element: <BlogDetail />
+      },
+      {
+        path: 'category/:id',
+        element: <News />
       }
     ]
   },
