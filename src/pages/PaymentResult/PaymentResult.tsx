@@ -29,8 +29,6 @@ const PaymentResult = () => {
   const [orderAPIFn] = useCreateOrderMutation()
   // console.log(state)
   const { auth, products } = useAppSelector((state: RootState) => {
-    console.log(state)
-
     return state.persistedReducer
   })
   const [searchParams] = useSearchParams()

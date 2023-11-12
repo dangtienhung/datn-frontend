@@ -6,11 +6,12 @@ import { ITopping } from '../../interfaces/topping.type'
 import { useAppSelector } from '../../store/hooks'
 import { useCanceledOrderMutation } from '../../store/slices/order'
 import { formatCurrency } from '../../utils/formatCurrency'
-import './MyOrder.scss'
 import { pause } from '../../utils/pause'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { ClientSocket } from '../../socket'
+import { RootState } from '../../store/store'
+import './MyOrder.scss'
 
 enum STATUS_ORDER {
   PENDING = 0,
@@ -26,7 +27,7 @@ const MyOrder = () => {
   const [idOrder, setIdOrder] = useState('')
   const [reason, setReason] = useState('')
 
-  const { user } = useAppSelector((state) => state.persistedReducer.auth)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const [orderUser, setOrderUser] = useState<any>([])
   const tabs = ['Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
   const [cancelOrder] = useCanceledOrderMutation()
@@ -36,7 +37,6 @@ const MyOrder = () => {
   }
   const listReason: string[] = [
     'Không muốn mua sản phẩm này nữa.',
-    'Sản phẩm bị hỏng khi nhận hàng.',
     'Sản phẩm không đúng mô tả trên trang web.',
     'Đã tìm thấy một sản phẩm tốt hơn ở nơi khác.',
     'Sản phẩm không còn cần thiết.',
@@ -127,7 +127,7 @@ const MyOrder = () => {
           </div>
         ) : (
           orderUser &&
-          orderUser?.map((order: any) => (
+          orderUser?.reverse()?.map((order: any) => (
             <div key={order._id} className={`order-content mb-20  shadow-md bg-[#fafafa]`}>
               <div className='status py-2'>
                 <span className='ml-2'>Trạng thái: </span>
@@ -202,7 +202,7 @@ const MyOrder = () => {
                 </div>
 
                 <div className='confirm-button flex gap-x-3 items-center'>
-                  <Button onClick={() => alert('clicked')} size='medium' shape='round'>
+                  <Button onClick={() => navigate(`/account-layout/my-order/${order._id}`)} size='medium' shape='round'>
                     Chi tiết đơn hàng
                   </Button>
                   <Button

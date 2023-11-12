@@ -1,4 +1,4 @@
-import { MyInfor, MyOrder, MyVoucher } from './components'
+import { MyInfor, MyOrder, MyOrderDetail, MyVoucher } from './components'
 import { GuardAccount, GuardSign } from './guardRoute'
 
 import { createBrowserRouter } from 'react-router-dom'
@@ -103,6 +103,7 @@ const routes = createBrowserRouter([
     children: [
       { index: true, element: <MyInfor /> },
       { path: 'my-order', element: <MyOrder /> },
+      { path: 'my-order/:id', element: <MyOrderDetail /> },
       { path: 'my-voucher', element: <MyVoucher /> },
       { path: 'my-address', element: <MyAddress /> },
       { path: 'change-password', element: <ChangePassword /> },
@@ -112,6 +113,10 @@ const routes = createBrowserRouter([
 
   {
     path: '*',
+    element: <NotFound />
+  },
+  {
+    path: 'not-found',
     element: <NotFound />
   },
   {
