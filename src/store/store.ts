@@ -19,6 +19,7 @@ import cartReducer from './slices/cart.slice'
 import { categoriesReducer } from './slices/categories'
 import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
+import StripeApi from '../api/paymentstripe'
 
 // import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
@@ -58,6 +59,7 @@ const middleware = [
   BannerApi.middleware,
   AnalyticsApi.middleware,
   NewBlogsApi.middleware,
+  StripeApi.middleware,
   addressApi.middleware
 ]
 
@@ -76,6 +78,7 @@ export const store = configureStore({
     [SizeApi.reducerPath]: SizeApi.reducer,
     [BannerApi.reducerPath]: BannerApi.reducer,
     [AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
+    [StripeApi.reducerPath]: StripeApi.reducer,
     [NewBlogsApi.reducerPath]: NewBlogsApi.reducer,
     [addressApi.reducerPath]: addressApi.reducer
   },
