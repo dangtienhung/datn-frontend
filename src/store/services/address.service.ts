@@ -21,7 +21,7 @@ export const addressApi = createApi({
 
     getAddress: build.query<IDocAddress, { userId: string }>({
       query: ({ userId }) => `/address/get/${userId}`,
-      providesTags: (result, error, _id) => [{ type: 'Address', _id }]
+      providesTags: (_, __, _id) => [{ type: 'Address', _id }]
     })
   })
 })
