@@ -29,7 +29,6 @@ import styles from './Checkout.module.scss'
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
@@ -62,7 +61,7 @@ const Checkout = () => {
     setValue('shippingLocation', address ?? '')
   }, [address, setValue])
   useEffect(() => {
-    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
+    dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
@@ -160,6 +159,7 @@ const Checkout = () => {
         dataCartCheckout.items.length &&
         dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
       dispatch(resetAllCart())
+      navigate('/products/checkout/payment-result', { state: 'success' })
       toast.success('Bạn đặt hàng thành công')
 
       // orderAPIFn(dataForm)

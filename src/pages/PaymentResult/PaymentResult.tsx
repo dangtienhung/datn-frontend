@@ -15,8 +15,6 @@ const PaymentResult = () => {
   const { state } = useLocation()
   const dispatch = useAppDispatch()
   const { auth, products } = useAppSelector((state: RootState) => {
-    console.log(state)
-
     return state.persistedReducer
   })
   const handleWindowResize = () => {
