@@ -1,7 +1,7 @@
 import { Button, Result } from 'antd'
 import { useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getAllProducts } from '../../store/services/product.service'
 import { RootState } from '../../store/store'
@@ -20,10 +20,10 @@ interface Payload extends JwtPayload {
 }
 
 const PaymentResult = () => {
-  const [second, setSecond] = useState<number>(5)
+  const [second, _] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const navigate = useNavigate()
-  const { state } = useLocation()
+  // const { state } = useLocation()
   const dispatch = useAppDispatch()
   const { data } = useBillingPaymentQuery()
   const [orderAPIFn] = useCreateOrderMutation()
@@ -46,7 +46,7 @@ const PaymentResult = () => {
   useEffect(() => {
     console.log(data)
 
-    let date = new Date()
+    const date = new Date()
     let decodedToken: Payload = {}
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode')!)
