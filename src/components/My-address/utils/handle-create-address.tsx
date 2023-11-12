@@ -1,7 +1,6 @@
-import { IAddressCreate } from '../../../interfaces'
-import { addressApi } from '../../../api/address.api'
 import { message } from 'antd'
-import { useAppSelector } from '../../../store/hooks'
+import { addressApi } from '../../../api/address.api'
+import { IAddressCreate } from '../../../interfaces'
 
 export const handleCreateAddress = async (data: IAddressCreate) => {
   try {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Input } from '../../components'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppSelector } from '../../store/hooks'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { message } from 'antd'
@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
-import { useDeleteCartDBMutation } from '../../api/cartDB'
 import CheckoutItem from '../../components/Checkout-Item'
 import ModalListVouchers from '../../components/ModalListVouchers'
 import YaSuoMap from '../../components/map/YaSuoMap'
@@ -19,7 +18,7 @@ import ListStore from '../../interfaces/Map.type'
 import { IVoucher } from '../../interfaces/voucher.type'
 import { ClientSocket } from '../../socket'
 import { useStripePaymentMutation } from '../../api/paymentstripe'
-import { CartItemState, arrTotal } from '../../store/slices/types/cart.type'
+import { arrTotal } from '../../store/slices/types/cart.type'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { UserCheckoutSchema } from '../../validate/Form'
@@ -65,7 +64,7 @@ const Checkout = () => {
     setValue('shippingLocation', address ?? '')
   }, [address, setValue])
   useEffect(() => {
-    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
+    dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {

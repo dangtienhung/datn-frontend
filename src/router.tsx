@@ -1,15 +1,13 @@
 import { GuardAccount, GuardSign } from './guardRoute'
-import { MyAddress, MyInfor, MyOrder, MyVoucher } from './components'
+import { MyAddress, MyInfor, MyOrder, MyOrderDetail, MyVoucher } from './components'
 
 import AccountLayout from './layouts/AccountLayout/accountLayout'
 import Achievement from './components/Achievement/Achievement'
 import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
 import Bot from './Bot'
-import BrandStory from './components/Blogs/BrandStory/BrandStory'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import Checkout from './pages/Checkout/Checkout'
 import ClientLayout from './layouts/client'
-import Events from './components/Blogs/Events/Events'
 import ForgotPassword from './pages/Forgot-password/ForgotPassword'
 import HomePage from './pages/Home/HomePage'
 import Introduce from './components/Introduce/Introduce'
@@ -104,6 +102,7 @@ const routes = createBrowserRouter([
     children: [
       { index: true, element: <MyInfor /> },
       { path: 'my-order', element: <MyOrder /> },
+      { path: 'my-order/:id', element: <MyOrderDetail /> },
       { path: 'my-voucher', element: <MyVoucher /> },
       { path: 'my-address', element: <MyAddress /> },
       { path: 'change-password', element: <ChangePassword /> },
@@ -113,6 +112,10 @@ const routes = createBrowserRouter([
 
   {
     path: '*',
+    element: <NotFound />
+  },
+  {
+    path: 'not-found',
     element: <NotFound />
   },
   {
