@@ -7,9 +7,8 @@ import { useGetAllBlogsQuery } from '../../api/NewBlogs'
 const News = () => {
   const navigate = useNavigate()
   const { data: blogData } = useGetAllBlogsQuery()
-  console.log(blogData)
   const handleNavigateBlogDeatail = (blogData: any) => {
-    navigate(`/blogs/${blogData._id}`, { state: blogData })
+    navigate(`/blogs/${blogData._id}`)
   }
 
   return (

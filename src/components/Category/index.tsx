@@ -1,26 +1,25 @@
 import { Divider, List, ListItem, ListItemText, Paper, Popover, Stack, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
-import { Link, createSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
-import { FaBars } from 'react-icons/fa'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { ICategory } from '../../interfaces/category.type'
-import { IQueryConfig } from '../../hook/useQueryConfig'
-import NotFound from '../../pages/Not-Found/NotFound'
-import SKProduct from '../Skeleton/SKProduct'
 import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { FaBars } from 'react-icons/fa'
+import { IQueryConfig } from '../../hook/useQueryConfig'
+import { ICategory } from '../../interfaces/category.type'
+import NotFound from '../../pages/Not-Found/NotFound'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
+import SKProduct from '../Skeleton/SKProduct'
 
 interface SidebarCateProps {
   categories: ICategory[] | undefined
   error: FetchBaseQueryError | SerializedError | undefined
   isLoading: boolean
-  queryConfig: IQueryConfig
+  queryConfig?: IQueryConfig
 }
 
-const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
+const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
 

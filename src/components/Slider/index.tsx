@@ -8,7 +8,6 @@ import Slider from 'react-slick'
 import styles from './Slider.module.scss'
 import { useGetAllBannerActiveTrueQuery } from '../../api/banner'
 import { v4 as uuidv4 } from 'uuid'
-import { useEffect } from 'react'
 
 const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
   <FaChevronLeft
