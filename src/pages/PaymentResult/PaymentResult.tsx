@@ -13,6 +13,8 @@ import { ClientSocket } from '../../socket'
 import { toast } from 'react-toastify'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { resetAllCart } from '../../store/slices/cart.slice'
+import { useBillingVnpayMutation } from '../../api/paymentvnpay'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
 
 interface Payload extends JwtPayload {
   noteOrder?: string
@@ -27,9 +29,10 @@ const PaymentResult = () => {
   const dispatch = useAppDispatch()
   const { data } = useBillingPaymentQuery()
   const [orderAPIFn] = useCreateOrderMutation()
+  const [vnpay] = useBillingVnpayMutation()
   // console.log(state)
   const { auth, products } = useAppSelector((state: RootState) => {
-    console.log(state)
+    // console.log(state)
 
     return state.persistedReducer
   })
@@ -44,9 +47,38 @@ const PaymentResult = () => {
   }, [dispatch])
 
   useEffect(() => {
-    console.log(data)
-
+    // let orderVnpay = {};
     let date = new Date()
+    if (searchParams.get('expire')) {
+      const orderVnpay: IOrderCheckout = {
+        user: searchParams.get('userId') as string,
+        items: [],
+        payment_vnpay: searchParams.get('vnp_SecureHash')!,
+        total: searchParams.get('total')!,
+        priceShipping: searchParams.get('priceShipping')!,
+        noteOrder: searchParams.get('noteOrder') as string,
+        paymentMethodId: 'vnpay',
+        inforOrderShipping: {
+          name: searchParams.get('name') as string,
+          phone: searchParams.get('phone') as string,
+          address: searchParams.get('address') as string,
+          noteShipping: searchParams.get('noteShipping') as string
+        }
+      }
+      vnpay(orderVnpay).then(({ data }: any) => {
+        orderAPIFn(data)
+          .unwrap()
+          .then((res) => {
+            console.log(res)
+            if (res.error) {
+              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+            } else {
+              ClientSocket.createOrder(res.order.orderNew.user)
+            }
+          })
+      })
+    }
+
     let decodedToken: Payload = {}
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode')!)
@@ -56,9 +88,8 @@ const PaymentResult = () => {
           .unwrap()
           .then((res) => {
             console.log(res)
-
             if (res.error) {
-              return toast.error('Đặt hàng thất bại' + res.error.data.error)
+              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
             } else {
               ClientSocket.createOrder(res.order.orderNew.user)
             }
@@ -67,7 +98,7 @@ const PaymentResult = () => {
     }
 
     window.onresize = () => handleWindowResize()
-    if (Object.values(decodedToken).length <= 0 || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
+    if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
       navigate('/')
     }
     // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {

@@ -20,6 +20,7 @@ import { categoriesReducer } from './slices/categories'
 import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
 import StripeApi from '../api/paymentstripe'
+import VnpayApi from '../api/paymentvnpay'
 
 // import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
@@ -60,7 +61,8 @@ const middleware = [
   AnalyticsApi.middleware,
   NewBlogsApi.middleware,
   StripeApi.middleware,
-  addressApi.middleware
+  addressApi.middleware,
+  VnpayApi.middleware
 ]
 
 export const store = configureStore({
@@ -80,7 +82,8 @@ export const store = configureStore({
     [AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
     [StripeApi.reducerPath]: StripeApi.reducer,
     [NewBlogsApi.reducerPath]: NewBlogsApi.reducer,
-    [addressApi.reducerPath]: addressApi.reducer
+    [addressApi.reducerPath]: addressApi.reducer,
+    [VnpayApi.reducerPath]: VnpayApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
