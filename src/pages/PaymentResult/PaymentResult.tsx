@@ -1,7 +1,7 @@
 import { Button, Result } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getAllProducts } from '../../store/services/product.service'
 import { RootState } from '../../store/store'
@@ -13,8 +13,8 @@ import { ClientSocket } from '../../socket'
 import { toast } from 'react-toastify'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { resetAllCart } from '../../store/slices/cart.slice'
-import { useBillingVnpayMutation } from '../../api/paymentvnpay'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { arrTotal } from '../../store/slices/types/cart.type'
 
 interface Payload extends JwtPayload {
   noteOrder?: string
@@ -22,18 +22,15 @@ interface Payload extends JwtPayload {
 }
 
 const PaymentResult = () => {
-  const [second, setSecond] = useState<number>(5)
+  const [second, _] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
   const navigate = useNavigate()
-  const { state } = useLocation()
+  // const { state } = useLocation()
   const dispatch = useAppDispatch()
   const { data } = useBillingPaymentQuery()
   const [orderAPIFn] = useCreateOrderMutation()
-  const [vnpay] = useBillingVnpayMutation()
-  // console.log(state)
   const { auth, products } = useAppSelector((state: RootState) => {
-    // console.log(state)
-
     return state.persistedReducer
   })
   const [searchParams] = useSearchParams()
@@ -42,65 +39,108 @@ const PaymentResult = () => {
     setWindowWidth(window.innerWidth)
   }
 
+  const getData = useCallback(
+    (getData: string) => {
+      const arrTotal: arrTotal[] = []
+      const arrTotalNumbers: number[] = []
+      dataCartCheckout.items.map((item) =>
+        item.items.map((data) => {
+          if (getData == 'list') {
+            console.log(item)
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { total, _id, ...rest } = data
+            arrTotal.push({ ...rest, name: item.name })
+          } else {
+            let value: number | undefined
+            if (getData === 'quantity') {
+              value = data.quantity
+            } else if (getData === 'total') {
+              value = data.total
+            }
+
+            if (value !== undefined) {
+              arrTotalNumbers.push(value)
+            }
+          }
+        })
+      )
+      return getData == 'list' ? arrTotal : arrTotalNumbers
+    },
+    [dataCartCheckout.items]
+  )
+
   useEffect(() => {
     dispatch(getAllProducts({}))
   }, [dispatch])
 
   useEffect(() => {
-    // let orderVnpay = {};
+    if (!searchParams.get('encode') && !searchParams.get('userId')) {
+      navigate('/')
+    }
     let date = new Date()
     if (searchParams.get('expire')) {
-      const orderVnpay: IOrderCheckout = {
-        user: searchParams.get('userId') as string,
-        items: [],
-        payment_vnpay: searchParams.get('vnp_SecureHash')!,
-        total: searchParams.get('total')!,
-        priceShipping: searchParams.get('priceShipping')!,
-        noteOrder: searchParams.get('noteOrder') as string,
-        paymentMethodId: 'vnpay',
-        inforOrderShipping: {
-          name: searchParams.get('name') as string,
-          phone: searchParams.get('phone') as string,
-          address: searchParams.get('address') as string,
-          noteShipping: searchParams.get('noteShipping') as string
+      if (Number(searchParams.get('expire')) < date.getTime() / 1000) {
+        navigate(-1)
+      } else {
+        const orderVnpay: IOrderCheckout = {
+          user:
+            (searchParams.get('userId') as string) === 'undefined' ? undefined : (searchParams.get('userId') as string),
+          items: getData('list'),
+          payment_vnpay: searchParams.get('vnp_SecureHash')!,
+          total: searchParams.get('total')!,
+          priceShipping: searchParams.get('priceShipping')!,
+          noteOrder: searchParams.get('noteOrder') as string,
+          paymentMethodId: 'vnpay',
+          inforOrderShipping: {
+            name: searchParams.get('name') as string,
+            phone: searchParams.get('phone') as string,
+            address: searchParams.get('address') as string,
+            noteShipping: searchParams.get('noteShipping') as string
+          }
         }
-      }
-      vnpay(orderVnpay).then(({ data }: any) => {
-        orderAPIFn(data)
+
+        orderAPIFn(orderVnpay)
           .unwrap()
           .then((res) => {
             console.log(res)
             if (res.error) {
               return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
             } else {
+              dispatch(resetAllCart())
               ClientSocket.createOrder(res.order.orderNew.user)
             }
           })
-      })
+      }
     }
 
     let decodedToken: Payload = {}
+
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode')!)
-      dispatch(resetAllCart())
-      if (data) {
-        orderAPIFn(data.invoice)
-          .unwrap()
-          .then((res) => {
-            console.log(res)
-            if (res.error) {
-              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
-            } else {
-              ClientSocket.createOrder(res.order.orderNew.user)
-            }
-          })
+      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+        navigate('/')
+      } else {
+        if (data) {
+          orderAPIFn(data.invoice)
+            .unwrap()
+            .then((res) => {
+              console.log(res)
+              if (res.error) {
+                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+              } else {
+                dispatch(resetAllCart())
+                ClientSocket.createOrder(res.order.orderNew.user)
+              }
+            })
+        }
       }
     }
 
     window.onresize = () => handleWindowResize()
-    if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
-      navigate('/')
-    }
+    // if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+    //   navigate('/')
+    // }
     // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
     //   navigate(-1)
     // }

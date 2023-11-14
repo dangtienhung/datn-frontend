@@ -1,28 +1,27 @@
-import { MyInfor, MyOrder, MyVoucher } from './components'
 import { GuardAccount, GuardSign } from './guardRoute'
+import { MyAddress, MyInfor, MyOrder, MyOrderDetail, MyVoucher } from './components'
 
+import AccountLayout from './layouts/AccountLayout/accountLayout'
 import Achievement from './components/Achievement/Achievement'
 // import BrandStory from './components/Blogs/BrandStory/BrandStory'
 // import Events from './components/Blogs/Events/Events'
+import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
+import Bot from './Bot'
+import ChangePassword from './components/ChangePassword/ChangePassword'
+import Checkout from './pages/Checkout/Checkout'
+import ClientLayout from './layouts/client'
+import ForgotPassword from './pages/Forgot-password/ForgotPassword'
+import HomePage from './pages/Home/HomePage'
+import Introduce from './components/Introduce/Introduce'
 import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
 import News from './components/Blogs/News/News'
-import Introduce from './components/Introduce/Introduce'
-import MyAddress from './components/My-address'
-import AccountLayout from './layouts/AccountLayout/accountLayout'
-import ClientLayout from './layouts/client'
-import Checkout from './pages/Checkout/Checkout'
-import HomePage from './pages/Home/HomePage'
 import NotFound from './pages/Not-Found/NotFound'
+import PaymentResult from './pages/PaymentResult/PaymentResult'
 import ProductsPage from './pages/Products/Products'
-import { createBrowserRouter } from 'react-router-dom'
+import ResetForgotPassword from './pages/Forgot-password/ResetForgotPassword'
 import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
-import ForgotPassword from './pages/Forgot-password/ForgotPassword'
-import ChangePassword from './components/ChangePassword/ChangePassword'
-import PaymentResult from './pages/PaymentResult/PaymentResult'
-import Bot from './Bot'
-import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
-import ResetForgotPassword from './pages/Forgot-password/ResetForgotPassword'
+import { createBrowserRouter } from 'react-router-dom'
 
 const routes = createBrowserRouter([
   {
@@ -105,6 +104,7 @@ const routes = createBrowserRouter([
     children: [
       { index: true, element: <MyInfor /> },
       { path: 'my-order', element: <MyOrder /> },
+      { path: 'my-order/:id', element: <MyOrderDetail /> },
       { path: 'my-voucher', element: <MyVoucher /> },
       { path: 'my-address', element: <MyAddress /> },
       { path: 'change-password', element: <ChangePassword /> },
@@ -114,6 +114,10 @@ const routes = createBrowserRouter([
 
   {
     path: '*',
+    element: <NotFound />
+  },
+  {
+    path: 'not-found',
     element: <NotFound />
   },
   {

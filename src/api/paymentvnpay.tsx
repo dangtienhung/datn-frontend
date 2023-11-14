@@ -12,16 +12,9 @@ const VnpayApi = createApi({
         method: 'POST',
         body: rest
       })
-    }),
-    billingVnpay: builder.mutation<any, any>({
-      query: ({ ...rest }) => ({
-        url: 'api/billing-vnpay',
-        method: 'POST',
-        body: rest
-      })
     })
   })
 })
 
-export const { useVnpayPaymentMutation, useBillingVnpayMutation } = VnpayApi
+export const { useVnpayPaymentMutation } = VnpayApi
 export default VnpayApi

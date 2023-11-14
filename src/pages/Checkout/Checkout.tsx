@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Input } from '../../components'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { message } from 'antd'
@@ -25,6 +25,7 @@ import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+import { resetAllCart } from '../../store'
 
 //
 const Checkout = () => {
@@ -33,12 +34,12 @@ const Checkout = () => {
   const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
   const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
-  const [vnpayPayment] = useVnpayPaymentMutation()
+  const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
   // const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
@@ -66,7 +67,7 @@ const Checkout = () => {
     setValue('shippingLocation', address ?? '')
   }, [address, setValue])
   useEffect(() => {
-    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
+    dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
@@ -163,14 +164,19 @@ const Checkout = () => {
       console.log(dataForm)
 
       if (data.paymentMethod == 'cod') {
+        console.log(dataForm)
+
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
             if (res.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
+              dispatch(resetAllCart())
+              console.log(res.order.orderNew)
+
               ClientSocket.createOrder(res.order.orderNew.user)
-              window.location.href = res.order.url
+              // window.location.href = res.order.url
             }
           })
       } else if (data.paymentMethod == 'stripe') {
@@ -391,7 +397,7 @@ const Checkout = () => {
               ></textarea>
             </div>
             <div className=''>
-              <Button type='checkout' style={cod || stripe ? 'bg-gray-500' : ''} size='large' shape='circle'>
+              <Button type='checkout' style={cod || stripe || vnpay ? 'bg-gray-500' : ''} size='large' shape='circle'>
                 <span className='block' onClick={handleFormInfoCheckout}>
                   Đặt hàng
                 </span>
