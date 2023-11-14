@@ -3,6 +3,8 @@ import { MyAddress, MyInfor, MyOrder, MyOrderDetail, MyVoucher } from './compone
 
 import AccountLayout from './layouts/AccountLayout/accountLayout'
 import Achievement from './components/Achievement/Achievement'
+// import BrandStory from './components/Blogs/BrandStory/BrandStory'
+// import Events from './components/Blogs/Events/Events'
 import BlogDetail from './components/Blogs/BlogDetail/BlogDetail'
 import Bot from './Bot'
 import ChangePassword from './components/ChangePassword/ChangePassword'

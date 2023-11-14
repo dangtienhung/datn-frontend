@@ -1,5 +1,5 @@
 import { Button, Result } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -13,6 +13,8 @@ import { ClientSocket } from '../../socket'
 import { toast } from 'react-toastify'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { resetAllCart } from '../../store/slices/cart.slice'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { arrTotal } from '../../store/slices/types/cart.type'
 
 interface Payload extends JwtPayload {
   noteOrder?: string
@@ -22,12 +24,12 @@ interface Payload extends JwtPayload {
 const PaymentResult = () => {
   const [second, _] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
   const navigate = useNavigate()
   // const { state } = useLocation()
   const dispatch = useAppDispatch()
   const { data } = useBillingPaymentQuery()
   const [orderAPIFn] = useCreateOrderMutation()
-  // console.log(state)
   const { auth, products } = useAppSelector((state: RootState) => {
     return state.persistedReducer
   })
@@ -37,37 +39,108 @@ const PaymentResult = () => {
     setWindowWidth(window.innerWidth)
   }
 
+  const getData = useCallback(
+    (getData: string) => {
+      const arrTotal: arrTotal[] = []
+      const arrTotalNumbers: number[] = []
+      dataCartCheckout.items.map((item) =>
+        item.items.map((data) => {
+          if (getData == 'list') {
+            console.log(item)
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { total, _id, ...rest } = data
+            arrTotal.push({ ...rest, name: item.name })
+          } else {
+            let value: number | undefined
+            if (getData === 'quantity') {
+              value = data.quantity
+            } else if (getData === 'total') {
+              value = data.total
+            }
+
+            if (value !== undefined) {
+              arrTotalNumbers.push(value)
+            }
+          }
+        })
+      )
+      return getData == 'list' ? arrTotal : arrTotalNumbers
+    },
+    [dataCartCheckout.items]
+  )
+
   useEffect(() => {
     dispatch(getAllProducts({}))
   }, [dispatch])
 
   useEffect(() => {
-    console.log(data)
-
+    if (!searchParams.get('encode') && !searchParams.get('userId')) {
+      navigate('/')
+    }
     const date = new Date()
-    let decodedToken: Payload = {}
-    if (searchParams.get('encode')) {
-      decodedToken = jwtDecode(searchParams.get('encode')!)
-      dispatch(resetAllCart())
-      if (data) {
-        orderAPIFn(data.invoice)
+    if (searchParams.get('expire')) {
+      if (Number(searchParams.get('expire')) < date.getTime() / 1000) {
+        navigate(-1)
+      } else {
+        const orderVnpay: IOrderCheckout = {
+          user:
+            (searchParams.get('userId') as string) === 'undefined' ? undefined : (searchParams.get('userId') as string),
+          items: getData('list'),
+          payment_vnpay: searchParams.get('vnp_SecureHash') as string,
+          total: Number(searchParams.get('total')),
+          priceShipping: Number(searchParams.get('priceShipping')),
+          noteOrder: searchParams.get('noteOrder') as string,
+          paymentMethodId: 'vnpay',
+          inforOrderShipping: {
+            name: searchParams.get('name') as string,
+            phone: searchParams.get('phone') as string,
+            address: searchParams.get('address') as string,
+            noteShipping: searchParams.get('noteShipping') as string
+          }
+        }
+
+        orderAPIFn(orderVnpay)
           .unwrap()
           .then((res) => {
             console.log(res)
-
             if (res.error) {
-              return toast.error('Đặt hàng thất bại' + res.error.data.error)
+              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
             } else {
+              dispatch(resetAllCart())
               ClientSocket.createOrder(res.order.orderNew.user)
             }
           })
       }
     }
 
-    window.onresize = () => handleWindowResize()
-    if (Object.values(decodedToken).length <= 0 || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
-      navigate('/')
+    let decodedToken: Payload = {}
+
+    if (searchParams.get('encode')) {
+      decodedToken = jwtDecode(searchParams.get('encode')!)
+      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+        navigate('/')
+      } else {
+        if (data) {
+          orderAPIFn(data.invoice)
+            .unwrap()
+            .then((res) => {
+              console.log(res)
+              if (res.error) {
+                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+              } else {
+                dispatch(resetAllCart())
+                ClientSocket.createOrder(res.order.orderNew.user)
+              }
+            })
+        }
+      }
     }
+
+    window.onresize = () => handleWindowResize()
+    // if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+    //   navigate('/')
+    // }
     // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
     //   navigate(-1)
     // }
