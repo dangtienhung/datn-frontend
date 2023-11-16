@@ -22,6 +22,7 @@ export const SupportBot = ({ showDrawer }: SupportBotProps) => {
   return ReactDOM.createPortal(
     <div className='rounded-xl fixed bottom-4 shadow border border-gray-100 z-[10000] right-20 w-full max-w-lg h-full max-h-[80vh] flex flex-col bg-white'>
       <ChatHeader name={'Tư vấn khách hàng'} numberOfMessages={chatMessages.length} showDrawer={showDrawer} />
+
       <ChatContent messages={chatMessages} />
       <ChatInputBox sendANewMessage={sendANewMessage} />
     </div>,
