@@ -24,6 +24,7 @@ export const SupportBot = ({ showDrawer }: SupportBotProps) => {
       <ChatHeader name={'Tư vấn khách hàng'} numberOfMessages={chatMessages.length} showDrawer={showDrawer} />
 
       <ChatContent messages={chatMessages} />
+
       <ChatInputBox sendANewMessage={sendANewMessage} />
     </div>,
     bodyElement
