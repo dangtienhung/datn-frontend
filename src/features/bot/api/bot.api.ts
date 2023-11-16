@@ -2,7 +2,7 @@ import { API_BOT_CHAT } from '../../../configs'
 import http from '../../../api/instance'
 import { message } from 'antd'
 
-const apiBotChat = API_BOT_CHAT
+const apiBotChat = 'http://localhost:3333/'
 
 export const sendMessage = async (inputMessage: string, idUser?: string) => {
   const api =
