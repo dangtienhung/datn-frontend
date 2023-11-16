@@ -26,6 +26,7 @@ export const SupportBot = ({ showDrawer }: SupportBotProps) => {
       <ChatContent messages={chatMessages} />
 
       <ChatInputBox sendANewMessage={sendANewMessage} />
+
     </div>,
     bodyElement
   )
