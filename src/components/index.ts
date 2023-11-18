@@ -5,10 +5,13 @@ import ListProducts from './List-Products'
 import MyCart from './My-cart'
 import MyInfor from './My-Infor'
 import MyOrder from './My-order'
+import MyOrderDetail from './My-OrderDetail'
 import MyVoucher from './My-voucher'
 import SidebarCate from './Category'
 import SupporterBtn from './Supporter-Button'
-import MyOrderDetail from './My-OrderDetail'
+
+export * from './My-address'
+
 export {
   Input,
   Button,
