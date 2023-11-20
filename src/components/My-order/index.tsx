@@ -56,12 +56,18 @@ const MyOrder = () => {
       .unwrap()
       .then(() => {
         ClientSocket.cancelOrder(idOrder)
+        ClientSocket.sendNotification({
+          idUser: user._id!,
+          idOrder,
+          content: `Đơn hàng "${idOrder.toUpperCase()}" đã được hủy thành công`
+        })
+        ClientSocket.sendNotificationToAdmin(`Đơn hàng "${idOrder.toUpperCase()}" đã được hủy!`)
         toast.success('Hủy đơn hàng thành công')
       })
       .catch(() => {
         toast.error('Hủy đơn hàng thất bại.')
       })
-    setIsModalOpen(false)
+    handleCancel()
   }
 
   const handleCancel = () => {
@@ -127,7 +133,7 @@ const MyOrder = () => {
           </div>
         ) : (
           orderUser &&
-          orderUser?.reverse()?.map((order: any) => (
+          orderUser?.map((order: any) => (
             <div key={order._id} className={`order-content mb-20  shadow-md bg-[#fafafa]`}>
               <div className='status py-2'>
                 <span className='ml-2'>Trạng thái: </span>
@@ -229,6 +235,7 @@ const MyOrder = () => {
       <Modal
         title='Lý do hủy đơn hàng?'
         open={isModalOpen}
+        destroyOnClose
         onCancel={handleCancel}
         footer={[
           <ButtonAnt hidden={!reason} key='cancel' onClick={handleCancel}>

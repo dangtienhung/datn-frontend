@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaBell } from 'react-icons/fa'
-import { Tooltip, Popover } from 'antd'
+import { Tooltip, Popover, Empty } from 'antd'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { RootState } from '../../store/store'
 import { useSelector } from 'react-redux'
@@ -12,12 +12,15 @@ import { useForm } from 'react-hook-form'
 import { RoleSchema } from '../../validate/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import './Header.scss'
+import { ClientSocket } from '../../socket'
+import { useUpdateNotifitoReadByidMutation } from '../../api/notifications'
 
 const Header = () => {
   const dispatch = useAppDispatch()
   const queryConfig = useQueryConfig()
-
+  const [notification, setNotification] = useState<any[]>([])
   const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
+  const [updateNotification] = useUpdateNotifitoReadByidMutation()
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -25,6 +28,10 @@ const Header = () => {
     },
     resolver: yupResolver(RoleSchema)
   })
+
+  const handleUpdateNotification = (id: string) => {
+    updateNotification(id)
+  }
 
   const navigate = useNavigate()
 
@@ -47,6 +54,10 @@ const Header = () => {
       })
     )
   }, [dispatch, queryConfig._page, queryConfig.c, queryConfig.limit, queryConfig.searchName])
+
+  useEffect(() => {
+    ClientSocket.getUnreadNotificationsByidUser(setNotification, user._id!)
+  }, [])
 
   return (
     <div className='header flex items-center justify-between gap-2 px-4 py-2 select-none sticky top-0 w-full bg-white z-10'>
@@ -72,6 +83,7 @@ const Header = () => {
         <div className='info_notifi flex items-center gap-x-5'>
           <Tooltip title='Thông báo' arrow={false} zIndex={11}>
             <Popover
+              // onOpenChange={() => notification.length > 0 && setNotification([])}
               className='notification cursor-pointer'
               title='Thông báo'
               placement='bottomRight'
@@ -79,25 +91,45 @@ const Header = () => {
               getPopupContainer={(trigger: any) => trigger?.parentNode}
               content={
                 <>
-                  {[1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].map((_, index) => (
-                    <div key={index} className='py-2 px-2 group hover:bg-[#d3b673] rounded'>
-                      <a
-                        className='group-hover:!text-white'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href='https://www.aliyun.com'
+                  {notification.length > 0 ? (
+                    notification?.reverse()?.map((item, index) => (
+                      <div
+                        key={index}
+                        className='py-2 px-2 group hover:bg-[#d3b673] rounded flex items-center gap-x-2'
+                        title={item.content}
                       >
-                        Đơn hàng "ABCXYZ" của bạn đã được xác nhận
-                      </a>
-                    </div>
-                  ))}
+                        <span className='inline-block w-[10px] h-[10px] bg-[#d3b673] rounded-full group-hover:bg-white'></span>
+                        <a
+                          onClick={() => {
+                            handleUpdateNotification(item._id)
+                          }}
+                          className='group-hover:!text-white block'
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          href={`/account-layout/my-order/${item.idOrder}`}
+                        >
+                          {item.content}
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    <Empty
+                      className='flex items-center flex-col'
+                      image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
+                      imageStyle={{ height: 200 }}
+                      description={<span>Hiện tại bạn không có thông báo nào!</span>}
+                    />
+                  )}
                 </>
               }
             >
               <div className='relative'>
-                <span className='absolute left-2 -top-[6px] bg-red-600 text-white text-xs rounded-full w-max h-[15px] px-1 flex items-center justify-center'>
-                  <span>99+</span>
-                </span>
+                {notification.length > 0 && (
+                  <span className='absolute left-2 -top-[6px] bg-red-600 text-white text-xs rounded-full w-max h-[15px] px-1 flex items-center justify-center'>
+                    <span>{notification.length}</span>
+                  </span>
+                )}
+
                 <FaBell className='text-xl' />
               </div>
             </Popover>

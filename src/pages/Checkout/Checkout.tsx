@@ -174,7 +174,9 @@ const Checkout = () => {
             } else {
               dispatch(resetAllCart())
               console.log(res.order.orderNew)
-
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo và đang chờ xác nhận.`
+              )
               ClientSocket.createOrder(res.order.orderNew.user)
               // window.location.href = res.order.url
             }
