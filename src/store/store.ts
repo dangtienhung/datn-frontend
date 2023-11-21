@@ -21,6 +21,7 @@ import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
 import StripeApi from '../api/paymentstripe'
 import VnpayApi from '../api/paymentvnpay'
+import ApiNotifications from '../api/notifications'
 
 // import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
 
@@ -62,7 +63,8 @@ const middleware = [
   NewBlogsApi.middleware,
   StripeApi.middleware,
   addressApi.middleware,
-  VnpayApi.middleware
+  VnpayApi.middleware,
+  ApiNotifications.middleware
 ]
 
 export const store = configureStore({
@@ -83,7 +85,8 @@ export const store = configureStore({
     [StripeApi.reducerPath]: StripeApi.reducer,
     [NewBlogsApi.reducerPath]: NewBlogsApi.reducer,
     [addressApi.reducerPath]: addressApi.reducer,
-    [VnpayApi.reducerPath]: VnpayApi.reducer
+    [VnpayApi.reducerPath]: VnpayApi.reducer,
+    [ApiNotifications.reducerPath]: ApiNotifications.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

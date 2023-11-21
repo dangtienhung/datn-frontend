@@ -174,7 +174,11 @@ const Checkout = () => {
             } else {
               dispatch(resetAllCart())
               console.log(res.order.orderNew)
-
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                  res.order.orderNew.inforOrderShipping.name
+                }" và đang chờ xác nhận.`
+              )
               ClientSocket.createOrder(res.order.orderNew.user)
               // window.location.href = res.order.url
             }
@@ -310,7 +314,7 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán qua Ví vnPay</span>
                 <input
                   className='absolute opacity-0'
-                  defaultChecked
+                  // defaultChecked
                   type='radio'
                   value='vnpay'
                   {...register('paymentMethod')}
@@ -321,7 +325,7 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán qua Stripe</span>
                 <input
                   className='absolute opacity-0'
-                  defaultChecked
+                  // defaultChecked
                   type='radio'
                   value='stripe'
                   {...register('paymentMethod')}
