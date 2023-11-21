@@ -31,6 +31,10 @@ const Header = () => {
 
   const handleUpdateNotification = (id: string) => {
     updateNotification(id)
+      .unwrap()
+      .then(() => {
+        ClientSocket.getUnreadNotificationsByidUser(setNotification, user._id!)
+      })
   }
 
   const navigate = useNavigate()

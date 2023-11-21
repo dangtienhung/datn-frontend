@@ -24,6 +24,7 @@ interface Payload extends JwtPayload {
 const PaymentResult = () => {
   const [second, _] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [idOrder, setIdOrder] = useState('')
   const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
   const navigate = useNavigate()
   // const { state } = useLocation()
@@ -108,7 +109,13 @@ const PaymentResult = () => {
               return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
             } else {
               dispatch(resetAllCart())
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                  res.order.orderNew.inforOrderShipping.name
+                }" và đang chờ xác nhận.`
+              )
               ClientSocket.createOrder(res.order.orderNew.user)
+              setIdOrder(res.order.orderNew._id)
             }
           })
       }
@@ -130,7 +137,13 @@ const PaymentResult = () => {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
               } else {
                 dispatch(resetAllCart())
+                ClientSocket.sendNotificationToAdmin(
+                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                    res.order.orderNew.inforOrderShipping.name
+                  }" và đang chờ xác nhận.`
+                )
                 ClientSocket.createOrder(res.order.orderNew.user)
+                setIdOrder(res.order.orderNew._id)
               }
             })
         }
@@ -175,7 +188,7 @@ const PaymentResult = () => {
                       className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
                       type='primary'
                       key='console'
-                      onClick={() => navigate('/account-layout/my-order')}
+                      onClick={() => navigate(`/account-layout/my-order/${idOrder}`)}
                     >
                       Xem đơn hàng
                     </Button>
