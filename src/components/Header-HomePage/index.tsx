@@ -33,6 +33,7 @@ const HeaderHomePage = () => {
   useEffect(() => {
     fetchUser()
   }, [fetchUser])
+
   const menuRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const toggleMenu = () => {

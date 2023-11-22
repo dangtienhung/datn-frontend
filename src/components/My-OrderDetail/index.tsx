@@ -48,7 +48,7 @@ const MyOrderDetail = () => {
     <>
       <Loader />
       <div className='max-h-screen overflow-y-auto hidden-scroll-bar relative'>
-        <div className='py-5 flex items-center justify-between sticky top-0 bg-white z-10'>
+        <div className='py-5 flex items-center justify-between sticky top-0 bg-white z-[8]'>
           <div className='flex items-center gap-x-2 cursor-pointer select-none' onClick={() => navigate(-1)}>
             <AiOutlineArrowLeft className='text-lg' />
             <span className='uppercase'>Trở lại</span>

@@ -27,10 +27,31 @@ export const ClientSocket = {
   getOrderUser: (setOrderUser: React.Dispatch<any>, options: Options) => {
     socket.emit('client:requestOrderUser', options)
     socket.on('server:loadOrderUser', (data) => {
-      setOrderUser(data.filter((item: any) => item.status === options.status))
+      setOrderUser(data.filter((item: any) => item.status === options.status)?.reverse())
     })
     return () => {
       socket.disconnect()
     }
+  },
+  sendNotification: ({ idUser, idOrder, content }: { idUser: string; idOrder: string; content: string }) => {
+    socket.emit('client:sendNotification', { idOrder, content, idUser, to: 'user' })
+  },
+  sendNotificationToAdmin: (content: string) => {
+    socket.emit('client:sendNotificationToAdmin', { content, to: 'admin' })
+  },
+  getNotification: (setNotification: React.Dispatch<any>, notification: any[]) => {
+    // socket.emit('client:requestNotification')
+    socket.on('server:sendNotification', (data) => {
+      // console.log(data)
+      setNotification([data, ...notification])
+    })
+  },
+  getUnreadNotificationsByidUser: (setNotification: React.Dispatch<any>, idUser: string) => {
+    socket.emit('client:requestUnreadNotificationByidUser', idUser)
+    socket.on('server:loadUnreadNotificationByidUser', ({ data }) => {
+      // console.log(data)
+      // return
+      data && data.length > 0 ? setNotification([...data]) : setNotification([])
+    })
   }
 }
