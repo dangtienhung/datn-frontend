@@ -4,6 +4,7 @@ import { IVoucher } from '../../interfaces/voucher.type'
 import style from './Voucher.module.scss'
 import { BiDetail } from 'react-icons/bi'
 import { Content } from './content'
+import Loading from '../Loading'
 const MyVoucher = () => {
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(0)
   const currentDate = new Date()
@@ -12,9 +13,9 @@ const MyVoucher = () => {
     <div>
       <h1 className='dark:text-white sm:text-2xl text-xl my-[10px] font-semibold text-gray-900'>Kho Mã Giảm Giá</h1>
       {isLoading ? (
-        // <Loading />
-        <Skeleton />
+        <Loading />
       ) : (
+        // <Skeleton />
         <div className={`${style.allVoucher} grid lg:grid-cols-2 lg:gap-3 sm:grid-cols-1 sm:gap-3`}>
           {vouchers &&
             vouchers?.data?.docs?.map((voucher: IVoucher) => {
@@ -35,7 +36,7 @@ const MyVoucher = () => {
                         <div className='grid grid-cols-[3fr,1fr]'>
                           <div className='p-3 text-white'>
                             <h2>Giảm {voucher?.sale / 1000}K</h2>
-                            <p>Cho đơn hàng từ 2B $</p>
+                            <p>Cho đơn hàng từ 0 đồng</p>
                           </div>
                           <div className='p-3 text-[#fff] text-right'>
                             <Popover
@@ -50,7 +51,7 @@ const MyVoucher = () => {
                             </Popover>
                           </div>
                         </div>
-                        <p className='px-4 pt-5 text-[13px] text-[#fff]'>HSD: {formattedEndDate}</p>
+                        <p className='px-4 pt-3 text-[13px] text-[#fff]'>HSD: {formattedEndDate}</p>
                       </div>
                     </div>
                   )
