@@ -224,7 +224,6 @@ const PaymentResult = () => {
           orderAPIFn(orderVnpay)
             .unwrap()
             .then((res) => {
-              console.log(res)
               if (res.error) {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
               } else {
@@ -239,6 +238,8 @@ const PaymentResult = () => {
                 localStorage.removeItem('storeNote')
               }
             })
+        } else {
+          localStorage.removeItem('storeNote')
         }
       }
     }
@@ -247,9 +248,13 @@ const PaymentResult = () => {
 
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode')!)
-      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+      if ((decodedToken.exp && decodedToken.exp < date.getTime() / 1000) || !localStorage.getItem('storeNote')) {
         navigate('/')
       } else {
+        if (JSON.parse(localStorage.getItem('storeNote') as string).paymentMethodId == 'cod') {
+          dispatch(resetAllCart())
+          localStorage.removeItem('storeNote')
+        }
         if (data) {
           orderAPIFn(data.invoice)
             .unwrap()
@@ -265,6 +270,7 @@ const PaymentResult = () => {
                   }" và đang chờ xác nhận.`
                 )
                 ClientSocket.createOrder(res.order.orderNew.user)
+                localStorage.removeItem('storeNote')
                 setIdOrder(res.order.orderNew._id)
               }
             })

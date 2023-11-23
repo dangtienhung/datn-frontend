@@ -165,24 +165,29 @@ const Checkout = () => {
 
       const storeNote = {
         noteOrder: dataForm.noteOrder,
-        noteShipping: dataForm.inforOrderShipping.noteShipping
+        noteShipping: dataForm.inforOrderShipping.noteShipping,
+        paymentMethodId: dataForm.paymentMethodId
       }
+      localStorage.setItem('storeNote', JSON.stringify(storeNote))
 
       if (data.paymentMethod == 'cod') {
+        console.log('test')
+
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
             if (res.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
-              dispatch(resetAllCart())
-              console.log(res.order.orderNew)
+              // dispatch(resetAllCart())
+              // console.log(res.order.orderNew)
               ClientSocket.sendNotificationToAdmin(
                 `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                   res.order.orderNew.inforOrderShipping.name
                 }" và đang chờ xác nhận.`
               )
               ClientSocket.createOrder(res.order.orderNew.user)
+              window.location.href = res.order.url
             }
           })
       } else if (data.paymentMethod == 'stripe') {
@@ -197,7 +202,6 @@ const Checkout = () => {
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
-            localStorage.setItem('storeNote', JSON.stringify(storeNote))
             window.location.href = url
           })
           .catch((err) => {
