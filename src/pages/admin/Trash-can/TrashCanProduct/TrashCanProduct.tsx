@@ -92,7 +92,7 @@ const TrashCanProduct = () => {
       is_active: item.is_active,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt
-    }))
+    })) as DataType[]
   }
 
   const [searchText, setSearchText] = useState('')

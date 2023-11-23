@@ -1,4 +1,4 @@
-import { Skeleton, Popover } from 'antd'
+import { Popover } from 'antd'
 import { useGetAllVouchersQuery } from '../../api/voucher'
 import { IVoucher } from '../../interfaces/voucher.type'
 import style from './Voucher.module.scss'
@@ -42,7 +42,7 @@ const MyVoucher = () => {
                             <Popover
                               placement='bottom'
                               content={() => (
-                                <Content code={voucher.code} endDate={formattedEndDate} title={voucher.title} />
+                                <Content code={voucher.code} endDate={formattedEndDate} title={voucher.title ?? ''} />
                               )}
                             >
                               <button>

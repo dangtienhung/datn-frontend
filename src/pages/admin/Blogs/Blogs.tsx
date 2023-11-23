@@ -347,7 +347,8 @@ const EditBlogsModal = function ({ dataBlogs11 }: IPropBlog) {
         _id: dataBlogs11._id,
         name: data.name,
         description: data.description,
-        images: dataBlogs11.images
+        images: dataBlogs11.images,
+        category: undefined
       })
       if (response) {
         toast.success('Cập nhật blog thành công')

@@ -1,4 +1,4 @@
-import { API_BOT_CHAT } from '../../../configs'
+// import { API_BOT_CHAT } from '../../../configs'
 import http from '../../../api/instance'
 import { message } from 'antd'
 

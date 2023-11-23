@@ -1,10 +1,8 @@
 import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
-import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
-import { DrawerAddProduct } from '../../../components'
-import { FaPlus } from 'react-icons/fa'
-import ProductsTable from '../../../components/CrudProduct/listProduct'
 import { useState } from 'react'
+import { FaPlus } from 'react-icons/fa'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 export default function ProductsList() {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false)
@@ -28,7 +26,7 @@ export default function ProductsList() {
                 </Button>
               </Tooltip>
 
-              <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
+              {/* <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} /> */}
               {/* {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''} */}
             </div>
           </div>
@@ -37,9 +35,7 @@ export default function ProductsList() {
       <div className='flex flex-col'>
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
-            <div className='overflow-hidden shadow'>
-              <ProductsTable />
-            </div>
+            <div className='overflow-hidden shadow'>{/* <ProductsTable /> */}</div>
           </div>
         </div>
       </div>
