@@ -109,9 +109,20 @@ const Checkout = () => {
     [dataCartCheckout.items]
   )
 
+  const totalQuantity = useMemo(() => {
+    const all = getData('quantity') as number[]
+
+    const a = all.reduce((acc, curent) => {
+      return acc + curent
+    }, 0)
+    return a
+  }, [getData])
+
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return pickGapStore.value > 30000 || pickGapStore.value <= 2000 ? 0 : (pickGapStore.value - 2000) * 2
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
+        ? 0
+        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
     }
     return 0
   }, [gapStore, pickGapStore])
@@ -126,15 +137,6 @@ const Checkout = () => {
       const a = acc + curent
       return a
     }, 0)
-  }, [getData])
-
-  const totalQuantity = useMemo(() => {
-    const all = getData('quantity') as number[]
-
-    const a = all.reduce((acc, curent) => {
-      return acc + curent
-    }, 0)
-    return a
   }, [getData])
 
   // tong cong tien
@@ -161,11 +163,12 @@ const Checkout = () => {
         }
       }
 
-      console.log(dataForm)
+      const storeNote = {
+        noteOrder: dataForm.noteOrder,
+        noteShipping: dataForm.inforOrderShipping.noteShipping
+      }
 
       if (data.paymentMethod == 'cod') {
-        console.log(dataForm)
-
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
@@ -180,18 +183,25 @@ const Checkout = () => {
                 }" và đang chờ xác nhận.`
               )
               ClientSocket.createOrder(res.order.orderNew.user)
-              // window.location.href = res.order.url
             }
           })
       } else if (data.paymentMethod == 'stripe') {
-        stripePayment(dataForm).then(({ data: { url } }: any) => {
-          window.location.href = url
-        })
+        stripePayment(dataForm)
+          .then(({ data: { url } }: any) => {
+            window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
+          })
       } else if (data.paymentMethod == 'vnpay') {
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
+            localStorage.setItem('storeNote', JSON.stringify(storeNote))
             window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
           })
       }
 
@@ -377,6 +387,10 @@ const Checkout = () => {
                   <span>Tổng: </span>
                   <span className='font-bold w-[80px] text-right'>{formatCurrency(totalMoneyCheckout)}</span>
                 </div>
+              </div>
+              <div className='flex justify-end py-1 text-sm'>
+                <span>Quãng đường:</span>
+                <span className='w-[80px] text-right'>{pickGapStore.text ? pickGapStore.text : '0 Km'}</span>
               </div>
               <div className='flex justify-end py-1 text-sm'>
                 <span>Phí vận chuyển: </span>

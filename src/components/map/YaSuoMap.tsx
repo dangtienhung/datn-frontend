@@ -17,14 +17,6 @@ const List: ListStore[] = [
       lat: 21.038338774000067,
       lng: 105.74712340900004
     }
-  },
-  {
-    highName: 'Xã Hồng Hà',
-    name: 'Xã Hồng Hà, Đan Phượng, Hà Nội',
-    geoLocation: {
-      lat: 21.13130478200003,
-      lng: 105.68977495700005
-    }
   }
 ]
 
@@ -55,7 +47,6 @@ getLocation()
 const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-  //   const [gapStore, setGapStore] = useState([])
 
   const getDistance = async () => {
     setTimeout(async () => {
@@ -66,8 +57,8 @@ const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
         .get(
           `https://rsapi.goong.io/DistanceMatrix?origins=${StorageDistance?.lat ? StorageDistance.lat : lnglat.lat},${
             StorageDistance?.lng ? StorageDistance.lng : lnglat.lng
-          }&destinations=${List[0].geoLocation.lat},${List[0].geoLocation.lng}%7C${List[1].geoLocation.lat},${
-            List[1].geoLocation.lng
+          }&destinations=${List[0].geoLocation.lat},${
+            List[0].geoLocation.lng
           }&vehicle=car&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
           { signal: controller.signal }
         )

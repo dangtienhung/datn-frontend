@@ -13,7 +13,7 @@ import formatDate from '../../utils/formatDate'
 const MyOrderDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: orderData, isError } = useGetOrderByidQuery(id!)
+  const { data: orderData, isError } = useGetOrderByidQuery(id as string)
 
   const totalPrice = orderData?.order?.items.reduce(
     (accumulator, item) =>
