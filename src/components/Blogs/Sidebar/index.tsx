@@ -4,7 +4,6 @@ import { useGetAllBlogCategoryQuery } from '../../../api/NewBlogs'
 
 const SiderbarBlog = () => {
   const { data: blogCategories } = useGetAllBlogCategoryQuery()
-  console.log(blogCategories)
 
   return (
     <div className='sm:w-full lg:w-full max-w-[300px]'>

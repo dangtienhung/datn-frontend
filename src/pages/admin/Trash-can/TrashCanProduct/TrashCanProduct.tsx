@@ -33,7 +33,6 @@ const TrashCanProduct = () => {
   const [deleteRealProductFN, deleteRealProductRes] = useDeleteRealProductMutation()
   const [restoreProductFN, restoreProductRes] = useRestoreProductMutation()
 
-  console.log(productData, '::')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<IProduct[]>(productData?.docs ? productData.docs : [])
   const [loading, setLoading] = useState(false)
@@ -45,7 +44,6 @@ const TrashCanProduct = () => {
     }
   })
 
-  console.log(productData)
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
@@ -68,7 +66,6 @@ const TrashCanProduct = () => {
     }, 1000)
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -264,18 +261,13 @@ const TrashCanProduct = () => {
       )
     }
   ]
-  // console.log(productData);
 
   const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
   const handleProductAll = (type: string) => {
-    console.log('a', selectedRowKeys)
-
     selectedRowKeys.length > 0 &&
       selectedRowKeys.forEach((item) => {
-        console.log('1')
-        console.log(item)
         if (type == 'deleteRealProduct') {
           deleteRealProductFN(item as string)
         }

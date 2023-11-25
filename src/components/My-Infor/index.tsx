@@ -50,8 +50,6 @@ const MyInfor = () => {
   }
 
   const handleDateChange = (selectedDates: Date[]) => {
-    console.log(selectedDates)
-
     const selected = selectedDates[0] || null
     setBirthday(selected)
   }

@@ -91,7 +91,6 @@ type CategoryTableProps = {
 }
 
 const CategoryTable = ({ dataCate, error, isLoading }: CategoryTableProps) => {
-  console.log(dataCate)
   const dispatch = useAppDispatch()
   const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
   const [acceptChecked, setAcceptChecked] = useState(false)

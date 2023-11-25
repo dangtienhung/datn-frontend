@@ -12,7 +12,7 @@ type FieldType = {
 const ChangePassword = () => {
   const [updatePasswordFn, updatePasswordRes] = useUpdatePasswordMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  console.log(user)
+
   const [avatar, _] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
     file: undefined,
     base64: ''

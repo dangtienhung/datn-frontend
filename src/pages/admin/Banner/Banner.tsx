@@ -169,16 +169,11 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files
 
-    // console.log(event.target.files[0])
-    // console.log('file', file)
-
     const formData = new FormData()
     Array.prototype.forEach.call(fileList, (file) => {
       formData.append('images', file)
       uploadBanner(formData)
         .then(({ data }: any) => {
-          // console.log(data)
-
           const dataBanner = data.urls.map((item: IBanner) => {
             return {
               url: item.url,
@@ -203,7 +198,6 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
 
           setBanner([] as IBanner[])
           toast.success('Thêm thành công')
-          console.log(banner)
         })
         .catch(() => {
           toast.error('Thêm thất bại')
@@ -221,9 +215,6 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
         console.log(err)
       })
   }
-
-  // console.log('banner', banner)
-  // console.log('bannerPreview', banner)
 
   return (
     <>

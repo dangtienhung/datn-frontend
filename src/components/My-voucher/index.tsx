@@ -24,7 +24,9 @@ const MyVoucher = () => {
                 const formattedEndDate = `${endDate?.getDate()}/${
                   endDate && endDate?.getMonth() + 1
                 }/${endDate?.getFullYear()}`
-                console.log('currentDate', currentDate, '/endDate', endDate)
+
+                // console.log('currentDate', currentDate, '/endDate', endDate)
+
                 if (endDate > currentDate) {
                   return (
                     <div key={voucher._id} className='grid grid-cols-[1fr,2fr]'>

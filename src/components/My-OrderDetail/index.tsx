@@ -20,7 +20,6 @@ const MyOrderDetail = () => {
       accumulator + item.price + item?.toppings.reduce((acc: number, topping: ITopping) => acc + topping.price, 0),
     0
   )
-  console.log(totalPrice)
 
   const items = [
     {

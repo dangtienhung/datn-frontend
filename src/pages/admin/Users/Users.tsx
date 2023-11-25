@@ -255,8 +255,6 @@ const AddUserModal: FC = function () {
     resolver: yupResolver(AddUserSchema)
   })
   const onHandleSubmit = (data: AddUserForm) => {
-    console.log(data)
-    // return
     if (data) {
       addUser({ ...data, avatar: urlAvatar.url })
         .unwrap()

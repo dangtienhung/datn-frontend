@@ -21,7 +21,6 @@ import Loading from '../../../components/Loading'
 
 const Blogs = () => {
   const { data: dataBlogs, error, isLoading } = useGetAllBlogsQuery()
-  console.log(dataBlogs?.docs)
 
   const [data, setData] = useState<(string | undefined)[][]>([])
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -31,7 +30,6 @@ const Blogs = () => {
       setData([...rows])
     }
   }, [dataBlogs])
-  // console.log(dataBlogs?.docs)
 
   return (
     <>
@@ -96,7 +94,6 @@ type BlogsTableProps = {
 }
 
 const BlogsTable = ({ dataBlogs, error, isLoading }: BlogsTableProps) => {
-  //   console.log(dataBlogs)
   //   const dispatch = useAppDispatch()
   const [deleteBlog] = useDeleteBlogsMutation()
   const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
@@ -136,7 +133,6 @@ const BlogsTable = ({ dataBlogs, error, isLoading }: BlogsTableProps) => {
   }
 
   const handleDeleteBlog = (_id: string) => {
-    console.log(error)
     if (!error || ('undefined' && _id)) {
       Swal.fire({
         icon: 'info',
@@ -255,7 +251,7 @@ const AddBlogsModal = function ({ error }: { error: string }) {
   })
   const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files
-    console.log(file)
+    // console.log(file)
   }
 
   return (
@@ -365,7 +361,6 @@ const EditBlogsModal = function ({ dataBlogs11 }: IPropBlog) {
   useEffect(() => {
     setValue('name', dataBlogs11.name)
   }, [dataBlogs11.name, setValue])
-  // console.log(dataBlogs11.name)
 
   return (
     <>

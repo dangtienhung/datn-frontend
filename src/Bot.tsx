@@ -13,7 +13,6 @@ const Bot = () => {
     try {
       const response = await fetch(`http://localhost:3333/ask?query=${inputMessage}`)
       const data = await response.json()
-      console.log(data)
       setMessages((prevMessages) => [...prevMessages, { user: inputMessage, bot: data.answer }])
       setInputMessage('')
     } catch (error) {

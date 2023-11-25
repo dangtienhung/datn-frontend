@@ -84,8 +84,6 @@ const Checkout = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
-            console.log(item)
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
@@ -170,8 +168,6 @@ const Checkout = () => {
       localStorage.setItem('storeNote', JSON.stringify(storeNote))
 
       if (data.paymentMethod == 'cod') {
-        console.log('test')
-
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
@@ -179,7 +175,7 @@ const Checkout = () => {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
               // dispatch(resetAllCart())
-              // console.log(res.order.orderNew)
+
               ClientSocket.sendNotificationToAdmin(
                 `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                   res.order.orderNew.inforOrderShipping.name

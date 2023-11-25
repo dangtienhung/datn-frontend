@@ -91,7 +91,6 @@ const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
         { signal: controller.signal }
       )
       .then(({ data: { results } }) => {
-        console.log(results)
         ;(document.querySelector<HTMLInputElement>('.mapboxgl-ctrl-geocoder--input')!.value =
           results[0].formatted_address),
           controller.abort()

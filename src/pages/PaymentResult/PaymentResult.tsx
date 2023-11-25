@@ -47,8 +47,6 @@ const PaymentResult = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
-            console.log(item)
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
@@ -259,7 +257,6 @@ const PaymentResult = () => {
           orderAPIFn(data.invoice)
             .unwrap()
             .then((res) => {
-              console.log(res)
               if (res.error) {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
               } else {

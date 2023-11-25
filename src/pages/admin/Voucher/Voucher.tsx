@@ -39,7 +39,7 @@ const Voucher = () => {
       item.createdAt,
       item.updatedAt
     ])
-    console.log('🚀 ~ file: Voucher.tsx:45 ~ useEffect ~ rows:', rows)
+    // console.log('🚀 ~ file: Voucher.tsx:45 ~ useEffect ~ rows:', rows)
   }, [vouchers])
   return (
     <>

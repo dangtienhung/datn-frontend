@@ -9,7 +9,6 @@ const ForgotPassword = () => {
   const [forgotPasswordFN, forgotPasswordRes] = useForgotPasswordMutation()
   const handleSubmitForm = async (data: { email: string }) => {
     try {
-      console.log(data)
       data &&
         forgotPasswordFN(data).then(() => {
           toast.success('Kiểm tra email của bạn')
