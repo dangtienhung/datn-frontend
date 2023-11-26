@@ -25,6 +25,7 @@ import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
+import { IUserAddress } from '../../interfaces'
 
 //
 const Checkout = () => {
@@ -35,7 +36,7 @@ const Checkout = () => {
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   // const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
-  const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
+
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
@@ -52,6 +53,7 @@ const Checkout = () => {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
     setValue
   } = useForm({
     resolver: yupResolver(UserCheckoutSchema)
@@ -63,19 +65,24 @@ const Checkout = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setValue('shippingLocation', address ?? '')
-  }, [address, setValue])
-  useEffect(() => {
     dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
-      dataInfoUser.user.address && setValue('shippingLocation', dataInfoUser.user.address)
+
+      dataInfoUser.user.address?.length &&
+        (dataInfoUser.user.address as IUserAddress[])?.map((item) => {
+          if (item.default) {
+            setValue('shippingLocation', item.address)
+            setValue('phone', item.phone)
+            return
+          }
+          return
+        })
     }
-    // YaSuoMap();
-  }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue])
+  }, [dataInfoUser, setValue])
 
   const getData = useCallback(
     (getData: string) => {
@@ -148,7 +155,7 @@ const Checkout = () => {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
-        total: totalAllMoneyCheckOut,
+        total: moneyPromotion >= totalAllMoneyCheckOut ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         paymentMethodId: data.paymentMethod,
@@ -298,7 +305,12 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} setPickGapStore={setPickGapStore} />
+              <YaSuoMap
+                setValue={setValue}
+                getValues={getValues}
+                setGapStore={setGapStore}
+                setPickGapStore={setPickGapStore}
+              />
               <div id='map'></div>
             </div>
           </div>

@@ -1,20 +1,21 @@
-import { RootState } from '../../store/store'
-import { useAppSelector } from '../../store/hooks'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Box } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useEffect, useState } from 'react'
 import Flatpickr from 'react-flatpickr'
 import { useForm } from 'react-hook-form'
-import { InforForm, InforFormSchema } from '../../validate/Form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useUpdateInforMutation } from '../../api/Auth'
 import { toast } from 'react-toastify'
-import convertToBase64 from '../../utils/convertBase64'
+import { useUpdateInforMutation } from '../../api/Auth'
 import { useUpLoadAvartaUserMutation } from '../../api/User'
-import CircularProgress from '@mui/material/CircularProgress'
-import { Box } from '@mui/material'
+import { useAppSelector } from '../../store/hooks'
+import { RootState } from '../../store/store'
+import convertToBase64 from '../../utils/convertBase64'
+import { InforForm, InforFormSchema } from '../../validate/Form'
+import { IUserAddress } from '../../interfaces'
 
 const MyInfor = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  const [birthday, setBirthday] = useState<Date | null>(user.birthday!)
+  const [birthday, setBirthday] = useState<Date | null>(user.birthday ?? null)
   const [errDate, setErrDate] = useState('')
   const [updateInfor, { isLoading: isUpdateInfor }] = useUpdateInforMutation()
   const [avatar, setAvatar] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
@@ -22,10 +23,12 @@ const MyInfor = () => {
     base64: ''
   })
   const [uploadAvatar, { isLoading: isUpdateAvatar }] = useUpLoadAvartaUserMutation()
+
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<InforForm>({
     mode: 'onSubmit',
     resolver: yupResolver(InforFormSchema),
@@ -34,9 +37,19 @@ const MyInfor = () => {
       username: user.username,
       account: user.account,
       gender: user.gender,
-      address: user.address
+      address: ''
     }
   })
+  useEffect(() => {
+    if (user) {
+      user.address?.length &&
+        (user.address as IUserAddress[])?.map((item: IUserAddress) => {
+          if (item.default) {
+            setValue('address', item.address)
+          }
+        })
+    }
+  }, [setValue, user])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -66,9 +79,9 @@ const MyInfor = () => {
     return true // Date is valid
   }
 
-  useEffect(() => {
-    // Flatpickr()
-  })
+  // useEffect(() => {
+  //   // Flatpickr()
+  // })
 
   const ChangeInfor = (dataUpdate: any) => {
     updateInfor(dataUpdate).then(({ data }: any) => {
@@ -85,8 +98,6 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
-    // console.log(dateUpdate)
-
     if (!errDate) {
       if (avatar.file) {
         const form = new FormData()
@@ -100,6 +111,7 @@ const MyInfor = () => {
     }
   }
 
+  console.log(user, ':adress user L')
   return (
     <div className='my-account grow '>
       <div className='account flex flex-col'>
@@ -193,7 +205,7 @@ const MyInfor = () => {
                     <label className='block py-2 text-[#959393]'>Sinh nhật</label>
                     <Flatpickr
                       className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
-                      value={birthday!}
+                      value={birthday ?? ''}
                       onChange={handleDateChange}
                       onClose={(_, selectedDates) => {
                         const isValid = validateDate(selectedDates)
