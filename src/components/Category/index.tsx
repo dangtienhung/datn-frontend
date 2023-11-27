@@ -22,6 +22,7 @@ interface SidebarCateProps {
 const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
+  const [selectedCategory, setSelectedCategory] = useState('')
 
   const { products } = useAppSelector((state) => state.persistedReducer.products)
 
@@ -58,8 +59,13 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
             // }}
           >
             <div
-              onClick={() => dispatch(getIdCate(''))}
-              className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
+              onClick={() => {
+                dispatch(getIdCate(''))
+                setSelectedCategory('')
+              }}
+              className={`cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none ${
+                selectedCategory == '' ? 'bg-gray-200' : ''
+              }`}
             >
               <div className='cat-name capitalize'>Tất cả sản phẩm</div>
             </div>
@@ -83,8 +89,11 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
                   onClick={() => {
                     dispatch(getIdCate({ idCate: category._id, nameCate: category.name }))
                     dispatch(savePage(1))
+                    setSelectedCategory(category._id)
                   }}
-                  className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
+                  className={`cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent  border-b-[#f1f1f1] py-[8px] last:border-none ${
+                    selectedCategory === category._id ? 'bg-gray-200' : ''
+                  }`}
                 >
                   <div className='cat-name capitalize'>{category.name}</div>
                   <div className='cat-amount text-[#8a733f]'>

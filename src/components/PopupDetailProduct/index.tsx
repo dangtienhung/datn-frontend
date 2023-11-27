@@ -110,8 +110,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     }
   }
   if (!product) return null
-  console.log('🚀 ~ file: index.tsx:113 ~ PopupDetailProduct ~ product:', product)
-
+ 
   return (
     <div
       className={`transition-opacity ease-in-out duration-[400ms] z-[11] ${

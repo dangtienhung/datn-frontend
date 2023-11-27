@@ -1,9 +1,9 @@
-import { AiFillCreditCard, AiFillHome, AiOutlineUser } from 'react-icons/ai'
+import { AiFillCreditCard, AiOutlineUser } from 'react-icons/ai'
 
-import { GrLogout } from 'react-icons/gr'
-import { Link } from 'react-router-dom'
-import { MdShoppingCart } from 'react-icons/md'
 import type { MenuProps } from 'antd'
+import { GrLogout } from 'react-icons/gr'
+import { MdShoppingCart } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 
 type MenuItem = Required<MenuProps>['items'][number]
 

@@ -4,7 +4,6 @@ import { useGetAllBlogCategoryQuery } from '../../../api/NewBlogs'
 
 const SiderbarBlog = () => {
   const { data: blogCategories } = useGetAllBlogCategoryQuery()
-  console.log(blogCategories)
 
   return (
     <div className='sm:w-full lg:w-full max-w-[300px]'>
@@ -27,9 +26,9 @@ const SiderbarBlog = () => {
           </li> */}
         </ul>
       </div>
-      <div className={`${styles.category_menu_title} hidden sm:hidden lg:inline-block text-[28px] `}>
+      {/* <div className={`${styles.category_menu_title} hidden sm:hidden lg:inline-block text-[28px] `}>
         <span>Từ khóa</span>
-      </div>
+      </div> */}
     </div>
   )
 }
