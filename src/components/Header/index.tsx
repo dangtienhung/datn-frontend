@@ -96,24 +96,24 @@ const Header = () => {
               content={
                 <>
                   {notification.length > 0 ? (
-                    notification?.reverse()?.map((item, index) => (
+                    notification?.map((item, index) => (
                       <div
                         key={index}
                         className='py-2 px-2 group hover:bg-[#d3b673] rounded flex items-center gap-x-2'
                         title={item.content}
                       >
                         <span className='inline-block w-[10px] h-[10px] bg-[#d3b673] rounded-full group-hover:bg-white'></span>
-                        <a
+                        <Link
                           onClick={() => {
                             handleUpdateNotification(item._id)
                           }}
                           className='group-hover:!text-white block'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          href={`/account-layout/my-order/${item.idOrder}`}
+                          // target='_blank'
+                          // rel='noopener noreferrer'
+                          to={`/account-layout/my-order/${item.idOrder}`}
                         >
                           {item.content}
-                        </a>
+                        </Link>
                       </div>
                     ))
                   ) : (

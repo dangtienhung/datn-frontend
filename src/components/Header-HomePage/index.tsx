@@ -176,7 +176,7 @@ const HeaderHomePage = () => {
             </div>
           ) : (
             <Link
-              to='signin'
+              to='/signin'
               className='hidden  py-2 uppercase text-sm rounded px-4 md:flex items-center justify-center bg-[#d3b673] text-white hover:bg-white hover:text-[#d3b673] transition-all'
             >
               Đăng nhập

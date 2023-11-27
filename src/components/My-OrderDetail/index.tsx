@@ -13,14 +13,13 @@ import formatDate from '../../utils/formatDate'
 const MyOrderDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: orderData, isError } = useGetOrderByidQuery(id!)
+  const { data: orderData, isError } = useGetOrderByidQuery(id as string)
 
   const totalPrice = orderData?.order?.items.reduce(
     (accumulator, item) =>
-      accumulator + item.price + item?.toppings.reduce((acc: any, topping: ITopping) => acc + topping.price, 0),
+      accumulator + item.price + item?.toppings.reduce((acc: number, topping: ITopping) => acc + topping.price, 0),
     0
   )
-  console.log(totalPrice)
 
   const items = [
     {
@@ -51,7 +50,9 @@ const MyOrderDetail = () => {
         <div className='py-5 flex items-center justify-between sticky top-0 bg-white z-[8]'>
           <div className='flex items-center gap-x-2 cursor-pointer select-none' onClick={() => navigate(-1)}>
             <AiOutlineArrowLeft className='text-lg' />
-            <span className='uppercase'>Trở lại</span>
+            <span className='uppercase' onClick={() => navigate(-1)}>
+              Trở lại
+            </span>
           </div>
           <div className='uppercase flex items-center gap-x-3 text-sm'>
             <span>Mã đơn hàng: {orderData?.order?._id}</span>
@@ -94,7 +95,7 @@ const MyOrderDetail = () => {
                 </span>
               )}
               <span className='text-[12px] text-[#0000008a]'>
-                Thời gian đặt hàng: {formatDate(orderData?.order?.createdAt!)}
+                Thời gian đặt hàng: {orderData?.order?.createdAt && formatDate(orderData?.order?.createdAt)}
               </span>
             </div>
           </div>
@@ -175,7 +176,7 @@ const MyOrderDetail = () => {
             <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
               <div className='text-[12px] pr-2'>Phí vận chuyển</div>
               <div className='w-[200px] text-[#866312] border-l border-l-[#ccc]'>
-                {formatCurrency(orderData?.order?.priceShipping!)}
+                {orderData?.order?.priceShipping && formatCurrency(orderData?.order?.priceShipping)}
               </div>
             </div>
             {/* <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
@@ -185,7 +186,7 @@ const MyOrderDetail = () => {
             <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
               <div className='text-[12px] pr-2'>Thành tiền</div>
               <div className='w-[200px] text-2xl text-[#866312] border-l border-l-[#ccc]'>
-                {formatCurrency(orderData?.order?.total!)}
+                {orderData?.order?.total && formatCurrency(orderData?.order?.total)}
               </div>
             </div>
           </div>

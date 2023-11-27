@@ -18,7 +18,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const product = action.payload
-      console.log('🚀 ~ file: cart.slice.ts:21 ~ product:', product)
+
       // /* check xem đã có sản phẩm nào tồn tại bên trong giỏ hàng chưa */
       const products = [...state.items]
       const productIndex = products.findIndex((item) => item.name === product.name)
@@ -68,10 +68,8 @@ const cartSlice = createSlice({
             /* kiểm tra xem topping có trùng nhau hay không */
             /* nếu mà có trùng nhau hết thì tăng số lượng lên không thì tạo mới sản phẩn */
             for (let i = 0; i < state.items[productIndex].items.length; i++) {
-              // console.log(state.items[])
               const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
               if (isEqual === true) {
-                // console.log(3.1)
                 state.items[productIndex].items[i].quantity += product.quantity
                 state.items[productIndex].items[i].total += product.total
                 return
@@ -80,7 +78,7 @@ const cartSlice = createSlice({
             // TH2  topping không chùng nhau=> thêm mới
 
             /* nếu mà không có topping nào trùng nhau thì sẽ thêm sản phẩm mới */
-            // console.log(3.2)
+
             const newProduct = {
               image: product.image,
               price: product.price,

@@ -110,7 +110,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     }
   }
   if (!product) return null
-  console.log('🚀 ~ file: index.tsx:113 ~ PopupDetailProduct ~ product:', product)
 
   return (
     <div

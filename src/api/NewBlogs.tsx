@@ -25,7 +25,7 @@ const NewBlogsApi = createApi({
     }),
 
     addBlogs: builder.mutation<void, IBlogs>({
-      query: (size: any) => ({
+      query: (size) => ({
         url: '/api/create-newsBlog',
         method: 'POST',
         body: size

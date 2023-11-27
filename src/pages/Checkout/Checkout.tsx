@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Input } from '../../components'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppSelector } from '../../store/hooks'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { message } from 'antd'
@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
+import { useStripePaymentMutation } from '../../api/paymentstripe'
+import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import CheckoutItem from '../../components/Checkout-Item'
 import ModalListVouchers from '../../components/ModalListVouchers'
 import YaSuoMap from '../../components/map/YaSuoMap'
@@ -17,15 +19,13 @@ import YasuoGap from '../../components/map/YasuoGap'
 import ListStore from '../../interfaces/Map.type'
 import { IVoucher } from '../../interfaces/voucher.type'
 import { ClientSocket } from '../../socket'
-import { useStripePaymentMutation } from '../../api/paymentstripe'
+import { useCreateOrderMutation } from '../../store/slices/order'
 import { arrTotal } from '../../store/slices/types/cart.type'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
-import { useCreateOrderMutation } from '../../store/slices/order'
-import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
-import { resetAllCart } from '../../store'
+import { IUserAddress } from '../../interfaces'
 
 //
 const Checkout = () => {
@@ -34,9 +34,9 @@ const Checkout = () => {
   const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
-  const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
+
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
@@ -53,6 +53,7 @@ const Checkout = () => {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
     setValue
   } = useForm({
     resolver: yupResolver(UserCheckoutSchema)
@@ -64,19 +65,24 @@ const Checkout = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setValue('shippingLocation', address ?? '')
-  }, [address, setValue])
-  useEffect(() => {
     dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
-      dataInfoUser.user.address && setValue('shippingLocation', dataInfoUser.user.address)
+
+      dataInfoUser.user.address?.length &&
+        (dataInfoUser.user.address as IUserAddress[])?.map((item) => {
+          if (item.default) {
+            setValue('shippingLocation', item.address)
+            setValue('phone', item.phone)
+            return
+          }
+          return
+        })
     }
-    // YaSuoMap();
-  }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue])
+  }, [dataInfoUser, setValue])
 
   const getData = useCallback(
     (getData: string) => {
@@ -85,8 +91,6 @@ const Checkout = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
-            console.log(item)
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
@@ -109,9 +113,20 @@ const Checkout = () => {
     [dataCartCheckout.items]
   )
 
+  const totalQuantity = useMemo(() => {
+    const all = getData('quantity') as number[]
+
+    const a = all.reduce((acc, curent) => {
+      return acc + curent
+    }, 0)
+    return a
+  }, [getData])
+
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return pickGapStore.value > 30000 || pickGapStore.value <= 2000 ? 0 : (pickGapStore.value - 2000) * 2
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
+        ? 0
+        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
     }
     return 0
   }, [gapStore, pickGapStore])
@@ -128,15 +143,6 @@ const Checkout = () => {
     }, 0)
   }, [getData])
 
-  const totalQuantity = useMemo(() => {
-    const all = getData('quantity') as number[]
-
-    const a = all.reduce((acc, curent) => {
-      return acc + curent
-    }, 0)
-    return a
-  }, [getData])
-
   // tong cong tien
   const totalAllMoneyCheckOut = useMemo(() => {
     return moneyShipping + totalMoneyCheckout - moneyPromotion
@@ -149,7 +155,7 @@ const Checkout = () => {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
-        total: totalAllMoneyCheckOut,
+        total: moneyPromotion >= totalAllMoneyCheckOut ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         paymentMethodId: data.paymentMethod,
@@ -161,37 +167,47 @@ const Checkout = () => {
         }
       }
 
-      console.log(dataForm)
+      const storeNote = {
+        noteOrder: dataForm.noteOrder,
+        noteShipping: dataForm.inforOrderShipping.noteShipping,
+        paymentMethodId: dataForm.paymentMethodId
+      }
+      localStorage.setItem('storeNote', JSON.stringify(storeNote))
 
       if (data.paymentMethod == 'cod') {
-        console.log(dataForm)
-
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
             if (res.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
-              dispatch(resetAllCart())
-              console.log(res.order.orderNew)
+              // dispatch(resetAllCart())
+
               ClientSocket.sendNotificationToAdmin(
                 `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                   res.order.orderNew.inforOrderShipping.name
                 }" và đang chờ xác nhận.`
               )
               ClientSocket.createOrder(res.order.orderNew.user)
-              // window.location.href = res.order.url
+              window.location.href = res.order.url
             }
           })
       } else if (data.paymentMethod == 'stripe') {
-        stripePayment(dataForm).then(({ data: { url } }: any) => {
-          window.location.href = url
-        })
+        stripePayment(dataForm)
+          .then(({ data: { url } }: any) => {
+            window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
+          })
       } else if (data.paymentMethod == 'vnpay') {
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
             window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
           })
       }
 
@@ -289,7 +305,12 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} setPickGapStore={setPickGapStore} />
+              <YaSuoMap
+                setValue={setValue}
+                getValues={getValues}
+                setGapStore={setGapStore}
+                setPickGapStore={setPickGapStore}
+              />
               <div id='map'></div>
             </div>
           </div>
@@ -379,6 +400,10 @@ const Checkout = () => {
                 </div>
               </div>
               <div className='flex justify-end py-1 text-sm'>
+                <span>Quãng đường:</span>
+                <span className='w-[80px] text-right'>{pickGapStore.text ? pickGapStore.text : '0 Km'}</span>
+              </div>
+              <div className='flex justify-end py-1 text-sm'>
                 <span>Phí vận chuyển: </span>
                 <span className='w-[80px] text-right'>{formatCurrency(moneyShipping)}</span>
               </div>
@@ -389,7 +414,7 @@ const Checkout = () => {
               <div className='flex justify-end py-1 text-sm'>
                 <span className='font-bold'>Tổng cộng: </span>
                 <span className='w-[80px] text-right text-[#86744e] font-bold'>
-                  {formatCurrency(totalAllMoneyCheckOut)}
+                  {moneyPromotion >= totalAllMoneyCheckOut ? 0 : formatCurrency(totalAllMoneyCheckOut)}
                 </span>
               </div>
             </div>

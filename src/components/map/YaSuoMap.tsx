@@ -3,6 +3,8 @@ import '../../StyleMap.css'
 import axios from 'axios'
 import GeoLoCaTion from '../../utils/geolocation'
 import ListStore, { Distance } from '../../interfaces/Map.type'
+import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { IUserCheckout } from '../../validate/Form'
 
 interface LngLat {
   lng: number
@@ -17,21 +19,14 @@ const List: ListStore[] = [
       lat: 21.038338774000067,
       lng: 105.74712340900004
     }
-  },
-  {
-    highName: 'Xã Hồng Hà',
-    name: 'Xã Hồng Hà, Đan Phượng, Hà Nội',
-    geoLocation: {
-      lat: 21.13130478200003,
-      lng: 105.68977495700005
-    }
   }
 ]
 
 interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
-  setAddress?: React.Dispatch<React.SetStateAction<string>>
+  getValues: UseFormGetValues<IUserCheckout>
   setPickGapStore?: React.Dispatch<React.SetStateAction<ListStore>>
+  setValue: UseFormSetValue<IUserCheckout>
 }
 
 const getLocation = () => {
@@ -52,10 +47,9 @@ const getLocation = () => {
 
 getLocation()
 
-const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
+const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-  //   const [gapStore, setGapStore] = useState([])
 
   const getDistance = async () => {
     setTimeout(async () => {
@@ -66,8 +60,8 @@ const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
         .get(
           `https://rsapi.goong.io/DistanceMatrix?origins=${StorageDistance?.lat ? StorageDistance.lat : lnglat.lat},${
             StorageDistance?.lng ? StorageDistance.lng : lnglat.lng
-          }&destinations=${List[0].geoLocation.lat},${List[0].geoLocation.lng}%7C${List[1].geoLocation.lat},${
-            List[1].geoLocation.lng
+          }&destinations=${List[0].geoLocation.lat},${
+            List[0].geoLocation.lng
           }&vehicle=car&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
           { signal: controller.signal }
         )
@@ -100,7 +94,6 @@ const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
         { signal: controller.signal }
       )
       .then(({ data: { results } }) => {
-        console.log(results)
         ;(document.querySelector<HTMLInputElement>('.mapboxgl-ctrl-geocoder--input')!.value =
           results[0].formatted_address),
           controller.abort()
@@ -114,16 +107,18 @@ const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
 
     document.querySelector('.mapboxgl-ctrl-geocoder--icon-search')?.remove()
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('placeholder', 'Địa chỉ người nhận')
-    document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('name', 'address')
+    document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('name', 'shippingLocation')
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('autoComplete', 'off')
 
-    // document.querySelector("#map")?.addEventListener("click", (e: any) => {
-    //   console.log(e.target.className === "mapboxgl-ctrl-icon");
-    // }); // not delete
+    const domaddress = document.querySelector('.mapboxgl-ctrl-geocoder--input') as HTMLInputElement
+
+    if (domaddress) {
+      domaddress.value = getValues('shippingLocation')
+    }
 
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.addEventListener('change', async (e: any) => {
-      if (setAddress) {
-        setAddress(e.target.value)
+      if (setValue) {
+        setValue('shippingLocation', e.target.value)
       }
       await getDistance()
     })
