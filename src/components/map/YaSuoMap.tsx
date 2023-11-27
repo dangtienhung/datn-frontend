@@ -116,10 +116,6 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
       domaddress.value = getValues('shippingLocation')
     }
 
-    // document.querySelector("#map")?.addEventListener("click", (e: any) => {
-    //   console.log(e.target.className === "mapboxgl-ctrl-icon");
-    // }); // not delete
-
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.addEventListener('change', async (e: any) => {
       if (setValue) {
         setValue('shippingLocation', e.target.value)

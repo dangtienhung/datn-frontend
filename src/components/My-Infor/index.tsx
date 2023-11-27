@@ -111,7 +111,6 @@ const MyInfor = () => {
     }
   }
 
-  console.log(user, ':adress user L')
   return (
     <div className='my-account grow '>
       <div className='account flex flex-col'>

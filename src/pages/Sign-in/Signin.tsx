@@ -33,7 +33,6 @@ const Signin = () => {
           position: toast.POSITION.TOP_RIGHT
         })
       } else {
-        console.log(data, 'data userr ')
         ClientSocket.JoinRoom(data.data.user._id)
         if (items.length > 0) {
           items.map(async (cart) => {
