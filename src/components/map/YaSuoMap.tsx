@@ -50,7 +50,9 @@ getLocation()
 const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-
+  useEffect(() => {
+    setValue('shippingLocation', '')
+  }, [])
   const getDistance = async () => {
     setTimeout(async () => {
       const controller = new AbortController()

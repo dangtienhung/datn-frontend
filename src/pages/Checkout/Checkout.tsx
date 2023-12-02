@@ -158,6 +158,12 @@ const Checkout = () => {
         total: moneyPromotion >= totalAllMoneyCheckOut ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
+        moneyPromotion: voucherChecked?._id
+          ? {
+              price: moneyPromotion,
+              voucherId: voucherChecked?._id || ''
+            }
+          : {},
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
           name: data.name,
@@ -286,14 +292,6 @@ const Checkout = () => {
                   <span className='text-red-500 text-[13px] self-start'>Địa chỉ nhận hàng là bắt buộc</span>
                 )}
               </div>
-              {/* <Input
-                  prefix={<FaMapMarkerAlt />}
-                  placeholder='Địa chỉ người nhận'
-                  name='address'
-                  error={errors.shippingLocation?.message}
-                  register={register}
-                /> */}
-              {/* </div> */}
             </div>
             <div className='py-[10px]'>
               <Input
@@ -342,7 +340,8 @@ const Checkout = () => {
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
-              <label className={` ${styles.container_radio} cod-payment group !hidden`}>
+              <label className={` ${styles.container_radio} cod-payment group !hidden`}></label>
+              {/* <label className={` ${styles.container_radio} cod-payment block group`}>
                 <span className='text-sm'>Thanh toán qua Stripe</span>
                 <input
                   className='absolute opacity-0'
@@ -352,7 +351,7 @@ const Checkout = () => {
                   {...register('paymentMethod')}
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label>
+              </label> */}
               {/* <label className={` ${styles.container_radio} momo-payment block group`}>
                 <span className='text-sm'>Thanh toán qua Ví MoMo</span>
                 <input className='opacity-0 absolute' type='radio' value='momo' {...register('paymentMethod')} />

@@ -31,6 +31,12 @@ export interface IOrderCheckout {
   noteOrder: string | undefined
   paymentMethodId: string
   inforOrderShipping: inforOrderShipping
+  moneyPromotion:
+    | {
+        price: number
+        voucherId: string
+      }
+    | object
 }
 
 export interface dataDocsOrderRes {
