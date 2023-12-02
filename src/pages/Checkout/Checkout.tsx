@@ -1,31 +1,31 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Button, Input } from '../../components'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Input } from '../../components'
-import { useAppSelector } from '../../store/hooks'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import { message } from 'antd'
-import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
-import { toast } from 'react-toastify'
-import { v4 as uuidv4 } from 'uuid'
-import { useStripePaymentMutation } from '../../api/paymentstripe'
-import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import CheckoutItem from '../../components/Checkout-Item'
+import { ClientSocket } from '../../socket'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { IUserAddress } from '../../interfaces'
+import { IVoucher } from '../../interfaces/voucher.type'
+import ListStore from '../../interfaces/Map.type'
 import ModalListVouchers from '../../components/ModalListVouchers'
+import { UserCheckoutSchema } from '../../validate/Form'
 import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
-import ListStore from '../../interfaces/Map.type'
-import { IVoucher } from '../../interfaces/voucher.type'
-import { ClientSocket } from '../../socket'
-import { useCreateOrderMutation } from '../../store/slices/order'
 import { arrTotal } from '../../store/slices/types/cart.type'
-import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
-import { UserCheckoutSchema } from '../../validate/Form'
+import { message } from 'antd'
 import styles from './Checkout.module.scss'
-import { IUserAddress } from '../../interfaces'
+import { toast } from 'react-toastify'
+import { useAppSelector } from '../../store/hooks'
+import { useCreateOrderMutation } from '../../store/slices/order'
+import { useForm } from 'react-hook-form'
+import { useStripePaymentMutation } from '../../api/paymentstripe'
+import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+import { v4 as uuidv4 } from 'uuid'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 //
 const Checkout = () => {
@@ -342,7 +342,7 @@ const Checkout = () => {
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
-              <label className={` ${styles.container_radio} cod-payment block group`}>
+              <label className={` ${styles.container_radio} cod-payment group !hidden`}>
                 <span className='text-sm'>Thanh toán qua Stripe</span>
                 <input
                   className='absolute opacity-0'
