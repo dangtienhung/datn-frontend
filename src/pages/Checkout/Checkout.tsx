@@ -5,7 +5,7 @@ import { Button, Input } from '../../components'
 import { useAppSelector } from '../../store/hooks'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { message } from 'antd'
+import { Popover, message } from 'antd'
 import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
 import { toast } from 'react-toastify'
@@ -26,8 +26,25 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
 import { IUserAddress } from '../../interfaces'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
-//
+const content = (
+  <div className='w-72'>
+    <ul className='list-disc pl-4'>
+      <li>Kiểm tra sản phẩm trước khi thanh toán.</li>
+      <li>Đổi trả hàng nếu bị lỗi, hỏng hóc hoặc giao sai hàng.</li>
+      <li>Không thể đổi trả sau khi đã nhận và kiểm tra với nhân viên bán hoặc giao hàng.</li>
+      <li>
+        Điều kiện đổi trả: sản phẩm còn nguyên vẹn, chưa sử dụng, chưa bóc hộp và còn mới 100%. Giữ phiếu mua hàng.
+      </li>
+      <li>Đổi trả tại cửa hàng mua hàng ban đầu.</li>
+      <li>
+        Sẽ hoàn tiền sau khi xác nhận đã nhận được hàng trả lại. Chi phí vận chuyển hàng trả lại do khách hàng chịu.
+      </li>
+      <li>Không đổi trả nếu sản phẩm không còn nguyên vẹn hoặc là quà tặng.</li>
+    </ul>
+  </div>
+)
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
@@ -364,6 +381,11 @@ const Checkout = () => {
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin đơn hàng</h2>
+            </div>
+            <div>
+              <Popover className='cursor-pointer' content={content} title='Chính sách cửa hàng'>
+                <QuestionCircleOutlined />
+              </Popover>
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
