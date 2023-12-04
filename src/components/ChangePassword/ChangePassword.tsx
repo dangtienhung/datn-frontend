@@ -75,8 +75,8 @@ const ChangePassword = () => {
             rules={[
               { required: true, message: 'Mật khẩu mới không được bỏ trống!' },
               {
-                min: 5,
-                message: 'Mật khẩu mới phải có ít nhất 5 kí tự.'
+                min: 6,
+                message: 'Mật khẩu mới phải có ít nhất 6 kí tự.'
               }
             ]}
           >

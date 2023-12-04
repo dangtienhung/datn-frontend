@@ -216,7 +216,8 @@ const PaymentResult = () => {
               phone: searchParams.get('phone') as string,
               address: searchParams.get('address') as string,
               noteShipping: JSON.parse(localStorage.getItem('storeNote') as string).noteShipping
-            }
+            },
+            moneyPromotion: {}
           }
 
           orderAPIFn(orderVnpay)
