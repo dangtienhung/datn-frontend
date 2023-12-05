@@ -141,12 +141,10 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
-        ? 0
-        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000 ? 0 : Math.round(pickGapStore.value * 2.5)
     }
     return 0
-  }, [gapStore, pickGapStore])
+  }, [pickGapStore])
   // total khuyen mai
   const moneyPromotion = useMemo(() => voucherChecked.sale ?? 0, [voucherChecked])
 
