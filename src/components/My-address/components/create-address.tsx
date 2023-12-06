@@ -69,6 +69,16 @@ export const CreateAddress = ({ isModalOpen, setIsModalOpen }: Props) => {
                 {
                   required: true,
                   message: 'Vui lòng nhập số điện thoại'
+                },
+                {
+                  validator: (rule, value, callback) => {
+                    const phoneRegex = /^-?(0|[1-9][0-9]*)(.[0-9]*)?$/
+                    if (value && !phoneRegex.test(value)) {
+                      callback('Số điện thoại không hợp lệ')
+                    } else {
+                      callback()
+                    }
+                  }
                 }
               ]}
             >

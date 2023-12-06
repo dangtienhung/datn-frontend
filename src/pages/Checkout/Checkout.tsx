@@ -1,6 +1,7 @@
 import { Button, Input } from '../../components'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
+import { Popover, message } from 'antd'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BiSolidUser } from 'react-icons/bi'
@@ -11,12 +12,12 @@ import { IUserAddress } from '../../interfaces'
 import { IVoucher } from '../../interfaces/voucher.type'
 import ListStore from '../../interfaces/Map.type'
 import ModalListVouchers from '../../components/ModalListVouchers'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { UserCheckoutSchema } from '../../validate/Form'
 import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
 import { arrTotal } from '../../store/slices/types/cart.type'
 import { formatCurrency } from '../../utils/formatCurrency'
-import { message } from 'antd'
 import styles from './Checkout.module.scss'
 import { toast } from 'react-toastify'
 import { useAppSelector } from '../../store/hooks'
@@ -27,7 +28,23 @@ import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-//
+const content = (
+  <div className='w-72'>
+    <ul className='list-disc pl-4'>
+      <li>Kiểm tra sản phẩm trước khi thanh toán.</li>
+      <li>Đổi trả hàng nếu bị lỗi, hỏng hóc hoặc giao sai hàng.</li>
+      <li>Không thể đổi trả sau khi đã nhận và kiểm tra với nhân viên bán hoặc giao hàng.</li>
+      <li>
+        Điều kiện đổi trả: sản phẩm còn nguyên vẹn, chưa sử dụng, chưa bóc hộp và còn mới 100%. Giữ phiếu mua hàng.
+      </li>
+      <li>Đổi trả tại cửa hàng mua hàng ban đầu.</li>
+      <li>
+        Sẽ hoàn tiền sau khi xác nhận đã nhận được hàng trả lại. Chi phí vận chuyển hàng trả lại do khách hàng chịu.
+      </li>
+      <li>Không đổi trả nếu sản phẩm không còn nguyên vẹn hoặc là quà tặng.</li>
+    </ul>
+  </div>
+)
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
@@ -124,12 +141,10 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
-        ? 0
-        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000 ? 0 : Math.round(pickGapStore.value * 2.5)
     }
     return 0
-  }, [gapStore, pickGapStore])
+  }, [pickGapStore])
   // total khuyen mai
   const moneyPromotion = useMemo(() => voucherChecked.sale ?? 0, [voucherChecked])
 
@@ -365,6 +380,11 @@ const Checkout = () => {
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin đơn hàng</h2>
+            </div>
+            <div>
+              <Popover className='cursor-pointer' content={content} title='Chính sách cửa hàng'>
+                <QuestionCircleOutlined />
+              </Popover>
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
