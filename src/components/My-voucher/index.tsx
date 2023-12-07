@@ -35,14 +35,14 @@ const MyVoucher = () => {
                       <div className='bg-[#87ACD9] rounded-[10px]'>
                         <div className='grid grid-cols-[3fr,1fr]'>
                           <div className='p-3 text-white'>
-                            <h2>Giảm {voucher?.sale / 1000}K</h2>
+                            <h2>{voucher?.title}</h2>
                             <p>Cho đơn hàng từ 0 đồng</p>
                           </div>
                           <div className='p-3 text-[#fff] text-right'>
                             <Popover
                               placement='bottom'
                               content={() => (
-                                <Content code={voucher.code} endDate={formattedEndDate} title={voucher.title ?? ''} />
+                                <Content code={voucher.code} endDate={formattedEndDate} desc={voucher.desc ?? ''} />
                               )}
                             >
                               <button>
