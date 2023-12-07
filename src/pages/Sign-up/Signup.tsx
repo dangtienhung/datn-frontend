@@ -29,9 +29,11 @@ const Signup = () => {
   })
 
   const onRegister = (registerData: any) => {
+
     registerUser(registerData).then((data: any) => {
       if (data.error) {
-        return toast.error(data.error.data.err, {
+        console.log(data,"err")
+        return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT
         })
       } else {
