@@ -48,7 +48,7 @@ const content = (
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-  const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
+  const [orderAPIFn, { isLoading: cod, error: errorCreate }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
   // const dispatch = useAppDispatch()
@@ -85,6 +85,9 @@ const Checkout = () => {
     dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
+  useEffect(() => {
+    errorCreate && toast.error((errorCreate as any)?.data.error)
+  }, [errorCreate])
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
