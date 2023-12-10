@@ -421,10 +421,10 @@ const Checkout = () => {
                   <span className='font-bold w-[80px] text-right'>{formatCurrency(totalMoneyCheckout)}</span>
                 </div>
               </div>
-              <div className='flex justify-end py-1 text-sm'>
+              {/* <div className='flex justify-end py-1 text-sm'>
                 <span>Quãng đường:</span>
                 <span className='w-[80px] text-right'>{pickGapStore.text ? pickGapStore.text : '0 Km'}</span>
-              </div>
+              </div> */}
               <div className='flex justify-end py-1 text-sm'>
                 <span>Phí vận chuyển: </span>
                 <span className='w-[80px] text-right'>{formatCurrency(moneyShipping)}</span>
