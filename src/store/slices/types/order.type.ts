@@ -24,6 +24,7 @@ enum PaymentMethod {
 }
 export interface IOrderCheckout {
   user: string | undefined
+  email: string
   payment_vnpay?: string
   items: Omit<CartItemState, 'total'>[] | number[]
   total: number | string

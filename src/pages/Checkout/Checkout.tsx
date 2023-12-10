@@ -27,6 +27,7 @@ import { useStripePaymentMutation } from '../../api/paymentstripe'
 import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { MdOutlineMail } from 'react-icons/md'
 
 const content = (
   <div className='w-72'>
@@ -91,6 +92,7 @@ const Checkout = () => {
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
+      setValue('email', dataInfoUser.user.account || '')
 
       dataInfoUser.user.address?.length &&
         (dataInfoUser.user.address as IUserAddress[])?.map((item) => {
@@ -172,8 +174,9 @@ const Checkout = () => {
     } else {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
+        email: data.email,
         items: getData('list'),
-        total: moneyPromotion >= totalAllMoneyCheckOut ? 0 : totalAllMoneyCheckOut,
+        total: totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         moneyPromotion: voucherChecked?._id
@@ -202,7 +205,7 @@ const Checkout = () => {
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
-            if (res.error) {
+            if (res.error || res.error.data.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
               // dispatch(resetAllCart())
@@ -235,21 +238,6 @@ const Checkout = () => {
           })
       }
 
-      // orderAPIFn(dataForm)
-      //   .unwrap()
-      //   .then((res) => {
-      //     if (res.error) {
-      //       return toast.error('Đặt hàng thất bại' + res.error.data.error)
-      //     } else {
-      //       reset()
-      //       dataCartCheckout.items.length &&
-      //         dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
-      //       dispatch(resetAllCart())
-      //       toast.success('Bạn đặt hàng thành công')
-
-      //       // alert(data.shippingNote)=
-      //       // dispatch(resetAllCart());
-      //       // navigate('http://localhost:4000/vnpay');
       //       if (data.paymentMethod == 'vnpay') {
       //         const returnUrl = 'http://localhost:5173' // url trả về
       //         window.location.href =
@@ -263,9 +251,6 @@ const Checkout = () => {
       //           data.shippingLocation +
       //           '&returnUrl=' +
       //           returnUrl
-      //       }
-      //     }
-      //   })
     }
   })
 
@@ -286,6 +271,15 @@ const Checkout = () => {
                 error={errors.name?.message}
                 prefix={<BiSolidUser />}
                 placeholder='Tên người nhận'
+              />
+            </div>
+            <div className='py-[10px]'>
+              <Input
+                prefix={<MdOutlineMail />}
+                placeholder='Email'
+                name='email'
+                register={register}
+                error={errors.email?.message}
               />
             </div>
             <div className='py-[10px]'>
@@ -340,7 +334,7 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán khi nhận hàng</span>
                 <input
                   className='absolute opacity-0'
-                  defaultChecked
+                  // defaultChecked
                   type='radio'
                   value='cod'
                   {...register('paymentMethod')}
@@ -351,7 +345,7 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán qua Ví vnPay</span>
                 <input
                   className='absolute opacity-0'
-                  // defaultChecked
+                  defaultChecked
                   type='radio'
                   value='vnpay'
                   {...register('paymentMethod')}
@@ -359,22 +353,7 @@ const Checkout = () => {
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
               <label className={` ${styles.container_radio} cod-payment group !hidden`}></label>
-              {/* <label className={` ${styles.container_radio} cod-payment block group`}>
-                <span className='text-sm'>Thanh toán qua Stripe</span>
-                <input
-                  className='absolute opacity-0'
-                  // defaultChecked
-                  type='radio'
-                  value='stripe'
-                  {...register('paymentMethod')}
-                />
-                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label> */}
-              {/* <label className={` ${styles.container_radio} momo-payment block group`}>
-                <span className='text-sm'>Thanh toán qua Ví MoMo</span>
-                <input className='opacity-0 absolute' type='radio' value='momo' {...register('paymentMethod')} />
-                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label> */}
+
               {errors.paymentMethod && <span className='text-red-500 text-[13px]'>{errors.paymentMethod.message}</span>}
             </div>
           </div>
@@ -436,7 +415,7 @@ const Checkout = () => {
               <div className='flex justify-end py-1 text-sm'>
                 <span className='font-bold'>Tổng cộng: </span>
                 <span className='w-[80px] text-right text-[#86744e] font-bold'>
-                  {moneyPromotion >= totalAllMoneyCheckOut ? 0 : formatCurrency(totalAllMoneyCheckOut)}
+                  {totalAllMoneyCheckOut <= 0 ? 0 : formatCurrency(totalAllMoneyCheckOut)}
                 </span>
               </div>
             </div>

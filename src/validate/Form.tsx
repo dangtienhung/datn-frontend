@@ -85,6 +85,11 @@ export const UserCheckoutSchema = Yup.object({
     .required('Số điện thoại không được để trống')
     .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
   shippingLocation: Yup.string().required('Địa chỉ không được để trống'),
+  email: Yup.string()
+    .trim()
+    .email('Email không đúng định dạng')
+    .required('Email là bắt buộc')
+    .regexMatch('Email không đúng'),
 
   shippingNote: Yup.string().default(' '),
   paymentMethod: Yup.string().required()
