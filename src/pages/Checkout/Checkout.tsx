@@ -454,6 +454,7 @@ const Checkout = () => {
         voucherChecked={voucherChecked}
         setVoucherChecked={setVoucherChecked}
         toggleModal={toggleModal}
+        totallPrice={totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut}
       />
     </div>
   )

@@ -1,18 +1,18 @@
-import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
-import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { FaArrowDown, FaBars } from 'react-icons/fa'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import { IProduct, IProductDocs } from '../../interfaces/products.type'
 
+import type { PaginationProps } from 'antd'
+import { Pagination } from 'antd'
 import { AxiosError } from 'axios'
 import { Button } from '..'
+import http from '../../api/instance'
 import { IQueryConfig } from '../../hook/useQueryConfig'
+import { useAppSelector } from '../../store/hooks'
 import ListProductItem from '../List-ProductItem'
-import { Pagination } from 'antd'
-import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
 import SKProduct from '../Skeleton/SKProduct'
-import http from '../../api/instance'
-import { useAppSelector } from '../../store/hooks'
 
 interface ListProductsProps {
   products: IProductDocs

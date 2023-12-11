@@ -217,7 +217,11 @@ const PaymentResult = () => {
               address: searchParams.get('address') as string,
               noteShipping: JSON.parse(localStorage.getItem('storeNote') as string).noteShipping
             },
-            moneyPromotion: {}
+            email: searchParams.get('email') || '',
+            moneyPromotion: {
+              price: Number(searchParams.get('price')),
+              voucherId: searchParams.get('voucherId') || ''
+            }
           }
 
           orderAPIFn(orderVnpay)

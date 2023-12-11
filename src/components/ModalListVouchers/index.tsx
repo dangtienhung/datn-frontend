@@ -7,16 +7,46 @@ import { GiTicket } from 'react-icons/gi'
 import { formatCurrency } from '../../utils/formatCurrency'
 // import { useState } from 'react'
 import './ModalListVoucher.scss'
+import { useEffect, useState } from 'react'
 
 type ModalListVouchersProps = {
   isOpen: boolean
   voucherChecked: IVoucher
   setVoucherChecked: React.Dispatch<React.SetStateAction<IVoucher>>
   toggleModal: () => void
+  totallPrice: number
 }
 
-const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChecked }: ModalListVouchersProps) => {
+const ModalListVouchers = ({
+  isOpen,
+  toggleModal,
+  voucherChecked,
+  setVoucherChecked,
+  totallPrice
+}: ModalListVouchersProps) => {
   const { data: vouchers } = useGetVoucherUnexpriedQuery()
+  const [voucherList, setVoucher] = useState<IVoucher[]>([])
+
+  useEffect(() => {
+    if (vouchers && vouchers.data?.docs) {
+      const listVoucher = vouchers.data?.docs.filter((voucher) => {
+        if (totallPrice > 30000 && totallPrice <= 50000 && voucher.sale < 10000) {
+          return voucher
+        } else if (totallPrice > 50000 && totallPrice <= 100000 && voucher.sale < 20000) {
+          return voucher
+        } else if (totallPrice > 100000 && totallPrice <= 150000 && voucher.sale < 30000) {
+          return voucher
+        } else if (totallPrice > 150000 && totallPrice <= 200000 && voucher.sale < 40000) {
+          return voucher
+        } else if (totallPrice > 200000 && totallPrice <= 250000) {
+          return voucher
+        } else if (totallPrice > 300000) {
+          return voucher
+        }
+      })
+      setVoucher(listVoucher)
+    }
+  }, [totallPrice, vouchers])
 
   const onChange = (e: CheckboxChangeEvent) => {
     setVoucherChecked(e.target.value)
@@ -37,6 +67,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
       message.error('Đã bỏ chọn mã khuyến mại', 1)
     }
   }
+
   return (
     <Modal
       title='Mã khuyến mại hôm nay 😍'
@@ -48,14 +79,13 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
       centered
       width={660}
       footer={
-        vouchers &&
-        vouchers?.data?.docs.length > 0 && [
-          <Button hidden={Object.keys(voucherChecked).length > 0 ? false : true} key='submit' onClick={cancelVoucher}>
+        voucherList &&
+        voucherList.length > 0 && [
+          <Button hidden={Object.keys(voucherChecked).length > 0 ? false : true} onClick={cancelVoucher}>
             Hủy
           </Button>,
           <Button
             hidden={Object.keys(voucherChecked).length > 0 ? false : true}
-            key='submit'
             className='bg-[#EE4D2D] text-white hover:!text-white'
             onClick={toggleModal}
           >
@@ -65,8 +95,8 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
       }
     >
       <Row className='list-voucher flex items-center justify-center md:justify-start gap-3 max-h-[450px] overflow-y-auto hidden-scroll-bar'>
-        {vouchers && vouchers?.data?.docs.length > 0 ? (
-          vouchers?.data?.docs?.map((voucher) => (
+        {voucherList.length > 0 ? (
+          voucherList.map((voucher) => (
             <Radio.Group
               key={voucher._id}
               optionType='button'
@@ -79,7 +109,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
               <Radio className='select-none' disabled={isExpiredVoucher(voucher?.endDate as string)} value={voucher}>
                 <div className='flex flex-col text-center items-center justify-center'>
                   <GiTicket className='text-2xl' />
-                  <span>Mã: {voucher.code}</span>
+                  <span>Mã: {voucher.code.toUpperCase()}</span>
                   <span> Giảm: {formatCurrency(voucher.sale)}</span>
                 </div>
               </Radio>
