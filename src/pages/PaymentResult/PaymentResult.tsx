@@ -250,7 +250,7 @@ const PaymentResult = () => {
     let decodedToken: Payload = {}
 
     if (searchParams.get('encode')) {
-      decodedToken = jwtDecode(searchParams.get('encode')!)
+      decodedToken = jwtDecode(searchParams.get('encode') || '')
       if ((decodedToken.exp && decodedToken.exp < date.getTime() / 1000) || !localStorage.getItem('storeNote')) {
         navigate('/')
       } else {
