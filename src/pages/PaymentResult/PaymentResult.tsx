@@ -214,13 +214,13 @@ const PaymentResult = () => {
             inforOrderShipping: {
               name: searchParams.get('name') as string,
               phone: searchParams.get('phone') as string,
+              email: searchParams.get('email') as string,
               address: searchParams.get('address') as string,
               noteShipping: JSON.parse(localStorage.getItem('storeNote') as string).noteShipping
             },
-            email: searchParams.get('email') || '',
             moneyPromotion: {
-              price: Number(searchParams.get('price')),
-              voucherId: searchParams.get('voucherId') || ''
+              price: JSON.parse(localStorage.getItem('storeNote') as string).moneyPromotion.price || 0,
+              voucherId: JSON.parse(localStorage.getItem('storeNote') as string).moneyPromotion.voucherId || ''
             }
           }
 
@@ -250,7 +250,7 @@ const PaymentResult = () => {
     let decodedToken: Payload = {}
 
     if (searchParams.get('encode')) {
-      decodedToken = jwtDecode(searchParams.get('encode')!)
+      decodedToken = jwtDecode(searchParams.get('encode') || '')
       if ((decodedToken.exp && decodedToken.exp < date.getTime() / 1000) || !localStorage.getItem('storeNote')) {
         navigate('/')
       } else {

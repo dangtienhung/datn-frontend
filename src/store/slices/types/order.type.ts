@@ -5,6 +5,7 @@ import { ITopping } from '../../../interfaces/topping.type'
 interface inforOrderShipping {
   name: string
   phone: string
+  email: string
   address: string
   noteShipping?: string
 }
@@ -24,7 +25,6 @@ enum PaymentMethod {
 }
 export interface IOrderCheckout {
   user: string | undefined
-  email: string
   payment_vnpay?: string
   items: Omit<CartItemState, 'total'>[] | number[]
   total: number | string

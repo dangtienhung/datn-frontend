@@ -174,7 +174,6 @@ const Checkout = () => {
     } else {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
-        email: data.email,
         items: getData('list'),
         total: totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
@@ -188,6 +187,7 @@ const Checkout = () => {
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
           name: data.name,
+          email: data.email,
           phone: data.phone,
           address: data.shippingLocation,
           noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
@@ -197,7 +197,13 @@ const Checkout = () => {
       const storeNote = {
         noteOrder: dataForm.noteOrder,
         noteShipping: dataForm.inforOrderShipping.noteShipping,
-        paymentMethodId: dataForm.paymentMethodId
+        paymentMethodId: dataForm.paymentMethodId,
+        moneyPromotion: voucherChecked?._id
+          ? {
+              price: moneyPromotion,
+              voucherId: voucherChecked?._id || ''
+            }
+          : {}
       }
       localStorage.setItem('storeNote', JSON.stringify(storeNote))
 
@@ -205,7 +211,7 @@ const Checkout = () => {
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
-            if (res.error || res.error.data.error) {
+            if (res.error || res?.error?.data?.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
               // dispatch(resetAllCart())
@@ -228,6 +234,7 @@ const Checkout = () => {
             console.error(err)
           })
       } else if (data.paymentMethod == 'vnpay') {
+        // console.log(dataForm)
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
