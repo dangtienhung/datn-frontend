@@ -28,7 +28,8 @@ const CardOrder = ({ product }: CardOrderProps) => {
             quantity: item.quantity,
             size: item.size,
             toppings: item.toppings,
-            product: item.product
+            product: item.product,
+            sale: item.sale || 0
           })
         )
       } else if (action === 'increamentQuantity') {
@@ -39,7 +40,8 @@ const CardOrder = ({ product }: CardOrderProps) => {
             quantity: item.quantity,
             size: item.size,
             toppings: item.toppings,
-            product: item.product
+            product: item.product,
+            sale: item.sale || 0
           })
         )
       }
