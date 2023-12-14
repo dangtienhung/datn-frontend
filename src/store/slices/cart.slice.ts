@@ -116,7 +116,7 @@ const cartSlice = createSlice({
         if (payload.toppings.length === 0) {
           /* tìm ra size của sản phẩm muốn tăng số lượng */
           state.items[productIndex].items[payload.index].quantity++
-          const priceData = payload.size.price - payload?.sale ? payload.sale : 0
+          const priceData = payload.size?.price - payload?.sale
           state.items[productIndex].items[payload.index].total += priceData
         } else {
           /* tính tổng tiền của topping đó */

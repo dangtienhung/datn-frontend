@@ -38,7 +38,7 @@ const Signin = () => {
           items.map(async (cart) => {
             cart.items.map(async (item) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { _id, ...rest } = item
+              const { sale, _id, ...rest } = item
               await addCartDbFn({
                 name: cart.name,
                 items: [
@@ -69,7 +69,7 @@ const Signin = () => {
             <form action='' className='flex flex-col' onSubmit={handleSubmit(onLogin)}>
               <Input
                 type='auth'
-                placeholder='Nhập SDT hoặc email của bạn'
+                placeholder='Nhập email của bạn'
                 name='account'
                 register={register}
                 error={errors.account?.message}
