@@ -26,6 +26,7 @@ const PaymentResult = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [idOrder, setIdOrder] = useState('')
   const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
+  const order = useAppSelector((state) => state.persistedReducer.order)
   const navigate = useNavigate()
   // const { state } = useLocation()
   const dispatch = useAppDispatch()
@@ -196,10 +197,12 @@ const PaymentResult = () => {
     }
     const date = new Date()
     if (searchParams.get('expire')) {
-      if (Number(searchParams.get('expire')) < date.getTime() || !localStorage.getItem('storeNote')) {
+      if (Number(searchParams.get('expire')) < date.getTime() || !localStorage.getItem('FormOrder')) {
         navigate('/')
       } else {
         if (Number(searchParams.get('vnp_ResponseCode')) != 24) {
+          console.log('Order disptach', order)
+
           const orderVnpay: IOrderCheckout = {
             user:
               (searchParams.get('userId') as string) === 'undefined'
@@ -214,14 +217,16 @@ const PaymentResult = () => {
             inforOrderShipping: {
               name: searchParams.get('name') as string,
               phone: searchParams.get('phone') as string,
-              email: searchParams.get('email') as string,
               address: searchParams.get('address') as string,
               noteShipping: JSON.parse(localStorage.getItem('storeNote') as string).noteShipping
             },
-            moneyPromotion: {
-              price: JSON.parse(localStorage.getItem('storeNote') as string).moneyPromotion.price || 0,
-              voucherId: JSON.parse(localStorage.getItem('storeNote') as string).moneyPromotion.voucherId || ''
-            }
+            email: searchParams.get('email') || '',
+            moneyPromotion: searchParams.get('voucherId')
+              ? {
+                  price: Number(searchParams.get('price')),
+                  voucherId: searchParams.get('voucherId') || ''
+                }
+              : {}
           }
 
           orderAPIFn(orderVnpay)

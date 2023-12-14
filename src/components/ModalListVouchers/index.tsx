@@ -81,11 +81,12 @@ const ModalListVouchers = ({
       footer={
         voucherList &&
         voucherList.length > 0 && [
-          <Button hidden={Object.keys(voucherChecked).length > 0 ? false : true} onClick={cancelVoucher}>
+          <Button key={'abc+0'} hidden={Object.keys(voucherChecked).length > 0 ? false : true} onClick={cancelVoucher}>
             Hủy
           </Button>,
           <Button
             hidden={Object.keys(voucherChecked).length > 0 ? false : true}
+            key={'abc+1'}
             className='bg-[#EE4D2D] text-white hover:!text-white'
             onClick={toggleModal}
           >

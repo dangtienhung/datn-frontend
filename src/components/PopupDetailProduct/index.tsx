@@ -89,7 +89,8 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
         ? // ? price * ((100 - product.sale) / 100) * quantity
           (price - product.sale) * quantity
         : price,
-      product: product._id
+      product: product._id,
+      sale: product?.sale ? product.sale : 0
     }
 
     if (user._id != '' && user.accessToken != '') {
