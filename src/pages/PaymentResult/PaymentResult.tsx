@@ -1,5 +1,5 @@
 import { Button, Result } from 'antd'
-import { useCallback, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -14,7 +14,6 @@ import { toast } from 'react-toastify'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { resetAllCart } from '../../store/slices/cart.slice'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
-import { arrTotal } from '../../store/slices/types/cart.type'
 import { saveFormOrder } from '../../store/slices/order.slice'
 
 interface Payload extends JwtPayload {
@@ -42,34 +41,34 @@ const PaymentResult = () => {
     setWindowWidth(window.innerWidth)
   }
 
-  const getData = useCallback(
-    (getData: string) => {
-      const arrTotal: arrTotal[] = []
-      const arrTotalNumbers: number[] = []
-      dataCartCheckout.items.map((item) =>
-        item.items.map((data) => {
-          if (getData == 'list') {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, _id, ...rest } = data
-            arrTotal.push({ ...rest, name: item.name })
-          } else {
-            let value: number | undefined
-            if (getData === 'quantity') {
-              value = data.quantity
-            } else if (getData === 'total') {
-              value = data.total
-            }
+  // const getData = useCallback(
+  //   (getData: string) => {
+  //     const arrTotal: arrTotal[] = []
+  //     const arrTotalNumbers: number[] = []
+  //     dataCartCheckout.items.map((item) =>
+  //       item.items.map((data) => {
+  //         if (getData == 'list') {
+  //           // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //           const { total, _id, ...rest } = data
+  //           arrTotal.push({ ...rest, name: item.name })
+  //         } else {
+  //           let value: number | undefined
+  //           if (getData === 'quantity') {
+  //             value = data.quantity
+  //           } else if (getData === 'total') {
+  //             value = data.total
+  //           }
 
-            if (value !== undefined) {
-              arrTotalNumbers.push(value)
-            }
-          }
-        })
-      )
-      return getData == 'list' ? arrTotal : arrTotalNumbers
-    },
-    [dataCartCheckout.items]
-  )
+  //           if (value !== undefined) {
+  //             arrTotalNumbers.push(value)
+  //           }
+  //         }
+  //       })
+  //     )
+  //     return getData == 'list' ? arrTotal : arrTotalNumbers
+  //   },
+  //   [dataCartCheckout.items]
+  // )
 
   useEffect(() => {
     dispatch(getAllProducts({}))
@@ -239,7 +238,7 @@ const PaymentResult = () => {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
               } else {
                 dispatch(resetAllCart())
-                dispatch(saveFormOrder(""))
+                dispatch(saveFormOrder(''))
                 ClientSocket.sendNotificationToAdmin(
                   `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                     res.order.orderNew.inforOrderShipping.name

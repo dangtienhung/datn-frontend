@@ -4,7 +4,6 @@ import { IOrderCheckout } from './types/order.type'
 
 const OrderCheckout: IOrderCheckout = {
   user: '',
-  email: '',
   payment_vnpay: '',
   items: [],
   total: 0,
@@ -13,6 +12,7 @@ const OrderCheckout: IOrderCheckout = {
   paymentMethodId: '',
   inforOrderShipping: {
     name: '',
+    email: '',
     phone: '',
     address: ''
   },
