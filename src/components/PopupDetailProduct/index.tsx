@@ -81,25 +81,20 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: (product.sale
-        ? // ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
-          nameRadioInput && nameRadioInput?.price - product.sale
-        : nameRadioInput?.price) as number,
-      total: product.sale
-        ? // ? price * ((100 - product.sale) / 100) * quantity
-          (price - product.sale) * quantity
-        : price,
+      price: (product.sale ? nameRadioInput && nameRadioInput?.price - product.sale : nameRadioInput?.price) as number,
+      total: product.sale ? (price - product.sale) * quantity : price,
       product: product._id,
       sale: product?.sale ? product.sale : 0
     }
 
-    if (user._id != '' && user.accessToken != '') {
-      const { name, ...rest } = data
+    if (user._id !== '' && user.accessToken !== '') {
+      const { sale, name, ...rest } = data
       addCartDbFn({
         name: name,
         items: [
           {
             ...rest,
+
             image: rest.image,
             size: data.size?._id as string,
             toppings: data.toppings.map((item) => item?._id as string)

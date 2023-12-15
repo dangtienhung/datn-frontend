@@ -50,11 +50,14 @@ const CardOrder = ({ product }: CardOrderProps) => {
       let quantity: number = item.quantity
       action === 'decreamentQuantity' && quantity--
       action === 'increamentQuantity' && quantity++
+      const topping = item.toppings
+      const priceTopping = topping && topping.length && topping.reduce((acc, item) => item.price + acc, 0)
+      quantity = +item.quantity === 1 && action === 'decreamentQuantity' ? 0 : quantity
       return updateCartDbFn({
-        quantity: item.quantity == 1 && action === 'decreamentQuantity' ? 0 : quantity,
+        quantity,
         _id: product._id as string,
         id: item._id as string,
-        total: item.total
+        total: quantity * item.price + quantity * priceTopping
       })
     }
   }
