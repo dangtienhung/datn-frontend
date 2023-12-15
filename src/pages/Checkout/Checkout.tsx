@@ -115,7 +115,7 @@ const Checkout = () => {
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, _id, ...rest } = data
+            const { total, sale, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
           } else {
             let value: number | undefined
