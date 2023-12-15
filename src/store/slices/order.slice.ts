@@ -16,7 +16,10 @@ const OrderCheckout: IOrderCheckout = {
     phone: '',
     address: ''
   },
-  moneyPromotion: {}
+  moneyPromotion: {
+    price: 0,
+    voucherId: ''
+  }
 }
 
 const initialState = {

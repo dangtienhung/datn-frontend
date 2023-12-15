@@ -88,10 +88,6 @@ const Checkout = () => {
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
-    console.log(gapStore)
-  }, [gapStore])
-
-  useEffect(() => {
     errorCreate && toast.error((errorCreate as any)?.data.error)
   }, [errorCreate])
   useEffect(() => {
@@ -190,9 +186,9 @@ const Checkout = () => {
             }
           : {},
         paymentMethodId: data.paymentMethod,
-        email: data.email,
         inforOrderShipping: {
           name: data.name,
+          email: data.email,
           phone: data.phone,
           address: data.shippingLocation,
           noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote

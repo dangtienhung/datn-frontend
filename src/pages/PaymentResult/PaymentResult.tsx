@@ -15,6 +15,7 @@ import { useCreateOrderMutation } from '../../store/slices/order'
 import { resetAllCart } from '../../store/slices/cart.slice'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { arrTotal } from '../../store/slices/types/cart.type'
+import { saveFormOrder } from '../../store/slices/order.slice'
 
 interface Payload extends JwtPayload {
   noteOrder?: string
@@ -197,37 +198,39 @@ const PaymentResult = () => {
     }
     const date = new Date()
     if (searchParams.get('expire')) {
-      if (Number(searchParams.get('expire')) < date.getTime() || !localStorage.getItem('FormOrder')) {
+      if (Number(searchParams.get('expire')) < date.getTime()) {
         navigate('/')
       } else {
         if (Number(searchParams.get('vnp_ResponseCode')) != 24) {
-          console.log('Order disptach', order)
-
           const orderVnpay: IOrderCheckout = {
             user:
               (searchParams.get('userId') as string) === 'undefined'
                 ? undefined
                 : (searchParams.get('userId') as string),
-            items: getData('list'),
+            items: order.data.items,
             payment_vnpay: searchParams.get('vnp_SecureHash') as string,
-            total: Number(searchParams.get('total')),
-            priceShipping: Number(searchParams.get('priceShipping')),
-            noteOrder: JSON.parse(localStorage.getItem('storeNote') as string).noteOrder,
+            total: order.data.total,
+            priceShipping: order.data.priceShipping,
+            noteOrder: order.data.noteOrder,
             paymentMethodId: 'vnpay',
             inforOrderShipping: {
-              name: searchParams.get('name') as string,
-              phone: searchParams.get('phone') as string,
-              address: searchParams.get('address') as string,
-              noteShipping: JSON.parse(localStorage.getItem('storeNote') as string).noteShipping
+              name: order.data.inforOrderShipping.name,
+              email: order.data.inforOrderShipping.email,
+              phone: order.data.inforOrderShipping.phone,
+              address: order.data.inforOrderShipping.address,
+              noteShipping: order.data.inforOrderShipping.noteShipping
             },
-            email: searchParams.get('email') || '',
-            moneyPromotion: searchParams.get('voucherId')
+            moneyPromotion: order.data.moneyPromotion.voucherId
               ? {
-                  price: Number(searchParams.get('price')),
-                  voucherId: searchParams.get('voucherId') || ''
+                  price: order.data.moneyPromotion.price,
+                  voucherId: order.data.moneyPromotion.voucherId
                 }
-              : {}
+              : {
+                  price: 0,
+                  voucherId: ''
+                }
           }
+          console.log(orderVnpay)
 
           orderAPIFn(orderVnpay)
             .unwrap()
@@ -236,6 +239,7 @@ const PaymentResult = () => {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
               } else {
                 dispatch(resetAllCart())
+                dispatch(saveFormOrder(""))
                 ClientSocket.sendNotificationToAdmin(
                   `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                     res.order.orderNew.inforOrderShipping.name
@@ -243,11 +247,8 @@ const PaymentResult = () => {
                 )
                 ClientSocket.createOrder(res.order.orderNew.user)
                 setIdOrder(res.order.orderNew._id)
-                localStorage.removeItem('storeNote')
               }
             })
-        } else {
-          localStorage.removeItem('storeNote')
         }
       }
     }

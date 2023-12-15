@@ -110,7 +110,6 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('placeholder', 'Địa chỉ người nhận')
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('name', 'shippingLocation')
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('autoComplete', 'off')
-    console.log(document.querySelectorAll('.mapboxgl-ctrl-top-right .mapboxgl-ctrl-group'))
     document
       .querySelectorAll('.mapboxgl-ctrl-top-right .mapboxgl-ctrl-group')[1]
       ?.addEventListener('click', async () => {

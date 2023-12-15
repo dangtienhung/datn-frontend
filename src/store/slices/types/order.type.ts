@@ -4,6 +4,7 @@ import { ITopping } from '../../../interfaces/topping.type'
 
 interface inforOrderShipping {
   name: string
+  email: string
   phone: string
   address: string
   noteShipping?: string
@@ -24,7 +25,6 @@ enum PaymentMethod {
 }
 export interface IOrderCheckout {
   user: string | undefined
-  email: string
   payment_vnpay?: string
   items: Omit<CartItemState, 'total'>[] | number[]
   total: number | string
@@ -37,7 +37,7 @@ export interface IOrderCheckout {
         price: number
         voucherId: string
       }
-    | object
+    | any
 }
 
 export interface dataDocsOrderRes {
