@@ -1,5 +1,5 @@
 import { Button, Result } from 'antd'
-import {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -224,18 +224,14 @@ const PaymentResult = () => {
                   price: order.data.moneyPromotion.price,
                   voucherId: order.data.moneyPromotion.voucherId
                 }
-              : {
-                  price: 0,
-                  voucherId: ''
-                }
+              : {}
           }
-          console.log(orderVnpay)
 
           orderAPIFn(orderVnpay)
             .unwrap()
             .then((res) => {
-              if (res.error) {
-                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+              if (res?.error) {
+                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res?.error?.data?.error)
               } else {
                 dispatch(resetAllCart())
                 dispatch(saveFormOrder(''))
@@ -272,9 +268,8 @@ const PaymentResult = () => {
               } else {
                 dispatch(resetAllCart())
                 ClientSocket.sendNotificationToAdmin(
-                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
-                    res.order.orderNew.inforOrderShipping.name
-                  }" và đang chờ xác nhận.`
+                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${res.order.orderNew
+                    ?.inforOrderShipping?.name}" và đang chờ xác nhận.`
                 )
                 ClientSocket.createOrder(res.order.orderNew.user)
                 localStorage.removeItem('storeNote')

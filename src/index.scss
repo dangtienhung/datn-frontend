@@ -220,3 +220,10 @@
   outline: none !important;
   box-shadow: none !important;
 }
+
+.styleSelecbox {
+  .ant-select-selector {
+    border: none !important;
+  }
+  
+}
