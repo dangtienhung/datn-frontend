@@ -83,11 +83,12 @@ const ModalListVouchers = ({ isOpen, toggleModal, setVoucherChecked, totallPrice
       footer={
         voucherList &&
         voucherList.length > 0 && [
-          <Button hidden={Object.keys(currentVoucher).length > 0 ? false : true} onClick={cancelVoucher}>
+          <Button key={'abc+0'} hidden={Object.keys(currentVoucher).length > 0 ? false : true} onClick={cancelVoucher}>
             Hủy
           </Button>,
           <Button
             hidden={Object.keys(currentVoucher).length > 0 ? false : true}
+            key={'abc+1'}
             className='bg-[#EE4D2D] text-white hover:!text-white'
             onClick={handleSubmit}
           >

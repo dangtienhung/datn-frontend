@@ -20,7 +20,7 @@ import { arrTotal } from '../../store/slices/types/cart.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './Checkout.module.scss'
 import { toast } from 'react-toastify'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
 import { useStripePaymentMutation } from '../../api/paymentstripe'
@@ -28,6 +28,7 @@ import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MdOutlineMail } from 'react-icons/md'
+import { saveFormOrder } from '../../store/slices/order.slice'
 
 const content = (
   <div className='w-72'>
@@ -52,12 +53,13 @@ const Checkout = () => {
   const [orderAPIFn, { isLoading: cod, error: errorCreate }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
 
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
+  // const Order = useAppSelector((state) => state.persistedReducer.order)
   // const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
@@ -71,7 +73,6 @@ const Checkout = () => {
     register,
     formState: { errors },
     handleSubmit,
-    getValues,
     setValue
   } = useForm({
     resolver: yupResolver(UserCheckoutSchema)
@@ -114,7 +115,7 @@ const Checkout = () => {
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, _id, ...rest } = data
+            const { total, sale, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
           } else {
             let value: number | undefined
@@ -174,7 +175,6 @@ const Checkout = () => {
     } else {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
-        email: data.email,
         items: getData('list'),
         total: totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
@@ -188,18 +188,15 @@ const Checkout = () => {
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
           name: data.name,
+          email: data.email,
           phone: data.phone,
           address: data.shippingLocation,
           noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
         }
       }
 
-      const storeNote = {
-        noteOrder: dataForm.noteOrder,
-        noteShipping: dataForm.inforOrderShipping.noteShipping,
-        paymentMethodId: dataForm.paymentMethodId
-      }
-      localStorage.setItem('storeNote', JSON.stringify(storeNote))
+      dispatch(saveFormOrder(dataForm))
+      localStorage.setItem('FormOrder', JSON.stringify(dataForm))
 
       if (data.paymentMethod == 'cod') {
         orderAPIFn(dataForm)
@@ -228,6 +225,7 @@ const Checkout = () => {
             console.error(err)
           })
       } else if (data.paymentMethod == 'vnpay') {
+        // console.log(dataForm)
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
@@ -315,12 +313,7 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap
-                setValue={setValue}
-                getValues={getValues}
-                setGapStore={setGapStore}
-                setPickGapStore={setPickGapStore}
-              />
+              <YaSuoMap setValue={setValue} setGapStore={setGapStore} setPickGapStore={setPickGapStore} />
               <div id='map'></div>
             </div>
           </div>

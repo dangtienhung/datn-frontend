@@ -3,7 +3,7 @@ import '../../StyleMap.css'
 import axios from 'axios'
 import GeoLoCaTion from '../../utils/geolocation'
 import ListStore, { Distance } from '../../interfaces/Map.type'
-import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { UseFormSetValue } from 'react-hook-form'
 import { IUserCheckout } from '../../validate/Form'
 
 interface LngLat {
@@ -24,7 +24,6 @@ const List: ListStore[] = [
 
 interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
-  getValues: UseFormGetValues<IUserCheckout>
   setPickGapStore?: React.Dispatch<React.SetStateAction<ListStore>>
   setValue: UseFormSetValue<IUserCheckout>
 }
@@ -47,16 +46,16 @@ const getLocation = () => {
 
 getLocation()
 
-const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) => {
+const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-  useEffect(() => {
-    setValue('shippingLocation', '')
-  }, [])
+
   const getDistance = async () => {
     setTimeout(async () => {
       const controller = new AbortController()
-      const StorageDistance = JSON.parse(localStorage.getItem('location') ?? '')
+      const StorageDistance = localStorage.getItem('location')
+        ? JSON.parse(localStorage.getItem('location') ?? '')
+        : localStorage.getItem('userLocation')
 
       await axios
         .get(
@@ -81,8 +80,6 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
             setGapStore(sortDistance)
             setPickGapStore(sortDistance[0])
           }
-
-          // localStorage.removeItem("location");
           controller.abort()
         })
     }, 1000)
@@ -96,10 +93,12 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
         { signal: controller.signal }
       )
       .then(({ data: { results } }) => {
+        setValue('shippingLocation', results[0].formatted_address)
         ;(document.querySelector<HTMLInputElement>('.mapboxgl-ctrl-geocoder--input')!.value =
           results[0].formatted_address),
           controller.abort()
       })
+    await getDistance()
   }
 
   useEffect(() => {
@@ -111,13 +110,13 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('placeholder', 'Địa chỉ người nhận')
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('name', 'shippingLocation')
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.setAttribute('autoComplete', 'off')
-
-    const domaddress = document.querySelector('.mapboxgl-ctrl-geocoder--input') as HTMLInputElement
-
-    if (domaddress) {
-      domaddress.value = getValues('shippingLocation')
-    }
-
+    document
+      .querySelectorAll('.mapboxgl-ctrl-top-right .mapboxgl-ctrl-group')[1]
+      ?.addEventListener('click', async () => {
+        localStorage.setItem('location', JSON.stringify(localStorage.getItem('userLocation')))
+        await getDistance()
+        await fillAddress()
+      })
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.addEventListener('change', async (e: any) => {
       if (setValue) {
         setValue('shippingLocation', e.target.value)
@@ -165,6 +164,14 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
         });
 
       map.addControl(new goongjs.NavigationControl());
+      map.addControl(
+        new goongjs.GeolocateControl({
+        positionOptions: {
+        enableHighAccuracy: true
+      },
+        trackUserLocation: true,
+      })
+      );
        map.on("load",()=>{
         if (navigator.geolocation) {
           marker.remove();
@@ -184,14 +191,14 @@ const YaSuoMap = ({ setValue, getValues, setGapStore, setPickGapStore }: Props) 
              });
              marker
                .setLngLat([position.coords.longitude,position.coords.latitude]).addTo(map)
-             map.addControl(
-               new goongjs.GeolocateControl({
-               positionOptions: {
-               enableHighAccuracy: true
-             },
-               trackUserLocation: true,
-             })
-             );
+            //  map.addControl(
+            //    new goongjs.GeolocateControl({
+            //    positionOptions: {
+            //    enableHighAccuracy: true
+            //  },
+            //    trackUserLocation: true,
+            //  })
+            //  );
           });
         }
 
