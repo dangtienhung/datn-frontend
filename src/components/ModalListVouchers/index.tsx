@@ -11,21 +11,15 @@ import { useEffect, useState } from 'react'
 
 type ModalListVouchersProps = {
   isOpen: boolean
-  voucherChecked: IVoucher
   setVoucherChecked: React.Dispatch<React.SetStateAction<IVoucher>>
   toggleModal: () => void
   totallPrice: number
 }
 
-const ModalListVouchers = ({
-  isOpen,
-  toggleModal,
-  voucherChecked,
-  setVoucherChecked,
-  totallPrice
-}: ModalListVouchersProps) => {
+const ModalListVouchers = ({ isOpen, toggleModal, setVoucherChecked, totallPrice }: ModalListVouchersProps) => {
   const { data: vouchers } = useGetVoucherUnexpriedQuery()
   const [voucherList, setVoucher] = useState<IVoucher[]>([])
+  const [currentVoucher, setCurrentVoucher] = useState<IVoucher>({} as IVoucher)
 
   useEffect(() => {
     if (vouchers && vouchers.data?.docs) {
@@ -49,8 +43,9 @@ const ModalListVouchers = ({
   }, [totallPrice, vouchers])
 
   const onChange = (e: CheckboxChangeEvent) => {
-    setVoucherChecked(e.target.value)
-    message.success('Thêm mã thành công🎉', 0.5)
+    setCurrentVoucher(e.target.value)
+    // setVoucherChecked(e.target.value)
+    // message.success('Thêm mã thành công🎉', 0.5)
   }
 
   const onCancel = () => {
@@ -63,9 +58,16 @@ const ModalListVouchers = ({
 
   const cancelVoucher = () => {
     setVoucherChecked({} as IVoucher)
-    if (Object.keys(voucherChecked).length > 0) {
+    setCurrentVoucher({} as IVoucher)
+    if (Object.keys(currentVoucher).length > 0) {
       message.error('Đã bỏ chọn mã khuyến mại', 1)
     }
+  }
+
+  const handleSubmit = () => {
+    setVoucherChecked(currentVoucher)
+    message.success('Thêm mã khuyến mại thành công🎉')
+    toggleModal()
   }
 
   return (
@@ -81,14 +83,14 @@ const ModalListVouchers = ({
       footer={
         voucherList &&
         voucherList.length > 0 && [
-          <Button key={'abc+0'} hidden={Object.keys(voucherChecked).length > 0 ? false : true} onClick={cancelVoucher}>
+          <Button key={'abc+0'} hidden={Object.keys(currentVoucher).length > 0 ? false : true} onClick={cancelVoucher}>
             Hủy
           </Button>,
           <Button
-            hidden={Object.keys(voucherChecked).length > 0 ? false : true}
+            hidden={Object.keys(currentVoucher).length > 0 ? false : true}
             key={'abc+1'}
             className='bg-[#EE4D2D] text-white hover:!text-white'
-            onClick={toggleModal}
+            onClick={handleSubmit}
           >
             Áp dụng
           </Button>
@@ -104,7 +106,7 @@ const ModalListVouchers = ({
               buttonStyle='solid'
               size='large'
               onChange={onChange}
-              value={voucherChecked}
+              value={currentVoucher}
               className='my-2 '
             >
               <Radio className='select-none' disabled={isExpiredVoucher(voucher?.endDate as string)} value={voucher}>
