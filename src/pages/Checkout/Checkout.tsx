@@ -451,7 +451,6 @@ const Checkout = () => {
       />
       <ModalListVouchers
         isOpen={isModalOpen}
-        voucherChecked={voucherChecked}
         setVoucherChecked={setVoucherChecked}
         toggleModal={toggleModal}
         totallPrice={totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut}
