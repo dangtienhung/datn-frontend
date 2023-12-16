@@ -29,6 +29,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MdOutlineMail } from 'react-icons/md'
 import { saveFormOrder } from '../../store/slices/order.slice'
+import { useGetAddressQuery } from '../../store'
 
 const content = (
   <div className='w-72'>
@@ -196,7 +197,6 @@ const Checkout = () => {
       }
 
       dispatch(saveFormOrder(dataForm))
-      localStorage.setItem('FormOrder', JSON.stringify(dataForm))
 
       if (data.paymentMethod == 'cod') {
         orderAPIFn(dataForm)

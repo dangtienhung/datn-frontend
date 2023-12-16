@@ -25,7 +25,6 @@ const PaymentResult = () => {
   const [second, _] = useState<number>(5)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [idOrder, setIdOrder] = useState('')
-  const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
   const order = useAppSelector((state) => state.persistedReducer.order)
   const navigate = useNavigate()
   // const { state } = useLocation()
@@ -197,10 +196,12 @@ const PaymentResult = () => {
     }
     const date = new Date()
     if (searchParams.get('expire')) {
-      if (Number(searchParams.get('expire')) < date.getTime()) {
+      if (Number(searchParams.get('expire')) < date.getTime() || !order.data) {
         navigate('/')
       } else {
         if (Number(searchParams.get('vnp_ResponseCode')) != 24) {
+          console.log('Kaka')
+
           const orderVnpay: IOrderCheckout = {
             user:
               (searchParams.get('userId') as string) === 'undefined'
@@ -233,6 +234,7 @@ const PaymentResult = () => {
               if (res?.error) {
                 return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res?.error?.data?.error)
               } else {
+                localStorage.removeItem('location')
                 dispatch(resetAllCart())
                 dispatch(saveFormOrder(''))
                 ClientSocket.sendNotificationToAdmin(
@@ -244,6 +246,9 @@ const PaymentResult = () => {
                 setIdOrder(res.order.orderNew._id)
               }
             })
+        } else {
+          dispatch(saveFormOrder(''))
+          localStorage.removeItem('location')
         }
       }
     }

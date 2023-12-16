@@ -117,6 +117,10 @@ export type IUserCheckout = Yup.InferType<typeof UserCheckoutSchema>
 export const InforFormSchema = Yup.object({
   _id: Yup.string().trim().required('ID Không được để trống'),
   username: Yup.string().trim().required('Họ và tên không được để trống'),
+  phone: Yup.string()
+    .trim()
+    .required('Số điện thoại không được để trống')
+    .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
   account: Yup.string().trim().required('Tài khoản không được để trống'),
   gender: Yup.string().trim().required('Giới tính không được để trống'),
   address: Yup.string().trim().required('Địa chỉ không được để trống')

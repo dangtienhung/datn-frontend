@@ -23,7 +23,14 @@ export const MyAddress = () => {
 
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
 
-  const { data: addressData } = useGetAddressQuery({ userId: user._id as string })
+  const { data: addressData } = useGetAddressQuery(
+    { userId: user._id as string },
+    {
+      pollingInterval: 3000,
+      refetchOnMountOrArgChange: true,
+      skip: false
+    }
+  )
   const [deleteAddress] = useDeleteAddressMutation()
 
   useEffect(() => {
