@@ -26,7 +26,6 @@ export const MyAddress = () => {
   const { data: addressData } = useGetAddressQuery(
     { userId: user._id as string },
     {
-      pollingInterval: 3000,
       refetchOnMountOrArgChange: true,
       skip: false
     }

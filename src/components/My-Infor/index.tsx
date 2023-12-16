@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Box } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useEffect, useState } from 'react'
-import Flatpickr from 'react-flatpickr'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { useUpdateInforMutation } from '../../api/Auth'
@@ -12,10 +11,10 @@ import { RootState } from '../../store/store'
 import convertToBase64 from '../../utils/convertBase64'
 import { InforForm, InforFormSchema } from '../../validate/Form'
 import { IUserAddress } from '../../interfaces'
+import { addressApi } from '../../store'
 
 const MyInfor = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  // const loadAddress = useGetAddressQuery.
   const [updateInfor, { isLoading: isUpdateInfor }] = useUpdateInforMutation()
   const [avatar, setAvatar] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
     file: undefined,
@@ -39,8 +38,6 @@ const MyInfor = () => {
     }
   })
   useEffect(() => {
-    console.log(user)
-
     if (user) {
       user.address?.length &&
         (user.address as IUserAddress[])?.map((item: IUserAddress) => {
@@ -50,7 +47,7 @@ const MyInfor = () => {
           }
         })
     }
-  }, [setValue, user])
+  }, [setValue])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -64,19 +61,17 @@ const MyInfor = () => {
   }
 
   const ChangeInfor = (dataUpdate: any) => {
-    updateInfor(dataUpdate)
-      .then(({ data }: any) => {
-        if (data.error) {
-          toast.error(data.error, {
-            position: 'top-right'
-          })
-        } else {
-          toast.success(data.message, {
-            position: 'top-right'
-          })
-        }
-      })
-      .then(() => {})
+    updateInfor(dataUpdate).then(({ data }: any) => {
+      if (data.error) {
+        toast.error(data.error, {
+          position: 'top-right'
+        })
+      } else {
+        toast.success(data.message, {
+          position: 'top-right'
+        })
+      }
+    })
   }
 
   const onInfor = (dateUpdate: InforForm) => {

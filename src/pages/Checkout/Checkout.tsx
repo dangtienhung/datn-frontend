@@ -29,7 +29,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MdOutlineMail } from 'react-icons/md'
 import { saveFormOrder } from '../../store/slices/order.slice'
-import { useGetAddressQuery } from '../../store'
 
 const content = (
   <div className='w-72'>
@@ -60,7 +59,6 @@ const Checkout = () => {
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
-  // const Order = useAppSelector((state) => state.persistedReducer.order)
   // const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
