@@ -23,7 +23,6 @@ import { toast } from 'react-toastify'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
-import { useStripePaymentMutation } from '../../api/paymentstripe'
 import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -57,7 +56,6 @@ const Checkout = () => {
   const [OpenGapStore, setOpenGapStore] = useState(false)
 
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
-  const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
 
   const toggleModal = () => {
@@ -70,7 +68,6 @@ const Checkout = () => {
   const {
     register,
     formState: { errors },
-    getValues,
     handleSubmit,
     setValue
   } = useForm({
@@ -215,14 +212,6 @@ const Checkout = () => {
                 window.location.href = res.order.url
               }
             })
-        } else if (data.paymentMethod == 'stripe') {
-          stripePayment(dataForm)
-            .then(({ data: { url } }: any) => {
-              window.location.href = url
-            })
-            .catch((err) => {
-              console.error(err)
-            })
         } else if (data.paymentMethod == 'vnpay') {
           // console.log(dataForm)
           vnpayPayment(dataForm)
@@ -231,7 +220,7 @@ const Checkout = () => {
               window.location.href = url
             })
             .catch((err) => {
-              console.error(err)
+              toast.error(err.data.message)
             })
         }
       }
@@ -420,7 +409,7 @@ const Checkout = () => {
               ></textarea>
             </div>
             <div className=''>
-              <Button type='checkout' style={cod || stripe || vnpay ? 'bg-gray-500' : ''} size='large' shape='circle'>
+              <Button type='checkout' style={cod || vnpay ? 'bg-gray-500' : ''} size='large' shape='circle'>
                 <span className='block' onClick={handleFormInfoCheckout}>
                   Đặt hàng
                 </span>

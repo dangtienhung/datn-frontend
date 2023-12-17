@@ -40,35 +40,6 @@ const PaymentResult = () => {
     setWindowWidth(window.innerWidth)
   }
 
-  // const getData = useCallback(
-  //   (getData: string) => {
-  //     const arrTotal: arrTotal[] = []
-  //     const arrTotalNumbers: number[] = []
-  //     dataCartCheckout.items.map((item) =>
-  //       item.items.map((data) => {
-  //         if (getData == 'list') {
-  //           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //           const { total, _id, ...rest } = data
-  //           arrTotal.push({ ...rest, name: item.name })
-  //         } else {
-  //           let value: number | undefined
-  //           if (getData === 'quantity') {
-  //             value = data.quantity
-  //           } else if (getData === 'total') {
-  //             value = data.total
-  //           }
-
-  //           if (value !== undefined) {
-  //             arrTotalNumbers.push(value)
-  //           }
-  //         }
-  //       })
-  //     )
-  //     return getData == 'list' ? arrTotal : arrTotalNumbers
-  //   },
-  //   [dataCartCheckout.items]
-  // )
-
   useEffect(() => {
     dispatch(getAllProducts({}))
   }, [dispatch])
@@ -196,56 +167,58 @@ const PaymentResult = () => {
     }
     const date = new Date()
     if (searchParams.get('expire')) {
-      if (Number(searchParams.get('expire')) < date.getTime() || !order.data) {
+      if (Number(searchParams.get('expire')) < date.getTime()) {
         navigate('/')
       } else {
         if (Number(searchParams.get('vnp_ResponseCode')) != 24) {
-          console.log('Kaka')
+          if (!order.data) {
+            navigate('/')
+          } else {
+            const orderVnpay: IOrderCheckout = {
+              user:
+                (searchParams.get('userId') as string) === 'undefined'
+                  ? undefined
+                  : (searchParams.get('userId') as string),
+              items: order.data.items,
+              payment_vnpay: searchParams.get('vnp_SecureHash') as string,
+              total: order.data.total,
+              priceShipping: order.data.priceShipping,
+              noteOrder: order.data.noteOrder,
+              paymentMethodId: 'vnpay',
+              inforOrderShipping: {
+                name: order.data.inforOrderShipping.name,
+                email: order.data.inforOrderShipping.email,
+                phone: order.data.inforOrderShipping.phone,
+                address: order.data.inforOrderShipping.address,
+                noteShipping: order.data.inforOrderShipping.noteShipping
+              },
+              moneyPromotion: order.data.moneyPromotion.voucherId
+                ? {
+                    price: order.data.moneyPromotion.price,
+                    voucherId: order.data.moneyPromotion.voucherId
+                  }
+                : {}
+            }
 
-          const orderVnpay: IOrderCheckout = {
-            user:
-              (searchParams.get('userId') as string) === 'undefined'
-                ? undefined
-                : (searchParams.get('userId') as string),
-            items: order.data.items,
-            payment_vnpay: searchParams.get('vnp_SecureHash') as string,
-            total: order.data.total,
-            priceShipping: order.data.priceShipping,
-            noteOrder: order.data.noteOrder,
-            paymentMethodId: 'vnpay',
-            inforOrderShipping: {
-              name: order.data.inforOrderShipping.name,
-              email: order.data.inforOrderShipping.email,
-              phone: order.data.inforOrderShipping.phone,
-              address: order.data.inforOrderShipping.address,
-              noteShipping: order.data.inforOrderShipping.noteShipping
-            },
-            moneyPromotion: order.data.moneyPromotion.voucherId
-              ? {
-                  price: order.data.moneyPromotion.price,
-                  voucherId: order.data.moneyPromotion.voucherId
+            orderAPIFn(orderVnpay)
+              .unwrap()
+              .then((res) => {
+                if (res?.error) {
+                  return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res?.error?.data?.error)
+                } else {
+                  localStorage.removeItem('location')
+                  dispatch(resetAllCart())
+                  dispatch(saveFormOrder(''))
+                  ClientSocket.sendNotificationToAdmin(
+                    `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                      res.order.orderNew.inforOrderShipping.name
+                    }" và đang chờ xác nhận.`
+                  )
+                  ClientSocket.createOrder(res.order.orderNew.user)
+                  setIdOrder(res.order.orderNew._id)
                 }
-              : {}
+              })
           }
-
-          orderAPIFn(orderVnpay)
-            .unwrap()
-            .then((res) => {
-              if (res?.error) {
-                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res?.error?.data?.error)
-              } else {
-                localStorage.removeItem('location')
-                dispatch(resetAllCart())
-                dispatch(saveFormOrder(''))
-                ClientSocket.sendNotificationToAdmin(
-                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
-                    res.order.orderNew.inforOrderShipping.name
-                  }" và đang chờ xác nhận.`
-                )
-                ClientSocket.createOrder(res.order.orderNew.user)
-                setIdOrder(res.order.orderNew._id)
-              }
-            })
         } else {
           dispatch(saveFormOrder(''))
           localStorage.removeItem('location')
@@ -257,13 +230,9 @@ const PaymentResult = () => {
 
     if (searchParams.get('encode')) {
       decodedToken = jwtDecode(searchParams.get('encode') || '')
-      if ((decodedToken.exp && decodedToken.exp < date.getTime() / 1000) || !localStorage.getItem('storeNote')) {
+      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
         navigate('/')
       } else {
-        if (JSON.parse(localStorage.getItem('storeNote') as string).paymentMethodId == 'cod') {
-          dispatch(resetAllCart())
-          localStorage.removeItem('storeNote')
-        }
         if (data) {
           orderAPIFn(data.invoice)
             .unwrap()
