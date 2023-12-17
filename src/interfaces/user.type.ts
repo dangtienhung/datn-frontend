@@ -47,6 +47,10 @@ export interface IAddUser extends AddUserForm {
 }
 
 export interface IUserAddress {
+  geoLocation: {
+    lat?: string
+    lng?: string
+  }
   address: string
   name: string
   phone: string

@@ -128,6 +128,24 @@ export const InforFormSchema = Yup.object({
 
 export type InforForm = Yup.InferType<typeof InforFormSchema>
 
+export const InforAddressSchema = Yup.object({
+  // _id: Yup.string().required('Họ và tên không được để trống'),
+  name: Yup.string().required('Họ và tên không được để trống'),
+  userId: Yup.string(),
+  phone: Yup.string()
+    .trim()
+    .required('Số điện thoại không được để trống')
+    .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
+  address: Yup.string().trim().required('Địa chỉ không được để trống'),
+  default: Yup.boolean(),
+  geoLocation: Yup.object({
+    lat: Yup.string(),
+    lng: Yup.string()
+  })
+})
+
+export type InforAddressForm = Yup.InferType<typeof InforAddressSchema>
+
 export const BlogsSchema = Yup.object({
   name: Yup.string().trim().required('Name is required'),
   description: Yup.string().trim().required('Description is required')

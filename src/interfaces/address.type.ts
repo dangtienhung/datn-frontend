@@ -1,5 +1,9 @@
 export interface IAddressCreate {
   name: string
+  geoLocation: {
+    lat?: string
+    lng?: string
+  }
   userId: string
   phone: string
   address: string
@@ -8,6 +12,10 @@ export interface IAddressCreate {
 
 export interface IAddress {
   _id: string
+  geoLocation: {
+    lat?: string
+    lng?: string
+  }
   name: string
   userId: string
   phone: string

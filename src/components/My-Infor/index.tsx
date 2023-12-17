@@ -11,7 +11,7 @@ import { RootState } from '../../store/store'
 import convertToBase64 from '../../utils/convertBase64'
 import { InforForm, InforFormSchema } from '../../validate/Form'
 import { IUserAddress } from '../../interfaces'
-import { addressApi } from '../../store'
+import Autocomplete from '../autocompleteMap/Atutocomplete'
 
 const MyInfor = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
@@ -21,6 +21,7 @@ const MyInfor = () => {
     base64: ''
   })
   const [uploadAvatar, { isLoading: isUpdateAvatar }] = useUpLoadAvartaUserMutation()
+  const [defaultAddress, setDefaultAddress] = useState('')
 
   const {
     register,
@@ -42,12 +43,12 @@ const MyInfor = () => {
       user.address?.length &&
         (user.address as IUserAddress[])?.map((item: IUserAddress) => {
           if (item.default) {
-            setValue('address', item.address)
+            setDefaultAddress(item.address)
             setValue('phone', item.phone)
           }
         })
     }
-  }, [setValue])
+  }, [setValue, user])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -67,6 +68,7 @@ const MyInfor = () => {
           position: 'top-right'
         })
       } else {
+        localStorage.removeItem('addressDefault')
         toast.success(data.message, {
           position: 'top-right'
         })
@@ -75,14 +77,32 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
+    const geo = JSON.parse(localStorage.getItem('addressDefault') as string)
+      ? JSON.parse(localStorage.getItem('addressDefault') as string)
+      : (user.address as IUserAddress[])?.filter((item: IUserAddress) => {
+          if (item.default) {
+            return {
+              lat: item.geoLocation.lat,
+              lng: item.geoLocation.lng
+            }
+          }
+        })[0]?.geoLocation
+
+    localStorage.setItem('userLocation', JSON.stringify(geo))
+
     if (avatar.file) {
       const form = new FormData()
       form.append('images', avatar.file)
       uploadAvatar(form).then(({ data: { urls } }: any) => {
-        ChangeInfor({ ...dateUpdate, avatar: urls[0].url, userId: user._id })
+        ChangeInfor({
+          ...dateUpdate,
+          avatar: urls[0].url,
+          userId: user._id,
+          geoLocation: { lat: geo.lat, lng: geo.lng }
+        })
       })
     } else {
-      ChangeInfor({ ...dateUpdate, userId: user._id })
+      ChangeInfor({ ...dateUpdate, userId: user._id, geoLocation: { lat: geo.lat, lng: geo.lng } })
     }
   }
 
@@ -148,7 +168,6 @@ const MyInfor = () => {
                       type='text'
                       {...register('phone')}
                       name='phone'
-                      // defaultValue={user.grade}
                     />
                     <span className='text-red-500'>{errors.phone && errors.phone.message}</span>
                   </div>
@@ -214,13 +233,12 @@ const MyInfor = () => {
                   </div>
                   <div className='item-profile w-[50%] my-3'>
                     <label className='block py-2 text-[#959393]'>Địa chỉ mặc định</label>
-                    <input
-                      className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
-                      type='text'
-                      {...register('address')}
-                      name='address'
-                    />
+                    <div id='geocoder' className='flex flex-row gap-3'></div>
                     <span className='text-red-500'>{errors.address && errors.address.message}</span>
+                  </div>
+                  <div>
+                    <Autocomplete setValue={setValue} address={defaultAddress} />
+                    <div id='map'></div>
                   </div>
                 </div>
               )}

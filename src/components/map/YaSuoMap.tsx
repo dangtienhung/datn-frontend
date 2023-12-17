@@ -26,21 +26,24 @@ interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
   setPickGapStore?: React.Dispatch<React.SetStateAction<ListStore>>
   setValue: UseFormSetValue<IUserCheckout>
+  // getValue: UseFormGetValues<IUserCheckout>
 }
 
 const getLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      let location: LngLat = {
-        lng: 0,
-        lat: 0
-      }
-      location = {
-        lng: position.coords.longitude,
-        lat: position.coords.latitude
-      }
-      localStorage.setItem('userLocation', JSON.stringify(location))
-    })
+  if (!localStorage.getItem('userLocation')) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let location: LngLat = {
+          lng: 0,
+          lat: 0
+        }
+        location = {
+          lng: position.coords.longitude,
+          lat: position.coords.latitude
+        }
+        localStorage.setItem('userLocation', JSON.stringify(location))
+      })
+    }
   }
 }
 
@@ -50,12 +53,16 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
 
-  const getDistance = async () => {
+  const getDistance = async (locate?: { lng: number; lat: number }) => {
     setTimeout(async () => {
       const controller = new AbortController()
-      const StorageDistance = localStorage.getItem('location')
-        ? JSON.parse(localStorage.getItem('location') ?? '')
-        : localStorage.getItem('userLocation')
+      let StorageDistance = localStorage.getItem('location')
+        ? JSON.parse(localStorage.getItem('location') as string)
+        : JSON.parse(localStorage.getItem('userLocation') as string)
+
+      if (locate) {
+        StorageDistance = locate
+      }
 
       await axios
         .get(
@@ -85,11 +92,18 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
     }, 1000)
   }
 
-  const fillAddress = async () => {
+  const fillAddress = async (locate?: { lng: number; lat: number }) => {
+    let geoDefault = JSON.parse(localStorage.getItem('userLocation') as string)
+    if (locate) {
+      geoDefault = locate
+    }
+
     const controller = new AbortController()
     await axios
       .get(
-        `https://rsapi.goong.io/Geocode?latlng=${lnglat.lat},${lnglat.lng}&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
+        `https://rsapi.goong.io/Geocode?latlng=${geoDefault ? geoDefault.lat : lnglat.lat},${
+          geoDefault ? geoDefault.lng : lnglat.lng
+        }&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
         { signal: controller.signal }
       )
       .then(({ data: { results } }) => {
@@ -98,7 +112,9 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
           results[0].formatted_address),
           controller.abort()
       })
-    await getDistance()
+    if (!locate) {
+      await getDistance()
+    }
   }
 
   useEffect(() => {
@@ -113,9 +129,12 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
     document
       .querySelectorAll('.mapboxgl-ctrl-top-right .mapboxgl-ctrl-group')[1]
       ?.addEventListener('click', async () => {
-        localStorage.setItem('location', JSON.stringify(localStorage.getItem('userLocation')))
-        await getDistance()
-        await fillAddress()
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(async (position) => {
+            await getDistance({ lng: position.coords.longitude, lat: position.coords.latitude })
+            await fillAddress({ lng: position.coords.longitude, lat: position.coords.latitude })
+          })
+        }
       })
     document.querySelector('.mapboxgl-ctrl-geocoder--input')?.addEventListener('change', async (e: any) => {
       if (setValue) {
@@ -128,7 +147,7 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
       map.current.innerHTML = `
       goongjs.accessToken = "QG9FGuZksX4QOibtVKjBvv7dQcSLpbDqQnajow1S";
       var map = new goongjs.Map({
-        container: 'map',
+        container: 'mapCheckout',
         style: 'https://tiles.goong.io/assets/goong_map_web.json',
         center: [${lnglat.lng}, ${lnglat.lat}],
         zoom: 13
@@ -138,7 +157,7 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
         });
 
       var marker = new goongjs.Marker();
-        geocoder.addTo('#geocoder');
+        geocoder.addTo('#geocoderCheckout');
 
         // Add geocoder result to container.
         geocoder.on('result', function ({result:{result:{geometry:{location}}}}) {
@@ -173,38 +192,46 @@ const YaSuoMap = ({ setValue, setGapStore, setPickGapStore }: Props) => {
       })
       );
        map.on("load",()=>{
-        if (navigator.geolocation) {
+        if(localStorage.getItem("userLocation")){
           marker.remove();
-          navigator.geolocation.getCurrentPosition((position) => {
-              localStorage.setItem("userLocation",JSON.stringify(
-                {
-                  lng:position.coords.longitude,
-                  lat:position.coords.latitude
-                }
-              ))
-              map.flyTo({
-                 center: [
-                  position.coords.longitude,
-                  position.coords.latitude
-                 ],
-                 essential: true // this animation is considered essential with respect to prefers-reduced-motion
-             });
-             marker
-               .setLngLat([position.coords.longitude,position.coords.latitude]).addTo(map)
-            //  map.addControl(
-            //    new goongjs.GeolocateControl({
-            //    positionOptions: {
-            //    enableHighAccuracy: true
-            //  },
-            //    trackUserLocation: true,
-            //  })
-            //  );
+          map.flyTo({
+            center: [
+              JSON.parse(localStorage.getItem('userLocation')).lng,
+              JSON.parse(localStorage.getItem('userLocation')).lat,
+            ],
+            essential: true // this animation is considered essential with respect to prefers-reduced-motion
           });
+          marker
+            .setLngLat([
+              JSON.parse(localStorage.getItem('userLocation')).lng,
+              JSON.parse(localStorage.getItem('userLocation')).lat,])
+              .addTo(map)
+        }else{
+          if (navigator.geolocation) {
+            marker.remove();
+            navigator.geolocation.getCurrentPosition((position) => {
+                localStorage.setItem("userLocation",JSON.stringify(
+                  {
+                    lng:position.coords.longitude,
+                    lat:position.coords.latitude
+                  }
+                ))
+                map.flyTo({
+                   center: [
+                    position.coords.longitude,
+                    position.coords.latitude
+                   ],
+                   essential: true // this animation is considered essential with respect to prefers-reduced-motion
+               });
+               marker
+                 .setLngLat([position.coords.longitude,position.coords.latitude]).addTo(map)
+            });
+          }
         }
 
        }); `
     }
-    if (lnglat.lat > 0 && lnglat.lng > 0) {
+    if ((lnglat.lat > 0 && lnglat.lng > 0) || localStorage.getItem('userLocation')) {
       getDistance()
       fillAddress()
     }

@@ -1,9 +1,13 @@
-import { Button, Checkbox, Col, Form, Input, Modal, Row, message } from 'antd'
+import { Button, Col, Form, Modal, Row, message } from 'antd'
 import { RootState, useAppSelector, useCreateAddressMutation } from '../../../store'
 import { handleCancel, handleOk } from '../utils'
 
-import { IAddressCreate } from '../../../interfaces'
 import { Navigate } from 'react-router-dom'
+import Autocomplete from '../../autocompleteMap/Atutocomplete'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import { InforAddressForm, InforAddressSchema } from '../../../validate/Form'
+import { useState } from 'react'
 
 type Props = {
   isModalOpen: boolean
@@ -12,112 +16,129 @@ type Props = {
 
 export const CreateAddress = ({ isModalOpen, setIsModalOpen }: Props) => {
   const [createAddress] = useCreateAddressMutation()
-  const [form] = Form.useForm()
-
+  const [defaultAddress, setDefaultAddress] = useState(false)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue
+  } = useForm<InforAddressForm>({
+    mode: 'onSubmit',
+    resolver: yupResolver(InforAddressSchema)
+  })
   if (!user) {
     message.error('Bạn cần đăng nhập để thực hiện chức năng này')
     return <Navigate to='/login' replace={true} />
   }
 
-  const handleSubmitAddress = async (data: Pick<IAddressCreate, 'address' | 'name' | 'phone' | 'default'>) => {
+  const handleSubmitAddress = async (data: InforAddressForm) => {
+    const geo = JSON.parse(localStorage.getItem('addressDefault') as string)
+    console.log({ ...data, geoLocation: { lat: geo.lat, lng: geo.lng } })
+
     try {
       const response = await createAddress({
         ...data,
-        default: data.default ? true : false,
+        geoLocation: { lat: geo.lat, lng: geo.lng },
+        default: defaultAddress,
         userId: user._id as string
       })
       if (response) {
+        reset()
+        localStorage.removeItem('addressDefault')
         message.success('Thêm địa chỉ thành công')
         setIsModalOpen(false)
       }
-      form.resetFields()
     } catch (error) {
       message.error('Có lỗi xảy ra, vui lòng thử lại sau!')
     }
   }
   return (
-    <Modal
-      title='Địa chỉ mới'
-      open={isModalOpen}
-      onOk={() => handleOk(setIsModalOpen)}
-      onCancel={() => handleCancel(setIsModalOpen)}
-      footer={null}
-    >
-      <Form layout='vertical' autoComplete='off' onFinish={handleSubmitAddress} form={form}>
-        <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item
-              label='Họ và tên'
-              name={'name'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Vui lòng nhập họ và tên'
-                }
-              ]}
-            >
-              <Input placeholder='Họ và tên' className='border rounded-md' />
-            </Form.Item>
-          </Col>
-          <Col span={12} className=''>
-            <Form.Item
-              label='Số điện thoại'
-              name={'phone'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Vui lòng nhập số điện thoại'
-                },
-                {
-                  validator: (_, value, callback) => {
-                    const phoneRegex = /^-?(0|[1-9][0-9]*)(.[0-9]*)?$/
-                    if (value && !phoneRegex.test(value)) {
-                      callback('Số điện thoại không hợp lệ')
-                    } else {
-                      callback()
-                    }
-                  }
-                }
-              ]}
-            >
-              <Input placeholder='Số điện thoại' className='border rounded-md' />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={24}>
-          <Col span={24}>
-            <Form.Item
-              label='Địa chỉ'
-              name={'address'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Vui lòng nhập địa chỉ'
-                }
-              ]}
-            >
-              <Input placeholder='Địa chỉ' className='border rounded-md' />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={24}>
-          <Col span={24}>
-            <Form.Item name='default' valuePropName='checked'>
-              <Checkbox>Đặt làm địa chỉ mặc định</Checkbox>
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Button
-          type='primary'
-          htmlType='submit'
-          className='bg-yellow hover:!bg-yellow text-white w-full border rounded-md'
+    <>
+      {isModalOpen && (
+        <Modal
+          title='Địa chỉ mới'
+          open={isModalOpen}
+          onOk={() => handleOk(setIsModalOpen)}
+          onCancel={() => {
+            handleCancel(setIsModalOpen, reset)
+            localStorage.removeItem('addressDefault')
+          }}
+          footer={null}
         >
-          Thêm địa chỉ
-        </Button>
-      </Form>
-    </Modal>
+          <Form layout='vertical' autoComplete='off' onFinish={handleSubmit(handleSubmitAddress)}>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item label='Họ và tên'>
+                  <div>
+                    <input
+                      className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
+                      type='text'
+                      {...register('name')}
+                      name='name'
+                    />
+                    <span className='text-red-500'>{errors.name && errors.name.message}</span>
+                  </div>
+                </Form.Item>
+              </Col>
+              <Col span={12} className=''>
+                <Form.Item label='Số điện thoại'>
+                  <div>
+                    <input
+                      className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
+                      type='text'
+                      {...register('phone')}
+                      name='phone'
+                    />
+                    <span className='text-red-500'>{errors.phone && errors.phone.message}</span>
+                  </div>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={24}>
+                <Form.Item>
+                  <div>
+                    <div className='item-profile w-full my-3'>
+                      <label className='block py-2 text-[#959393]'>Địa chỉ mặc định</label>
+                      <div id='geocoder' className='flex flex-row gap-3'></div>
+                      <span className='text-red-500'>{errors.address && errors.address.message}</span>
+                    </div>
+                    <div>
+                      <Autocomplete setValue={setValue} />
+                      <div id='map'></div>
+                    </div>
+                  </div>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={24}>
+                <Form.Item>
+                  <label htmlFor='default' className='cursor-pointer flex gap-1 items-center'>
+                    <input
+                      type='checkbox'
+                      className='rounded-sm border-gray-300 cursor-pointer hover:border-blue-500'
+                      id='default'
+                      onClick={() => setDefaultAddress(!defaultAddress)}
+                    />
+                    Đặt làm địa chỉ mặc định
+                  </label>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Button
+              type='primary'
+              htmlType='submit'
+              className='bg-yellow hover:!bg-yellow text-white w-full border rounded-md'
+            >
+              Thêm địa chỉ
+            </Button>
+          </Form>
+        </Modal>
+      )}
+    </>
   )
 }

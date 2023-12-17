@@ -59,7 +59,6 @@ const Checkout = () => {
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
-  // const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
@@ -71,6 +70,7 @@ const Checkout = () => {
   const {
     register,
     formState: { errors },
+    getValues,
     handleSubmit,
     setValue
   } = useForm({
@@ -196,42 +196,44 @@ const Checkout = () => {
 
       dispatch(saveFormOrder(dataForm))
 
-      if (data.paymentMethod == 'cod') {
-        orderAPIFn(dataForm)
-          .unwrap()
-          .then((res) => {
-            if (res.error || res?.error?.data?.error) {
-              return toast.error('Đặt hàng thất bại' + res.error.data.error)
-            } else {
-              // dispatch(resetAllCart())
-
-              ClientSocket.sendNotificationToAdmin(
-                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
-                  res.order.orderNew.inforOrderShipping.name
-                }" và đang chờ xác nhận.`
-              )
-              ClientSocket.createOrder(res.order.orderNew.user)
-              window.location.href = res.order.url
-            }
-          })
-      } else if (data.paymentMethod == 'stripe') {
-        stripePayment(dataForm)
-          .then(({ data: { url } }: any) => {
-            window.location.href = url
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      } else if (data.paymentMethod == 'vnpay') {
-        // console.log(dataForm)
-        vnpayPayment(dataForm)
-          .unwrap()
-          .then(({ url }) => {
-            window.location.href = url
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      if (Number(dataForm.total) <= 5000) {
+        message.error('Đơn hàng phải lớn hơn 5 nghìn', 2)
+      } else {
+        if (data.paymentMethod == 'cod') {
+          orderAPIFn(dataForm)
+            .unwrap()
+            .then((res) => {
+              if (res.error || res?.error?.data?.error) {
+                return toast.error('Đặt hàng thất bại' + res.error.data.error)
+              } else {
+                ClientSocket.sendNotificationToAdmin(
+                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                    res.order.orderNew.inforOrderShipping.name
+                  }" và đang chờ xác nhận.`
+                )
+                ClientSocket.createOrder(res.order.orderNew.user)
+                window.location.href = res.order.url
+              }
+            })
+        } else if (data.paymentMethod == 'stripe') {
+          stripePayment(dataForm)
+            .then(({ data: { url } }: any) => {
+              window.location.href = url
+            })
+            .catch((err) => {
+              console.error(err)
+            })
+        } else if (data.paymentMethod == 'vnpay') {
+          // console.log(dataForm)
+          vnpayPayment(dataForm)
+            .unwrap()
+            .then(({ url }) => {
+              window.location.href = url
+            })
+            .catch((err) => {
+              console.error(err)
+            })
+        }
       }
 
       //       if (data.paymentMethod == 'vnpay') {
@@ -293,7 +295,7 @@ const Checkout = () => {
                 <h2>Giao đến</h2>
               </div>
               <div>
-                <div id='geocoder' className='flex flex-row gap-3'>
+                <div id='geocoderCheckout' className='flex flex-row gap-3'>
                   <i className='fa-solid fa-location-dot'></i>
                 </div>
                 {errors.shippingLocation && (
@@ -312,7 +314,7 @@ const Checkout = () => {
             </div>
             <div>
               <YaSuoMap setValue={setValue} setGapStore={setGapStore} setPickGapStore={setPickGapStore} />
-              <div id='map'></div>
+              <div id='mapCheckout'></div>
             </div>
           </div>
 
