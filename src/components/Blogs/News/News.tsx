@@ -2,7 +2,9 @@ import { Avatar, Button, Card, Empty } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useGetAllBlogsQuery } from '../../../api/NewBlogs'
 import './New.module.scss'
-import ReactHtmlParser from 'html-react-parser'
+import parse from 'html-react-parser'
+import { Pagination } from 'antd'
+import { useState } from 'react'
 const { Meta } = Card
 
 const News = () => {
@@ -10,7 +12,17 @@ const News = () => {
   const navigate = useNavigate()
   const { data: dataBlog } = useGetAllBlogsQuery()
   const listBlogsByIdCate = dataBlog && dataBlog?.docs?.filter((item) => item?.category?._id === id)
-  if (listBlogsByIdCate && listBlogsByIdCate.length <= 0) {
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 4
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedData = listBlogsByIdCate?.slice(startIndex, endIndex)
+  const handleChangePage = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  if (paginatedData && paginatedData.length <= 0) {
     return (
       <div className='flex items-center justify-center w-full py-4'>
         <Empty
@@ -25,7 +37,7 @@ const News = () => {
   return (
     <>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-x-[20px] gap-y-[30px] my-[30px]'>
-        {listBlogsByIdCate?.map((item) => (
+        {paginatedData?.map((item) => (
           <Card
             onClick={() => navigate(`/blogs/${item._id}`)}
             key={item._id}
@@ -38,19 +50,12 @@ const News = () => {
                 src={item.images[0].url}
               />
             }
-            // actions={[
-            //   <Link to={'#'} className='text-left ml-3'>
-            //     <Button className=''>Xem thêm</Button>
-            //   </Link>
-            // ]}
           >
             <Meta
               className='custom-title  mb-5'
               avatar={<Avatar src='/logo_icon.png' />}
               title={item.name}
-              description={ReactHtmlParser(
-                item.description.length > 101 ? item.description.slice(0, 101) + '[...]' : item.description
-              )}
+              description={<div className='line-clamp-3 text-base'>{parse(item.description)}</div>}
             />
             <Link to={'#'} className='text-left '>
               <Button className='mt-[25px] hover:!text-[#d3b673] hover:bg-transparent hover:!border-[#d3b673]  text-[#fff] bg-[#d3b673]'>
@@ -60,6 +65,14 @@ const News = () => {
           </Card>
         ))}
       </div>
+      <Pagination
+        showQuickJumper
+        pageSize={itemsPerPage}
+        defaultCurrent={1}
+        current={currentPage}
+        total={listBlogsByIdCate?.length}
+        onChange={handleChangePage}
+      />
     </>
   )
 }
