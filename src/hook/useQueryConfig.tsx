@@ -12,7 +12,7 @@ export default function useQueryConfig() {
   const queryConfig: IQueryConfig = omitBy(
     {
       _page: queryParams._page || 1,
-      limit: queryParams.limit || 10,
+      limit: queryParams.limit || 12,
       searchName: queryParams.searchName,
       c: queryParams.c || ''
     },
