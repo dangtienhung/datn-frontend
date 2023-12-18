@@ -140,7 +140,7 @@ const Header = () => {
           </Tooltip>
           <Tooltip title='Tài khoản' arrow={false}>
             <Link to='/account-layout'>
-              <img className='w-9 h-9 rounded-full mr-[8px] object-cover ' src={user?.avatar} alt='' />
+              <img className='w-12 md:w-9 md:h-9 rounded-full mr-[8px] object-cover ' src={user?.avatar} alt='' />
             </Link>
           </Tooltip>
         </div>

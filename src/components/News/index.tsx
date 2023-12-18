@@ -68,7 +68,7 @@ const News = () => {
               >
                 <div className='img overflow-hidden'>
                   <img
-                    className='w-full max-h-[150px] object-cover transition-all group-hover:scale-[1.1]'
+                    className='w-full min-h-[95px] max-h-[95px] md:max-h-[150px] object-cover transition-all group-hover:scale-[1.1]'
                     src={blog.images[0].url}
                     alt={blog.name}
                   />
