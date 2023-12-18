@@ -5,9 +5,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '../store/store'
 import { refreshUser } from '../store/slices/Auth.slice'
 import { Login } from '../validate/Form'
+import Enviroment from '../utils/checkEnviroment'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8000',
+  baseUrl: Enviroment(),
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
