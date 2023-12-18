@@ -6,7 +6,7 @@ const Enviroment = (path = ''): string => {
     console.log('Đây là môi trường sản phẩm')
     return `https://duantotnghiep-gsy4.onrender.com/${path}`
   } else {
-    return 'http://localhost:8000'
+    return `https://duantotnghiep-gsy4.onrender.com/${path}`
   }
 }
 
