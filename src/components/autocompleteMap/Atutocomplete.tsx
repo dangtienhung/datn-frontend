@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import './Autocomplete.scss'
 import GeoLoCaTion from '../../utils/geolocation'
-import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { UseFormSetValue } from 'react-hook-form'
 
 interface Props {
   setValue: UseFormSetValue<any>
