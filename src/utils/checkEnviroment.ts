@@ -4,7 +4,7 @@ const Enviroment = (path = ''): string => {
     return `http://localhost:8000/${path}`
   } else if (process.env.NODE_ENV === 'production') {
     console.log('Đây là môi trường sản phẩm')
-    return 'https://duantotnghiep-gsy4.onrender.com'
+    return `https://duantotnghiep-gsy4.onrender.com/${path}`
   } else {
     return 'http://localhost:8000'
   }
