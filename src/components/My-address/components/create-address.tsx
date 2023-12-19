@@ -35,7 +35,6 @@ export const CreateAddress = ({ isModalOpen, setIsModalOpen }: Props) => {
 
   const handleSubmitAddress = async (data: InforAddressForm) => {
     const geo = JSON.parse(localStorage.getItem('addressDefault') as string)
-    console.log({ ...data, geoLocation: { lat: geo.lat, lng: geo.lng } })
 
     try {
       const response = await createAddress({

@@ -213,7 +213,6 @@ const Checkout = () => {
               }
             })
         } else if (data.paymentMethod == 'vnpay') {
-          // console.log(dataForm)
           vnpayPayment(dataForm)
             .unwrap()
             .then(({ url }) => {

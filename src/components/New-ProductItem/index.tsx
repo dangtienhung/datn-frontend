@@ -13,7 +13,6 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
   const redirectToDetailPage = (dataProduct: IProduct) => {
     navigate(`/products`, { state: dataProduct })
   }
-  console.log(product)
 
   return (
     <div

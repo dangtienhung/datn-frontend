@@ -67,7 +67,6 @@ const CardOrder = ({ product }: CardOrderProps) => {
   const dataSize = products.docs && products.docs.find((item) => item.name === product.name)?.sizes
 
   const handleChange = (value: string, item: CartItemState, index: number) => {
-    console.log(`selected ${value}`, item, index)
     const a = dataSize?.find((item) => item._id === value)
 
     dispatch(
