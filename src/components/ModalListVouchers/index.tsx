@@ -90,7 +90,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, setVoucherChecked, totallPrice
             hidden={Object.keys(currentVoucher).length > 0 ? false : true}
             key={'abc+1'}
             className='bg-[#EE4D2D] text-white hover:!text-white'
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
           >
             Áp dụng
           </Button>

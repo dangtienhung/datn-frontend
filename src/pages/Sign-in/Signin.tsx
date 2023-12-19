@@ -64,9 +64,9 @@ const Signin = () => {
         <div className='flex items-center justify-center h-full'>
           <div className='content background-content bg-white w-[90vw] md:w-[500px] h-[600px] mx-6 md:px-[100px] py-6 flex justify-center items-center flex-col rounded'>
             <div className='logo'>
-              <img src='/logo.png' alt='' className='w-[200px] mb-5' />
+              <img src='/logoduan.png' alt='' className='w-[250px] mb-5' />
             </div>
-            <form action='' className='flex flex-col' onSubmit={handleSubmit(onLogin)}>
+            <form action='' className='flex flex-col w-full' onSubmit={handleSubmit(onLogin)}>
               <Input
                 type='auth'
                 placeholder='Nhập email của bạn'
