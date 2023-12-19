@@ -34,7 +34,7 @@ const Popup = () => {
 
   return isShowPopup ? (
     <div>
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] sm:w-auto sm:h-auto z-10'>
+      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:h-[70%] sm:w-auto sm:h-auto z-10'>
         <div className='btn-close absolute -right-[30px] -top-[30px] '>
           <button
             onClick={handleClick}
@@ -43,7 +43,7 @@ const Popup = () => {
             <FaTimes className='group-hover:scale-[1.1]' />
           </button>
         </div>
-        <div className='content w-[500px] h-[400px] bg-white'>
+        <div className='content md:w-[500px] md:h-[400px] bg-white'>
           <Slider {...settings}>
             <Link to='/products'>
               <img
