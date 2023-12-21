@@ -12,7 +12,7 @@ interface Props {
 
 const CardSigin = ({ bgColor, icon, color, LoginIn, colorHover, bgColorHover }: Props) => {
   const OAuthLogin = () => {
-    window.open(`http://localhost:8000/auth/${LoginIn}`, '_self')
+    window.open(`https://sub.milk-tea-connect.click/auth/${LoginIn}`, '_self')
   }
   return (
     <Button

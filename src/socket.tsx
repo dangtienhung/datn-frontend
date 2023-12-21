@@ -1,7 +1,7 @@
 import { Socket, io } from 'socket.io-client'
 import { IOrderCheckout } from './store/slices/types/order.type'
 
-const socket: Socket = io('ws://localhost:8000', {
+const socket: Socket = io('ws://sub.milk-tea-connect.click/', {
   transports: ['websocket', 'pulling', 'flashsocket']
 })
 

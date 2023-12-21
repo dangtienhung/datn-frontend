@@ -3,7 +3,7 @@ import { RootState } from '../store/store'
 import { refreshUser } from '../store/slices/Auth.slice'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8000',
+  baseUrl: 'https://sub.milk-tea-connect.click/',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken

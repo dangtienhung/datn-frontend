@@ -3,7 +3,6 @@ import { baseQueryWithReauth } from './Auth'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const CartDBAPI = createApi({
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   reducerPath: 'CartDB',
   tagTypes: ['CartDB'],
   baseQuery: baseQueryWithReauth,

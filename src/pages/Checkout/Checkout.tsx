@@ -223,20 +223,6 @@ const Checkout = () => {
             })
         }
       }
-
-      //       if (data.paymentMethod == 'vnpay') {
-      //         const returnUrl = 'http://localhost:5173' // url trả về
-      //         window.location.href =
-      //           'http://ketquaday99.com/vnpay/fast?amount=' +
-      //           dataForm.total +
-      //           '&txt_inv_mobile=' +
-      //           data.phone +
-      //           '&txt_billing_fullname=' +
-      //           data.name +
-      //           '&txt_ship_addr1=' +
-      //           data.shippingLocation +
-      //           '&returnUrl=' +
-      //           returnUrl
     }
   })
 
